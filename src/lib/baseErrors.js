@@ -35,3 +35,6 @@ export class WrongInterfaceError extends RMCError {
     static domain = 'WrongInterface';
 }
 
+export class DuplicateError extends RMCError {
+    static domain = 'Duplicate';
+}

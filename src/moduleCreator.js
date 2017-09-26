@@ -1,11 +1,20 @@
 import {get, isNil} from 'lodash';
 
-import {InsufficientDataError, WrongInterfaceError, InvalidParamsError} from './lib/baseErrors';
+import {
+    InsufficientDataError,
+    WrongInterfaceError,
+    InvalidParamsError,
+    DuplicateError,
+} from './lib/baseErrors';
 
 
 let store;
 
 export function linkStore(globalStore) {
+    if (!isNil(store)) {
+        throw new DuplicateError('Attempt to link store twice');
+    }
+
     store = globalStore;
 }
 
