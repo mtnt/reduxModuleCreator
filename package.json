@@ -4,8 +4,8 @@
   "description": "With it you can move your module`s state path without any changes inside the module.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel --plugins transform-class-properties --presets env src --out-dir dist",
-    "test": "test",
+    "build": "babel src --out-dir dist",
+    "test": "jest",
     "clean-install": "rm -rf ./node_modules && npm install",
     "fast-clean-install": "rm -rf ./node_modules && yarn install",
     "prepublish": "npm run build",
@@ -29,7 +29,9 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-jest": "^21.0.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.0"
+    "babel-preset-env": "^1.6.0",
+    "jest": "^21.1.0"
   }
 }
