@@ -8,7 +8,7 @@
     "test": "jest",
     "clean-install": "rm -rf ./node_modules && npm install",
     "fast-clean-install": "rm -rf ./node_modules && yarn install",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "postpublish": "rm -rf dist"
   },
   "repository": {
