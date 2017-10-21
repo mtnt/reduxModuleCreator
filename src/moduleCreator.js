@@ -1,4 +1,4 @@
-import {get, isNil} from 'lodash';
+import {get, isNil, isFunction, isString, isArray} from 'lodash';
 
 import {
     InsufficientDataError,
@@ -50,13 +50,19 @@ export class Ctl {
         this._state = this._getState(nextOuterState);
 
         if (this._state !== prevState) {
-            this.stateDidUpdate(prevState);
+            this.stateDidUpdate(this._state);
         }
     };
 }
 
 class Module {
     constructor(reducer, Controller) {
+        if (!isFunction(reducer)) {
+            const msg = 'Attempt to create a module, but reducer is not a function';
+
+            throw new InvalidParamsError(msg);
+        }
+
         if (!(Controller.prototype instanceof Ctl)) {
             const msg = `Attempt to create a module with a wrong ctl class "${Controller.name}"`;
 
@@ -68,6 +74,13 @@ class Module {
     }
 
     integrator(path) {
+        if (
+            (!isString(path) || path === '') &&
+            (!isArray(path) || path.some(pathPart => !isString(pathPart)))
+        ) {
+            throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
+        }
+
         this._path = path;
 
         return this._reducer;
@@ -82,7 +95,13 @@ class Module {
             throw new InsufficientDataError(msg);
         }
 
-        return new this._controllerClass(path);
+        const ctl = new this._controllerClass(path);
+
+        if (!isFunction(ctl.stateDidUpdate)) {
+            throw new WrongInterfaceError('A controller must have `stateDidUpdate` method');
+        }
+
+        return ctl;
     }
 }
 
