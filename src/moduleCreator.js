@@ -18,6 +18,10 @@ export function linkStore(globalStore) {
     store = globalStore;
 }
 
+export function unlinkStore() {
+    store = null;
+}
+
 export class Ctl {
     constructor(path) {
         this._path = path;
