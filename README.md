@@ -52,6 +52,7 @@ class SampleCtl extends Ctl {
     // will be called only if the module relative part of state is changed 
     stateDidUpdate(prevState) {
         // some reaction to state changes
+        // use `this._state` to get access to current state
     }
 }
  
