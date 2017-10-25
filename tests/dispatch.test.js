@@ -1,172 +1,197 @@
-import {createStore, createModule, Ctl} from '../src';
-
-import {allValuesTypes, testAllValues} from './lib';
+import {createStore, createModule, Ctl, unlinkStore} from '../src';
 
 
-const collection = [
-    {
-        path: 'path0',
-        actionType: 'action0',
-        payload: 'somePayload0',
-        stateDidUpdate: jest.fn(),
-    },
-    {
-        path: 'path1',
-        actionType: 'action1',
-        payload0: 'somePayload1',
-        payload1: 'somePayload2',
-        stateDidUpdate: jest.fn(),
-    },
-    {
-        path: 'path2',
-        actionType: 'action2',
-        payload: 'somePayload3',
-        stateDidUpdate: jest.fn(),
-    },
-    {
-        path: 'path3',
-        actionType: 'action3',
-        payload: 'somePayload4',
-        stateDidUpdate: jest.fn(),
-    },
-    {
-        path: 'path4',
-        actionType: 'action4',
-        payload: 'somePayload5',
-        stateDidUpdate: jest.fn(),
-    },
-];
+const path0 = 'path0';
+const path1 = 'path1';
+const action0 = 'action0';
+const action1 = 'action1';
+const payload0 = 'payload0';
+const payload1 = 'payload1';
+const initialData0 = 'initialData0';
+const initialData1 = 'initialData1';
 
-collection[0].reducer = (state = 0, action) => {
-    switch(action.type) {
-        case collection[0].actionType:
-            return action.payload;
-
-        default:
-            return state;
-    }
-};
-collection[0].controllerClass = class extends Ctl {
-    stateDidUpdate = collection[0].stateDidUpdate;
-};
-collection[0].module = createModule(collection[0].reducer, collection[0].controllerClass);
-
-
-collection[1].reducer = (state = 0, action) => {
-    switch(action.type) {
-        case collection[1].actionType:
-            return action.payload;
-
-        default:
-            return state;
-    }
-};
-collection[1].controllerClass = class extends Ctl {
-    stateDidUpdate = collection[1].stateDidUpdate;
-};
-collection[1].module = createModule(collection[1].reducer, collection[1].controllerClass);
-
-collection[2].reducer = (state = 0, action) => {
-    switch(action.type) {
-        case collection[2].actionType:
-            return action.payload;
-
-        default:
-            return state;
-    }
-};
-collection[2].controllerClass = class extends Ctl {
-    stateDidUpdate = collection[2].stateDidUpdate;
-};
-collection[2].module = createModule(collection[2].reducer, collection[2].controllerClass);
-
-collection[3].reducer = (state = 0, action) => {
-    switch(action.type) {
-        case collection[3].actionType:
-            return action.payload;
-
-        default:
-            return state;
-    }
-};
-collection[4].reducer = (state = 0, action) => {
-    switch(action.type) {
-        case collection[4].actionType:
-            return action.payload;
-
-        default:
-            return state;
-    }
-};
-collection[3].controllerClass = class extends Ctl {
-    stateDidUpdate = collection[3].stateDidUpdate;
-};
-collection[4].controllerClass = class extends Ctl {
-    stateDidUpdate = collection[4].stateDidUpdate;
-};
-collection[3].module = createModule(collection[3].reducer, collection[3].controllerClass);
-collection[4].module = createModule(collection[4].reducer, collection[4].controllerClass);
-
-
-function rootReducer(state = {}, action) {
-    const nextState = {};
-
-    for (let set of collection) {
-        nextState[set.path] = set.module.integrator(set.path)(state[set.path], action);
-    }
-
-    return nextState;
-}
-
-createStore(rootReducer);
-
+let i = 0;
 describe('controller.dispatch', () => {
-    it('should call `stateDidUpdate` when `self` state is changed', () => {
-        const {payload, actionType: type, stateDidUpdate, module} = collection[0];
+    describe('when `self` state is changed single time', () => {
+        unlinkStore();
+
+        const stateDidUpdate = jest.fn();
+
+        function reducer(state = initialData0, action) {
+            switch(action.type) {
+                case action0:
+                    return action.payload;
+
+                default:
+                    return state;
+            }
+        }
+        class SCtl extends Ctl {
+            stateDidUpdate = stateDidUpdate;
+        }
+        const module = createModule(reducer, SCtl);
+
+        function rootReducer(state = {}, action) {
+            return {
+                [path0]: module.integrator(path0)(state[path0], action),
+            };
+        }
+        createStore(rootReducer);
+
         const ctl = module.getController();
 
-        ctl.dispatch({type, payload});
+        ctl.dispatch({type: action0, payload: payload0});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(1);
-        expect(stateDidUpdate).toHaveBeenCalledWith(payload);
+        it('should call `stateDidUpdate`', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalled();
+        });
+
+        it('should call `stateDidUpdate` with previousState', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledWith(initialData0);
+        });
+
+        it('should change private `_state` property to new state', () => {
+            expect.assertions(1);
+            expect(ctl._state).toBe(payload0);
+        })
     });
 
-    it('should call `stateDidUpdate` each time when `self` state is changed', () => {
-        const {payload0, payload1, actionType: type, stateDidUpdate, module} = collection[1];
+    describe('when `self` state is changed several time in a line', () => {
+        unlinkStore();
+
+        const stateDidUpdate = jest.fn();
+
+        function reducer(state = initialData0, action) {
+            switch(action.type) {
+                case action0:
+                    return action.payload;
+
+                default:
+                    return state;
+            }
+        }
+        class SCtl extends Ctl {
+            stateDidUpdate = stateDidUpdate;
+        }
+        const module = createModule(reducer, SCtl);
+
+        function rootReducer(state = {}, action) {
+            return {
+                [path0]: module.integrator(path0)(state[path0], action),
+            };
+        }
+        createStore(rootReducer);
+
         const ctl = module.getController();
 
-        ctl.dispatch({type, payload: payload0});
-        ctl.dispatch({type, payload: payload1});
+        ctl.dispatch({type: action0, payload: payload0});
+        ctl.dispatch({type: action0, payload: payload1});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(2);
-        expect(stateDidUpdate).toHaveBeenLastCalledWith(payload1);
+        it('should call `stateDidUpdate` each time', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledTimes(2);
+        });
+
+        it('should call `stateDidUpdate` with a result of handling a last action', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenLastCalledWith(payload0); // previous state
+        });
+
+        it('should change private `_state` property a result of handling a last action', () => {
+            expect.assertions(1);
+            expect(ctl._state).toBe(payload1);
+        });
     });
 
-    let desc_100 = 'shouldn`t call `stateDidUpdate` when `self` state isn`t changed on the' +
-        ' same action';
-    it(desc_100, () => {
-        const {payload, actionType: type, stateDidUpdate, module} = collection[2];
+    describe('when `self` state isn`t changed twice because of actions are identically', () => {
+        unlinkStore();
+
+        const stateDidUpdate = jest.fn();
+
+        function reducer(state = initialData0, action) {
+            switch(action.type) {
+                case action0:
+                    return action.payload;
+
+                default:
+                    return state;
+            }
+        }
+        class SCtl extends Ctl {
+            stateDidUpdate = stateDidUpdate;
+        }
+        const module = createModule(reducer, SCtl);
+
+        function rootReducer(state = {}, action) {
+            return {
+                [path0]: module.integrator(path0)(state[path0], action),
+            };
+        }
+        createStore(rootReducer);
+
         const ctl = module.getController();
 
-        ctl.dispatch({type, payload: payload});
-        ctl.dispatch({type, payload: payload});
+        ctl.dispatch({type: action0, payload: payload0});
+        ctl.dispatch({type: action0, payload: payload0});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(1);
-        expect(stateDidUpdate).toHaveBeenCalledWith(payload);
+        it('should call `stateDidUpdate` just single time', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledTimes(1);
+        });
     });
 
-    it('should not call `stateDidUpdate` when `not self` state is changed', () => {
-        const {payload, actionType: type, module} = collection[3];
-        const {stateDidUpdate} = collection[4];
+    describe('when `self` state isn`t changed via `alien` action', () => {
+        unlinkStore();
 
-        const ctl = module.getController();
+        const stateDidUpdate0 = jest.fn();
+        const stateDidUpdate1 = jest.fn();
 
-        ctl.dispatch({type, payload: payload});
+        function reducer0(state = initialData0, action) {
+            switch(action.type) {
+                case action0:
+                    return action.payload;
 
-        expect.assertions(1);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(0);
+                default:
+                    return state;
+            }
+        }
+        function reducer1(state = initialData1, action) {
+            switch(action.type) {
+                case action1:
+                    return action.payload;
+
+                default:
+                    return state;
+            }
+        }
+        class SCtl0 extends Ctl {
+            stateDidUpdate = stateDidUpdate0;
+        }
+        class SCtl1 extends Ctl {
+            stateDidUpdate = stateDidUpdate1;
+        }
+        const module0 = createModule(reducer0, SCtl0);
+        const module1 = createModule(reducer1, SCtl1);
+
+        function rootReducer(state = {}, action) {
+            return {
+                [path0]: module0.integrator(path0)(state[path0], action),
+                [path1]: module1.integrator(path1)(state[path1], action),
+            };
+        }
+        createStore(rootReducer);
+
+        const ctl0 = module0.getController();
+
+        const ctl1 = module1.getController();
+
+        ctl0.dispatch({type: action0, payload: payload0});
+
+        it('should not call `stateDidUpdate` at all', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate1).toHaveBeenCalledTimes(0);
+        });
     });
 });

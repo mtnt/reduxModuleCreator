@@ -18,6 +18,10 @@ export function linkStore(globalStore) {
     store = globalStore;
 }
 
+export function unlinkStore() {
+    store = null;
+}
+
 export class Ctl {
     constructor(path) {
         this._path = path;
@@ -50,7 +54,7 @@ export class Ctl {
         this._state = this._getState(nextOuterState);
 
         if (this._state !== prevState) {
-            this.stateDidUpdate(this._state);
+            this.stateDidUpdate(prevState);
         }
     };
 }

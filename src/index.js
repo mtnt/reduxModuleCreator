@@ -1,6 +1,6 @@
 import {createStore as reduxCreateStore} from 'redux';
 
-import {linkStore, createModule, Ctl} from './moduleCreator';
+import {linkStore, unlinkStore, createModule, Ctl} from './moduleCreator';
 
 
 function createStore(rootReducer, preloadedState, enhancer) {
@@ -11,4 +11,4 @@ function createStore(rootReducer, preloadedState, enhancer) {
     return store;
 }
 
-export {createModule, Ctl, createStore, linkStore};
+export {createModule, Ctl, createStore, linkStore, unlinkStore};
