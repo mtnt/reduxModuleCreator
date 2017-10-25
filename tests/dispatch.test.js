@@ -10,14 +10,11 @@ const payload1 = 'payload1';
 const initialData0 = 'initialData0';
 const initialData1 = 'initialData1';
 
+let i = 0;
 describe('controller.dispatch', () => {
-    afterEach(() => {
+    describe('when `self` state is changed single time', () => {
         unlinkStore();
-    });
 
-    const desc_100 = 'should call `stateDidUpdate` when `self` state is changed and pass a' +
-        ' previous state into it';
-    it(desc_100, () => {
         const stateDidUpdate = jest.fn();
 
         function reducer(state = initialData0, action) {
@@ -45,12 +42,25 @@ describe('controller.dispatch', () => {
 
         ctl.dispatch({type: action0, payload: payload0});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(1);
-        expect(stateDidUpdate).toHaveBeenCalledWith(payload0);
+        it('should call `stateDidUpdate`', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalled();
+        });
+
+        it('should call `stateDidUpdate` with previousState', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledWith(initialData0);
+        });
+
+        it('should change private `_state` property to new state', () => {
+            expect.assertions(1);
+            expect(ctl._state).toBe(payload0);
+        })
     });
 
-    it('should call `stateDidUpdate` each time when `self` state is changed', () => {
+    describe('when `self` state is changed several time in a line', () => {
+        unlinkStore();
+
         const stateDidUpdate = jest.fn();
 
         function reducer(state = initialData0, action) {
@@ -79,14 +89,25 @@ describe('controller.dispatch', () => {
         ctl.dispatch({type: action0, payload: payload0});
         ctl.dispatch({type: action0, payload: payload1});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(2);
-        expect(stateDidUpdate).toHaveBeenLastCalledWith(payload1);
+        it('should call `stateDidUpdate` each time', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledTimes(2);
+        });
+
+        it('should call `stateDidUpdate` with a result of handling a last action', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenLastCalledWith(payload0); // previous state
+        });
+
+        it('should change private `_state` property a result of handling a last action', () => {
+            expect.assertions(1);
+            expect(ctl._state).toBe(payload1);
+        });
     });
 
-    let desc_200 = 'shouldn`t call `stateDidUpdate` when `self` state isn`t changed on the' +
-        ' same action';
-    it(desc_200, () => {
+    describe('when `self` state isn`t changed twice because of actions are identically', () => {
+        unlinkStore();
+
         const stateDidUpdate = jest.fn();
 
         function reducer(state = initialData0, action) {
@@ -115,12 +136,15 @@ describe('controller.dispatch', () => {
         ctl.dispatch({type: action0, payload: payload0});
         ctl.dispatch({type: action0, payload: payload0});
 
-        expect.assertions(2);
-        expect(stateDidUpdate).toHaveBeenCalledTimes(1);
-        expect(stateDidUpdate).toHaveBeenCalledWith(payload0);
+        it('should call `stateDidUpdate` just single time', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate).toHaveBeenCalledTimes(1);
+        });
     });
 
-    it('should not call `stateDidUpdate` when `not self` state is changed', () => {
+    describe('when `self` state isn`t changed via `alien` action', () => {
+        unlinkStore();
+
         const stateDidUpdate0 = jest.fn();
         const stateDidUpdate1 = jest.fn();
 
@@ -165,7 +189,9 @@ describe('controller.dispatch', () => {
 
         ctl0.dispatch({type: action0, payload: payload0});
 
-        expect.assertions(1);
-        expect(stateDidUpdate1).toHaveBeenCalledTimes(0);
+        it('should not call `stateDidUpdate` at all', () => {
+            expect.assertions(1);
+            expect(stateDidUpdate1).toHaveBeenCalledTimes(0);
+        });
     });
 });
