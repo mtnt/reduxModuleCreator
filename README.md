@@ -1,7 +1,7 @@
 # Introduction
 
 If you don`t want to change a path to a reducer and path of data in a controller subscriber.  
-If you want to reuse yuo business logic several times without any troubles.
+If you want to reuse you business logic several times without any troubles.
 
 You need this =)
 
@@ -50,7 +50,7 @@ import {createModule, Ctl} from 'redux-module-creator';
  
 class SampleCtl extends Ctl {
     // will be called only if the module relative part of state is changed 
-    stateDidUpdate(statePart) {
+    stateDidUpdate(prevState) {
         // some reaction to state changes
     }
 }
