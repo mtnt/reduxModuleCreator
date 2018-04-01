@@ -1,13 +1,13 @@
 {
   "name": "redux-module-creator",
-  "version": "0.3.2",
-  "description": "With it you can move your module`s state path without any changes inside the module.",
+  "version": "0.4.0",
+  "description": "Create you redux modules orthogonal.",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "jest",
     "fast-clean-install": "rm -rf ./node_modules && npm install",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "postpublish": "rm -rf dist"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "babel-jest": "^21.0.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
+    "unit-tests-values-iterators": "^0.2.1",
     "jest": "^21.1.0"
   }
 }
