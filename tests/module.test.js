@@ -1,4 +1,5 @@
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators"
+import {cloneDeep} from 'lodash';
 
 import {createStore, unlinkStore, createModule, RMCCtl} from "../src";
 
@@ -106,7 +107,7 @@ describe("module", () => {
     expect(someFunc).toHaveBeenCalled();
   });
 
-  it("should have access to own state inside controller`s methods", () => {
+  it("should have access to get own state inside controller`s methods", () => {
     const ownState = {
       foo: 'bar',
       bar: 'foo',
@@ -123,7 +124,33 @@ describe("module", () => {
 
     const module = creator(reducer, Ctl);
 
-    expect(module.getter()).toBe(ownState);
+    expect(module.getter()).toEqual(ownState);
+  });
+
+  it("should haven`t access to change original own state", () => {
+    const ownState = {
+      foo: {
+        bar: 'baz',
+      },
+    };
+    const expectedState = cloneDeep(ownState);
+    const reducer = (state = {}, action) => {
+      return ownState;
+    };
+    class Ctl extends VALID_CLASS {
+      getState() {
+        return this.ownState;
+      }
+    }
+    const module = creator(reducer, Ctl);
+
+    const firstData = module.getState();
+    firstData.bar = "foo";
+    firstData.foo.bar = "newBaz";
+
+    const secondData = module.getState();
+
+    expect(secondData).toEqual(expectedState);
   });
 });
 
