@@ -135,20 +135,22 @@ class Module {
     }
 
     integrator(path) {
-        if (
+        const prevPath = this.__pathMdl;
+
+        if (isNil(prevPath)) {
+          if (
             (!isString(path) || path === '') &&
             (!isArray(path) || isEmpty(path) || path.some(pathPart => !isString(pathPart)))
-        ) {
+          ) {
             throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
+          }
+
+          this.__pathMdl = path;
+        } else if (!isEqual(prevPath, path)) {
+          const msg = `Attempt to change a path of integration: "${prevPath}" -> "${path}"`;
+
+          throw new InvalidParamsError(msg);
         }
-
-        if (!isNil(this.__pathMdl) && !isEqual(this.__pathMdl, path)) {
-            const msg = `Attempt to change a path of integration: "${this.__pathMdl}" -> "${path}"`;
-
-            throw new InvalidParamsError(msg);
-        }
-
-        this.__pathMdl = path;
 
         return this.__reducerMdl;
     };
