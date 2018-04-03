@@ -113,3 +113,12 @@ export default function reducer(state, action) {
     };
 };
 ```
+
+Or, if you need some module\`s data, you don\`t need to use selectors:
+
+```
+// Some module
+import sampleModule from "SampleModule";
+
+sampleModule.getSomeOwnData();
+```
