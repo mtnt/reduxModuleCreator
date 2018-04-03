@@ -1,7 +1,7 @@
-import {cloneDeep} from 'lodash';
+import {cloneDeep} from "lodash";
 
 import {unlinkStore, RMCCtl} from "../src";
-import {getActionCreator, creator} from './helpers';
+import {getActionCreator, creator} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {
   _stateDidUpdate() {}
@@ -20,8 +20,8 @@ describe("module.ownState", () => {
   describe("for getting data", () => {
     it("should be accessible from outside", () => {
       const ownState = {
-        foo: 'bar',
-        bar: 'foo',
+        foo: "bar",
+        bar: "foo",
       };
       const expected = cloneDeep(ownState);
       const reducer = (state = {}, action) => {
@@ -34,8 +34,8 @@ describe("module.ownState", () => {
 
     it("should be accessible from inside of controller`s method", () => {
       const ownState = {
-        foo: 'bar',
-        bar: 'foo',
+        foo: "bar",
+        bar: "foo",
       };
       const expected = cloneDeep(ownState);
       const reducer = (state = {}, action) => {
@@ -55,12 +55,12 @@ describe("module.ownState", () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
-        foo: 'bar',
-        bar: 'foo',
+        foo: "bar",
+        bar: "foo",
       };
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
-        switch(action.type) {
+        switch (action.type) {
           case actionCreator.type:
             return action.payload;
 
@@ -106,7 +106,7 @@ describe("module.ownState", () => {
     it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
-        switch(action.type) {
+        switch (action.type) {
           case actionCreator.type:
             return action.payload;
 
@@ -131,7 +131,7 @@ describe("module.ownState", () => {
     it("shouldn`t be accessible from outside", () => {
       const ownState = {
         foo: {
-          bar: 'foo',
+          bar: "foo",
         },
       };
       const expected = cloneDeep(ownState);
@@ -148,7 +148,7 @@ describe("module.ownState", () => {
     it("shouldn`t be accessible from inside of controller`s method", () => {
       const ownState = {
         foo: {
-          bar: 'foo',
+          bar: "foo",
         },
       };
       const expected = cloneDeep(ownState);
@@ -171,7 +171,7 @@ describe("module.ownState", () => {
       const actionCreator = getActionCreator();
       const ownState = {
         foo: {
-          bar: 'foo',
+          bar: "foo",
         },
       };
       const expected = cloneDeep(ownState);

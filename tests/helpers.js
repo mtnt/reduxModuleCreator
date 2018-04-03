@@ -1,10 +1,9 @@
-import {uniqueId} from 'lodash';
+import {uniqueId} from "lodash";
 
 import {createStore, createModule} from "../src";
 
-
 export function getActionCreator() {
-  const type = uniqueId('action');
+  const type = uniqueId("action");
 
   const actionCreator = function(payload) {
     return {

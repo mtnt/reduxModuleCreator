@@ -1,7 +1,7 @@
-import {noop} from 'lodash';
+import {noop} from "lodash";
 
 import {unlinkStore, RMCCtl} from "../src";
-import {creator} from './helpers';
+import {creator} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {
   _stateDidUpdate() {}

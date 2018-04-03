@@ -1,7 +1,7 @@
-import {noop} from 'lodash';
+import {noop} from "lodash";
 
 import {unlinkStore, RMCCtl} from "../src";
-import {getActionCreator, creator} from './helpers';
+import {getActionCreator, creator} from "./helpers";
 
 const payload0 = {
   name: "payload0",
@@ -19,12 +19,12 @@ afterEach(() => {
   unlinkStore();
 });
 
-describe('module.dispatch', () => {
+describe("module.dispatch", () => {
   it("does not affect deinitialized module", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
-      switch(action.type) {
+      switch (action.type) {
         case actionCreator.type:
           return action.payload;
 
@@ -45,11 +45,11 @@ describe('module.dispatch', () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 
-  it('called single time', () => {
+  it("called single time", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
-      switch(action.type) {
+      switch (action.type) {
         case actionCreator.type:
           return action.payload;
 
@@ -76,11 +76,11 @@ describe('module.dispatch', () => {
     expect(module.ownState).toEqual(payload0);
   });
 
-  it('called several times with a same action but different payloads', () => {
+  it("called several times with a same action but different payloads", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
-      switch(action.type) {
+      switch (action.type) {
         case actionCreator.type:
           return action.payload;
 
@@ -108,11 +108,11 @@ describe('module.dispatch', () => {
     expect(module.ownState).toEqual(payload1);
   });
 
-  it('called several times with totally same actions including payloads', () => {
+  it("called several times with totally same actions including payloads", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
-      switch(action.type) {
+      switch (action.type) {
         case actionCreator.type:
           return action.payload;
 
@@ -134,12 +134,12 @@ describe('module.dispatch', () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(1);
   });
 
-  it('called with an action that shouldn`t affect module`s state', () => {
+  it("called with an action that shouldn`t affect module`s state", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
     function reducer(state = initialData, action) {
-      switch(action.type) {
+      switch (action.type) {
         case actionCreator0.type:
           return action.payload;
 
