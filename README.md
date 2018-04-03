@@ -18,7 +18,7 @@ It means you need to make a dependency between main reducer and main controller 
 ```javascript
 // SampleModule.js
 
-import {createModule, RMCCtl} from 'redux-module-creator';
+import {createModule, RMCCtl} from "redux-module-creator";
 
 
 class SampleCtl extends RMCCtl {
@@ -44,12 +44,12 @@ export default createModule(sampleReducer, SampleCtl);
 
 ```javascript
 // Some reducer
-import sampleModule from 'SampleModule';
+import sampleModule from "SampleModule";
 
 
 export default function reducerOfAnotherModule(state, action, outerPath) {
     return {
-        sampleKey: sampleModule.integrator(outerPath + '.sampleKey')(state.sampleKey, action),
+        sampleKey: sampleModule.integrator(outerPath + ".sampleKey")(state.sampleKey, action),
     };
 };
 ```
@@ -69,7 +69,7 @@ Now you need to link a store with modules. You have two ways for it:
 And if you can\`t move this responsibility onto another side, you can just use
 
 ```javascript
-import {linkStore} from 'redux-module-creator`
+import {linkStore} from "redux-module-creator"
 
 linkStore(alreadyExistanceStore);
 ```
@@ -79,7 +79,7 @@ linkStore(alreadyExistanceStore);
 If you do not want to do anything with the store before linking it. You can just do
 
 ```javascript
-import {createStore} from 'redux-module-creator`
+import {createStore} from "redux-module-creator"
 
 const store = createStore(rootReducer, preloadedState, enhancer);
 ```
@@ -93,7 +93,7 @@ After linking the store all modules will see it and will be subscribed to change
 After that you can just call controller`s methods the module and use it.
 
 ```
-import sampleModule from 'SampleModule';
+import sampleModule from "SampleModule";
 
 const someData = sampleModule.someSelector();
 ```
@@ -104,12 +104,12 @@ Now if you wanna change a place of the reducer in the reducers tree, you just mo
 
 ```
 // Some reducer
-import sampleModule from 'SampleModule';
+import sampleModule from "SampleModule";
 
 
 export default function reducer(state, action) {
     return {
-        anotherKey: sampleModule.integrator('anotherKey')(state.anotherKey, action),
+        anotherKey: sampleModule.integrator("anotherKey")(state.anotherKey, action),
     };
 };
 ```
