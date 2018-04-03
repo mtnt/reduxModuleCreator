@@ -168,10 +168,7 @@ export function createModule(reducer, Controller) {
 
   const proxy = new Proxy(module, {
     get(target, propName) {
-      const isProtected = propName[0] === "_";
-      const isPrivate = isProtected && propName[1] === "_";
-
-      if ((isPrivate || !isProtected) && propName in target) {
+      if (this._useTarget(target, propName)) {
         return target[propName];
       }
 
@@ -183,10 +180,7 @@ export function createModule(reducer, Controller) {
     },
 
     set(target, propName, value) {
-      const isProtected = propName[0] === "_";
-      const isPrivate = isProtected && propName[1] === "_";
-
-      if ((isPrivate || !isProtected) && propName in target) {
+      if (this._useTarget(target, propName)) {
         target[propName] = value;
       } else if (propName !== "ownState") {
         target.__controllerMdl[propName] = value;
@@ -196,6 +190,13 @@ export function createModule(reducer, Controller) {
 
       return true;
     },
+
+    _useTarget(target, propName) {
+      const isProtected = propName[0] === "_";
+      const isPrivate = isProtected && propName[1] === "_";
+
+      return (isPrivate || !isProtected) && propName in target;
+    }
   });
 
   modulesList.push(proxy);
