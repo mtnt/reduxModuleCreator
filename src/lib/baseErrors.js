@@ -1,40 +1,39 @@
-import ExtendableError from 'es6-error';
-
+import ExtendableError from "es6-error";
 
 export class RMCError extends ExtendableError {
-    static domain = 'RMCError';
+  static domain = "RMCError";
 
-    constructor(message = '') {
-        super(message);
+  constructor(message = "") {
+    super(message);
 
-        const domains = [];
-        let prototype = this.__proto__;
+    const domains = [];
+    let prototype = this.__proto__;
 
-        do {
-            domains.unshift(prototype.constructor.domain);
-            prototype = prototype.__proto__;
-        } while (prototype.constructor !== ExtendableError);
+    do {
+      domains.unshift(prototype.constructor.domain);
+      prototype = prototype.__proto__;
+    } while (prototype.constructor !== ExtendableError);
 
-        this.message = domains.join('.') + (message ? `: ${message}` : '');
-    }
+    this.message = domains.join(".") + (message ? `: ${message}` : "");
+  }
 
-    get domain() {
-        return this.constructor.domain;
-    }
+  get domain() {
+    return this.constructor.domain;
+  }
 }
 
 export class InvalidParamsError extends RMCError {
-    static domain = 'InvalidParams';
+  static domain = "InvalidParams";
 }
 
 export class InsufficientDataError extends RMCError {
-    static domain = 'InsufficientData';
+  static domain = "InsufficientData";
 }
 
 export class WrongInterfaceError extends RMCError {
-    static domain = 'WrongInterface';
+  static domain = "WrongInterface";
 }
 
 export class DuplicateError extends RMCError {
-    static domain = 'Duplicate';
+  static domain = "Duplicate";
 }

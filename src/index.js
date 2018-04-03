@@ -1,14 +1,13 @@
-import {createStore as reduxCreateStore} from 'redux';
+import {createStore as reduxCreateStore} from "redux";
 
-import {linkStore, unlinkStore, createModule, RMCCtl} from './ModuleCreator';
-
+import {linkStore, unlinkStore, createModule, RMCCtl} from "./ModuleCreator";
 
 function createStore(rootReducer, preloadedState, enhancer) {
-    const store = reduxCreateStore(rootReducer, preloadedState, enhancer);
+  const store = reduxCreateStore(rootReducer, preloadedState, enhancer);
 
-    linkStore(store);
+  linkStore(store);
 
-    return store;
+  return store;
 }
 
 export {createModule, RMCCtl, createStore, linkStore, unlinkStore};
