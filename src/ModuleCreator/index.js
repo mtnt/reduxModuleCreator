@@ -42,7 +42,9 @@ export class RMCCtl {
     __initializeCtl(store, path) {
         this.__storeCtl = store;
         this.__pathCtl = path;
-        this.ownState = this.__getOwnStateCtl();
+
+        const ownState = this.__getOwnStateCtl();
+        this.__setOwnStateCtl(ownState);
 
         this.__unsubscribeStoreCtl = this.__storeCtl.subscribe(() => {
             const state = this.__storeCtl.getState();
@@ -56,16 +58,25 @@ export class RMCCtl {
     }
 
     __getOwnStateCtl(outerState = this.__storeCtl.getState()) {
-        return get(outerState, this.__pathCtl);
+        const path = this.__pathCtl;
+
+        return get(outerState, path);
     }
 
-    __stateUpdateListenerCtl = (nextOuterState) => {
+    // bypassing proxy
+    __setOwnStateCtl = (state) => {
+        this.ownState = state;
+    };
+
+    __stateUpdateListenerCtl(nextOuterState) {
         const prevOwnState = this.ownState;
 
-        this.ownState = this.__getOwnStateCtl(nextOuterState);
+        const ownState = this.__getOwnStateCtl(nextOuterState);
 
-        if (!isEqual(this.ownState, prevOwnState)) {
-            this._stateDidUpdate(cloneDeep(prevOwnState));
+        this.__setOwnStateCtl(ownState);
+
+        if (!isEqual(ownState, prevOwnState)) {
+            this._stateDidUpdate(prevOwnState);
         }
     };
 
@@ -127,11 +138,13 @@ class Module {
     }
 
     __initializeMdl(store) {
-      this.__controllerMdl.__initializeCtl(store, this.__pathMdl);
+      // keep `this = proxy` for controller`s method
+      this.__controllerMdl.__initializeCtl.call(this, store, this.__pathMdl);
     }
 
     deinitialize() {
-        this.__controllerMdl.__deinitializeCtl();
+      // keep `this = proxy` for controller`s method
+        this.__controllerMdl.__deinitializeCtl.call(this);
     }
 
     integrator(path) {
@@ -161,22 +174,39 @@ const modulesList = [];
 export function createModule(reducer, Controller) {
   const module = new Module(reducer, Controller);
 
-  modulesList.push(module);
-
-  return new Proxy(module, {
+  const proxy = new Proxy(module, {
     get(target, propName) {
       const isProtected = propName[0] === '_';
       const isPrivate = isProtected && propName[1] === '_';
 
-      if (isPrivate && propName in target) {
+      if ((isPrivate || !isProtected) && propName in target) {
         return target[propName];
       }
 
-      if (!isProtected && propName in target) {
-        return target[propName];
+      if (propName === "ownState") {
+        return cloneDeep(target.__controllerMdl[propName]);
       }
 
       return target.__controllerMdl[propName];
+    },
+
+    set(target, propName, value) {
+      const isProtected = propName[0] === '_';
+      const isPrivate = isProtected && propName[1] === '_';
+
+      if ((isPrivate || !isProtected) && propName in target) {
+        target[propName] = value;
+      } else if (propName !== "ownState") {
+        target.__controllerMdl[propName] = value;
+      } else {
+        return false;
+      }
+
+      return true;
     }
   });
+
+  modulesList.push(proxy);
+
+  return proxy;
 }
