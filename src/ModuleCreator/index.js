@@ -28,11 +28,7 @@ export function unlinkStore() {
 }
 
 export class RMCCtl {
-  constructor() {
-    if (!isFunction(this._stateDidUpdate)) {
-      throw new WrongInterfaceError("A controller must have `_stateDidUpdate` method");
-    }
-  }
+  __stateChangeListeners = new Set();
 
   __initializeCtl(store, path) {
     this.__storeCtl = store;
@@ -70,9 +66,27 @@ export class RMCCtl {
 
     this.__setOwnStateCtl(ownState);
 
-    if (!isEqual(ownState, prevOwnState)) {
+    if (isFunction(this._stateDidUpdate) && !isEqual(ownState, prevOwnState)) {
       this._stateDidUpdate(prevOwnState);
     }
+
+    this.__stateChangeListeners.forEach(listener => {
+      listener(prevOwnState, ownState);
+    });
+  }
+
+  __unsubscribeCtl(listener) {
+    this.__stateChangeListeners.delete(listener);
+  }
+
+  subscribe(listener) {
+    if (!isFunction(listener)) {
+      throw new InvalidParamsError("Attempt to subscribe, but listener is not a function");
+    }
+
+    this.__stateChangeListeners.add(listener);
+
+    return this.__unsubscribeCtl.bind(this, listener);
   }
 
   dispatch(action) {
