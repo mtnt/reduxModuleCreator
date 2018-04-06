@@ -32,12 +32,12 @@ describe("createModule", () => {
     });
   });
 
-  it("should throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
+  it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
       createModule(() => {}, Ctl);
-    }).toThrow();
+    }).not.toThrow();
   });
 
   it("should fire warning if a controller has a same named method or property with Module", () => {
