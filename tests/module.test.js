@@ -3,9 +3,7 @@ import {noop} from "lodash";
 import {unlinkStore, RMCCtl} from "../src";
 import {creator} from "./helpers";
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
+const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
     name: "initial",

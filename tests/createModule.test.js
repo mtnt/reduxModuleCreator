@@ -2,9 +2,7 @@ import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 
 import {createStore, unlinkStore, createModule, RMCCtl} from "../src";
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
+const VALID_CLASS = class SCtl extends RMCCtl {};
 
 describe("createModule", () => {
   afterEach(() => {

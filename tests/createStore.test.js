@@ -1,9 +1,7 @@
 import {createStore, unlinkStore, RMCCtl, createModule} from "../src";
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
-const INVALID_CLASS = class SCtl extends RMCCtl {};
+const VALID_CLASS = class SCtl extends RMCCtl {};
+const INVALID_CLASS = class SCtl extends RMCCtl {}; // there is no option to make class invalid (yet)
 
 describe("createStore", () => {
   afterEach(() => {

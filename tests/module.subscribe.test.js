@@ -1,7 +1,7 @@
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 import {noop} from "lodash";
 
-import {linkStore, unlinkStore, RMCCtl, createModule} from "../src";
+import {linkStore, unlinkStore, createStore, RMCCtl, createModule} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const payload0 = {
@@ -16,9 +16,7 @@ const initialData = {
   name: "initial",
 };
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
+const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return initialData;
 };

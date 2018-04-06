@@ -2,9 +2,7 @@ import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 
 import {createModule, RMCCtl} from "../src";
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
+const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
     name: "initial",
