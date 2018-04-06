@@ -5,9 +5,7 @@ You have been making a project with redux. You already have many modules with re
 Suddenly, you decide extend the project and restructure the state. You will need a lot of refactor: reducers, selectors, connected components...
 So, with this you don\`t have to - you\`ll need just replace `integrator` to a new place.
 
-Another problem:
-You have a module and you want to reuse it in another project or maybe in a same project one more time (like an instance).
-But, if you create the module with this, you woudn`t have the problem. (TBD)
+Redux state is a group of logically related data. It is a funnel with data, where each next level of depth store less knowledge relatively his parent. And when you need this data in a controller or a component or something else, you always need to know the path in the state to get this data... With this you don\`t. Redux-module linked with his "ownState" and has an API to subscribe to it\`s changes.
 
 # How to use
 
@@ -122,3 +120,41 @@ import sampleModule from "SampleModule";
 
 sampleModule.getSomeOwnData();
 ```
+
+# API reference
+
+## createModule(reducer, CtlClass)
+Create a module with the reducer and the controller
+- `reducer` is a typically reducer, that will be injected into a store
+- `CtlClass` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
+
+Returns `module`:
+#### integrator(path)
+Integrate your module into reducers tree.
+- `path` is a path to module\`s data in a state. It can be dot separated string like `some.module.path` or array of strings - `['some', 'module', 'path']`. It\`s important to path full path (from a root)
+
+#### dispatch(action)
+Dispatch an action to the store.
+
+#### subscribe(listener)
+Subscribe to the own state changes.
+- `listener` is a function that gets `prevState` and `currentState` parameters.
+
+Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
+
+## RMCCtl
+Base class for controller.
+
+#### _stateDidUpdate(prevState)
+Protected method of a controller for reactions to changes of the state.
+Use `this.ownState` to get a current state.
+
+## createStore(reducer, preloadedState, enchancer)
+Store creator. The arguments exactly as for redux.createStore.
+
+## linkStore(store)
+Links the store with created modules.
+- `store` is result of `createStore` or `redux.createStore` call;
+
+## unlinkStore()
+Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
