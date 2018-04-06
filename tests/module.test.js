@@ -1,11 +1,9 @@
 import {noop} from "lodash";
 
 import {unlinkStore, RMCCtl} from "../src";
-import {creator} from "./helpers";
+import {getActionCreator, creator} from "./helpers";
 
-const VALID_CLASS = class SCtl extends RMCCtl {
-  _stateDidUpdate() {}
-};
+const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
     name: "initial",
@@ -88,5 +86,36 @@ describe("module", () => {
     module.someMethod();
 
     expect(someFunc).toHaveBeenCalled();
+  });
+
+  it("should have access to parent`s method using 'super'", () => {
+    const actionCreator = getActionCreator();
+    function reducer(state = 'initial', action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    const someFunc = jest.fn();
+    const listener = jest.fn();
+    class Ctl extends VALID_CLASS {
+      subscribe(listener) {
+        someFunc();
+
+        super.subscribe(listener);
+      }
+    }
+    const module = creator(reducer, Ctl);
+
+    module.subscribe(listener);
+
+    expect(someFunc).toHaveBeenCalledTimes(1);
+
+    module.dispatch(actionCreator('payload'));
+
+    expect(listener).toHaveBeenCalledTimes(1);
   });
 });
