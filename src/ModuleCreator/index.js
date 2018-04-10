@@ -28,6 +28,24 @@ export function unlinkStore() {
 }
 
 export class RMCCtl {
+  constructor() {
+    this.__writable = false;
+
+    let ownProperty;
+    Object.defineProperty(this, "ownState", {
+      get() {
+        return cloneDeep(ownProperty);
+      },
+      set(value) {
+        if (!this.__writable) {
+          throw new WrongInterfaceError("Attempt to set ownState. This property changes via dispatching actions only.");
+        }
+
+        ownProperty = value;
+      }
+    });
+  }
+
   __stateChangeListeners = new Set();
 
   __initializeCtl(store, path) {
@@ -54,9 +72,12 @@ export class RMCCtl {
     return get(outerState, path);
   }
 
-  // bypassing proxy
   __setOwnStateCtl = state => {
+    this.__writable = true;
+
     this.ownState = state;
+
+    this.__writable = false;
   };
 
   __stateUpdateListenerCtl(nextOuterState) {
@@ -144,13 +165,11 @@ class Module {
   }
 
   __initializeMdl(store) {
-    // keep `this = proxy` for controller`s method
-    this.__controllerMdl.__initializeCtl.call(this, store, this.__pathMdl);
+    this.__controllerMdl.__initializeCtl(store, this.__pathMdl);
   }
 
   deinitialize() {
-    // keep `this = proxy` for controller`s method
-    this.__controllerMdl.__deinitializeCtl.call(this);
+    this.__controllerMdl.__deinitializeCtl();
   }
 
   integrator(path) {
@@ -186,20 +205,19 @@ export function createModule(reducer, Controller) {
         return target[propName];
       }
 
-      if (propName === "ownState") {
-        return cloneDeep(target.__controllerMdl[propName]);
+      const result = target.__controllerMdl[propName];
+      if (isFunction(result)) {
+        return result.bind(target.__controllerMdl);
+      } else {
+        return result;
       }
-
-      return target.__controllerMdl[propName];
     },
 
     set(target, propName, value) {
       if (this._useTarget(target, propName)) {
         target[propName] = value;
-      } else if (propName !== "ownState") {
-        target.__controllerMdl[propName] = value;
       } else {
-        return false;
+        target.__controllerMdl[propName] = value;
       }
 
       return true;

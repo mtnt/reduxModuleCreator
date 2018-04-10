@@ -49,6 +49,25 @@ describe("module.ownState", () => {
       expect(module.getOwnState()).toEqual(expected);
     });
 
+    it("should be accessible from inside of controller`s arrow method", () => {
+      const ownState = {
+        foo: "bar",
+        bar: "foo",
+      };
+      const expected = cloneDeep(ownState);
+      const reducer = (state = {}, action) => {
+        return ownState;
+      };
+      class Ctl extends VALID_CLASS {
+        getOwnState = () => {
+          return this.ownState;
+        };
+      }
+      const module = creator(reducer, Ctl);
+
+      expect(module.getOwnState()).toEqual(expected);
+    });
+
     it("should be accessible from inside of the `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
@@ -68,6 +87,35 @@ describe("module.ownState", () => {
       }
       class Ctl extends VALID_CLASS {
         _stateDidUpdate() {
+          someFunc(this.ownState);
+        }
+      }
+      const module = creator(reducer, Ctl);
+
+      module.dispatch(actionCreator(ownState));
+
+      expect(someFunc).toHaveBeenCalledWith(expected);
+    });
+
+    it("should be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+      const actionCreator = getActionCreator();
+      const someFunc = jest.fn();
+      const ownState = {
+        foo: "bar",
+        bar: "foo",
+      };
+      const expected = cloneDeep(ownState);
+      function reducer(state = {}, action) {
+        switch (action.type) {
+          case actionCreator.type:
+            return action.payload;
+
+          default:
+            return state;
+        }
+      }
+      class Ctl extends VALID_CLASS {
+        _stateDidUpdate = () => {
           someFunc(this.ownState);
         }
       }
@@ -101,6 +149,19 @@ describe("module.ownState", () => {
       }).toThrow();
     });
 
+    it("shouldn`t be accessible from inside of controller`s arrow method", () => {
+      class Ctl extends VALID_CLASS {
+        someMethod = () => {
+          this.ownState = {};
+        };
+      }
+      const module = creator(MODULE_REDUCER, Ctl);
+
+      expect(() => {
+        module.someMethod();
+      }).toThrow();
+    });
+
     it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
@@ -114,6 +175,29 @@ describe("module.ownState", () => {
       }
       class Ctl extends VALID_CLASS {
         _stateDidUpdate() {
+          this.ownState = {};
+        }
+      }
+      const module = creator(reducer, Ctl);
+
+      expect(() => {
+        module.dispatch(actionCreator());
+      }).toThrow();
+    });
+
+    it("shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+      const actionCreator = getActionCreator();
+      function reducer(state = {}, action) {
+        switch (action.type) {
+          case actionCreator.type:
+            return action.payload;
+
+          default:
+            return state;
+        }
+      }
+      class Ctl extends VALID_CLASS {
+        _stateDidUpdate = () => {
           this.ownState = {};
         }
       }
@@ -165,6 +249,28 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
+    it("shouldn`t be accessible from inside of controller`s arrow method", () => {
+      const ownState = {
+        foo: {
+          bar: "foo",
+        },
+      };
+      const expected = cloneDeep(ownState);
+      function reducer(state = {}, action) {
+        return ownState;
+      }
+      class Ctl extends VALID_CLASS {
+        someMethod = () => {
+          this.ownState.foo = {};
+        };
+      }
+      const module = creator(reducer, Ctl);
+
+      module.someMethod();
+
+      expect(module.ownState).toEqual(expected);
+    });
+
     it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
       const ownState = {
@@ -178,6 +284,29 @@ describe("module.ownState", () => {
       }
       class Ctl extends VALID_CLASS {
         _stateDidUpdate() {
+          this.ownState.foo = {};
+        }
+      }
+      const module = creator(reducer, Ctl);
+
+      module.dispatch(actionCreator());
+
+      expect(module.ownState).toEqual(expected);
+    });
+
+    it("shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+      const actionCreator = getActionCreator();
+      const ownState = {
+        foo: {
+          bar: "foo",
+        },
+      };
+      const expected = cloneDeep(ownState);
+      function reducer(state = {}, action) {
+        return ownState;
+      }
+      class Ctl extends VALID_CLASS {
+        _stateDidUpdate = () => {
           this.ownState.foo = {};
         }
       }
