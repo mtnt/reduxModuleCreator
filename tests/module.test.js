@@ -90,7 +90,7 @@ describe("module", () => {
 
   it("should have access to parent`s method using 'super'", () => {
     const actionCreator = getActionCreator();
-    function reducer(state = 'initial', action) {
+    function reducer(state = "initial", action) {
       switch (action.type) {
         case actionCreator.type:
           return action.payload;
@@ -114,7 +114,7 @@ describe("module", () => {
 
     expect(someFunc).toHaveBeenCalledTimes(1);
 
-    module.dispatch(actionCreator('payload'));
+    module.dispatch(actionCreator("payload"));
 
     expect(listener).toHaveBeenCalledTimes(1);
   });

@@ -186,7 +186,7 @@ describe("module.subscribe", () => {
 
     function rootReducer(state = {}, action) {
       return {
-        "modulePath": module.integrator("modulePath")(state["modulePath"], action),
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
       };
     }
 
@@ -201,5 +201,5 @@ describe("module.subscribe", () => {
     module.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(1);
-  })
+  });
 });
