@@ -1,5 +1,6 @@
 # Attention
-The work is still in progress. Be careful to take it in your project - use exactly first downloaded version and store it`s documentation somewhere.
+The work is still in progress. Be careful to take it in your project - use exactly first downloaded version and store its documentation somewhere.
+
 An interface and the docs can be changed without some notices until the lib will get a major version.
 
 # Why?
@@ -9,7 +10,7 @@ You have been making a project with redux. You already have many modules with re
 Suddenly, you decide extend the project and restructure the state. You will need a lot of refactor: reducers, selectors, connected components...
 So, with this you don\`t have to - you\`ll need just replace `integrator` to a new place.
 
-Redux state is a group of logically related data. It is a funnel with data, where each next level of depth store less knowledge relatively his parent. And when you need this data in a controller or a component or something else, you always need to know the path in the state to get this data... With this you don\`t. Redux-module linked with his "ownState" and has an API to subscribe to it\`s changes.
+Redux state is a group of logically related data. It is a funnel with data, where each next level of depth store less knowledge relatively his parent. And when you need this data in a controller or a component or something else, you always need to know the path in the state to get this data... With this you don\`t. Redux-module linked with his "ownState" and has an API to subscribe to changes of it.
 
 # How to use
 
