@@ -1,3 +1,7 @@
+# Attention
+The work is still in progress. Be careful to take it in your project - use exactly first downloaded version and store it`s documentation somewhere.
+An interface and the docs can be changed without some notices until the lib will get a major version.
+
 # Why?
 
 Imagine that:
@@ -158,3 +162,8 @@ Links the store with created modules.
 
 ## unlinkStore()
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
+
+# Some subtleties
+* you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method
+* you will get an error if you try to set whole `ownState` property, but you won\`t if you try to change a part of it: `ownState.foo = "bar"` (NB: you still can\`t change a part of `ownState` too, just without an error)
+* when you get `ownState`, you always get a deep clone of it
