@@ -1,6 +1,7 @@
 import {cloneDeep} from "lodash";
+import {createStore as reduxCreateStore} from "redux";
 
-import {unlinkStore, RMCCtl} from "../src";
+import {unlinkStore, RMCCtl, createModule} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -11,7 +12,9 @@ const MODULE_REDUCER = () => {
 };
 
 afterEach(() => {
-  unlinkStore();
+  try {
+    unlinkStore();
+  } catch (e) {}
 });
 
 describe("module.ownState", () => {
@@ -117,13 +120,50 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           someFunc(this.ownState);
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 
       module.dispatch(actionCreator(ownState));
 
       expect(someFunc).toHaveBeenCalledWith(expected);
+    });
+
+    it("should be `undefined` before store get linked", () => {
+      const ownState = {
+        foo: "bar",
+        bar: "foo",
+      };
+      const reducer = (state = {}, action) => {
+        return ownState;
+      };
+      const module = createModule(reducer, VALID_CLASS);
+      const modulePath = "modulePath";
+
+      function rootReducer(state = {}, action) {
+        return {
+          [modulePath]: module.integrator(modulePath)(state[modulePath], action),
+        };
+      }
+
+      reduxCreateStore(rootReducer);
+
+      expect(module.ownState).toBe(undefined);
+    });
+
+    it("should be `undefined` while store is unlinked", () => {
+      const ownState = {
+        foo: "bar",
+        bar: "foo",
+      };
+      const reducer = (state = {}, action) => {
+        return ownState;
+      };
+      const module = creator(reducer, VALID_CLASS);
+
+      unlinkStore();
+
+      expect(module.ownState).toBe(undefined);
     });
   });
 
@@ -199,7 +239,7 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           this.ownState = {};
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 
@@ -308,7 +348,7 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           this.ownState.foo = {};
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 

@@ -154,6 +154,15 @@ Base class for controller.
 Protected method of a controller for reactions to changes of the state.
 Use `this.ownState` to get a current state.
 
+#### _didLinkedWithStore()
+Protected method that will be called after the controller get linked with a store (if exists).
+
+#### _didUnlinkedWithStore()
+Protected method that will be called after the controller get unlinked with a store (if exists).
+
+#### subscribe(listener)
+Subscribes to the own state changes. `listener` get `previousState` and `new state` as params.
+
 ## createStore(reducer, preloadedState, enchancer)
 Store creator. The arguments exactly as for redux.createStore.
 
@@ -163,6 +172,11 @@ Links the store with created modules.
 
 ## unlinkStore()
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
+
+> Be careful - while a store is unlinked:
+> * `ownState` is undefined
+> * `module.dispatch` cause an error
+> * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
 
 # Some subtleties
 * you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method

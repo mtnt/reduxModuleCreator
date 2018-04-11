@@ -23,7 +23,7 @@ export function unlinkStore() {
   isStoreLinked = false;
 
   for (const module of modulesList) {
-    module.deinitialize();
+    module.__deinitialize();
   }
 }
 
@@ -34,6 +34,10 @@ export class RMCCtl {
     let ownProperty;
     Object.defineProperty(this, "ownState", {
       get() {
+        if (isNil(this.__storeCtl)) {
+          return;
+        }
+
         return cloneDeep(ownProperty);
       },
       set(value) {
@@ -42,7 +46,7 @@ export class RMCCtl {
         }
 
         ownProperty = value;
-      }
+      },
     });
   }
 
@@ -60,10 +64,20 @@ export class RMCCtl {
 
       this.__stateUpdateListenerCtl(state);
     });
+
+    if (isFunction(this._didLinkedWithStore)) {
+      this._didLinkedWithStore();
+    }
   }
 
   __deinitializeCtl() {
     this.__unsubscribeStoreCtl();
+
+    this.__storeCtl = undefined;
+
+    if (isFunction(this._didUnlinkedWithStore)) {
+      this._didUnlinkedWithStore();
+    }
   }
 
   __getOwnStateCtl(outerState = this.__storeCtl.getState()) {
@@ -111,6 +125,10 @@ export class RMCCtl {
   }
 
   dispatch(action) {
+    if (isNil(this.__storeCtl)) {
+      throw new WrongInterfaceError("Can not dispatch while store is not linked");
+    }
+
     this.__storeCtl.dispatch(action);
   }
 }
@@ -121,8 +139,9 @@ const deprecatedMethodsForCtl = [
   "__pathMdl",
   "__reducerMdl",
   "__controllerMdl",
+  "__deinitialize",
 ];
-const warnMethodsForCtl = ["deinitialize", "integrator"];
+const warnMethodsForCtl = ["integrator"];
 class Module {
   constructor(reducer, CtlClass) {
     if (!isFunction(reducer)) {
@@ -168,7 +187,7 @@ class Module {
     this.__controllerMdl.__initializeCtl(store, this.__pathMdl);
   }
 
-  deinitialize() {
+  __deinitialize() {
     this.__controllerMdl.__deinitializeCtl();
   }
 
@@ -228,7 +247,7 @@ export function createModule(reducer, Controller) {
       const isPrivate = isProtected && propName[1] === "_";
 
       return (isPrivate || !isProtected) && propName in target;
-    }
+    },
   });
 
   modulesList.push(proxy);
