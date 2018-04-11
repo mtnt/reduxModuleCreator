@@ -120,7 +120,7 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           someFunc(this.ownState);
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 
@@ -239,7 +239,7 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           this.ownState = {};
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 
@@ -348,7 +348,7 @@ describe("module.ownState", () => {
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
           this.ownState.foo = {};
-        }
+        };
       }
       const module = creator(reducer, Ctl);
 

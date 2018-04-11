@@ -46,7 +46,7 @@ export class RMCCtl {
         }
 
         ownProperty = value;
-      }
+      },
     });
   }
 
@@ -247,7 +247,7 @@ export function createModule(reducer, Controller) {
       const isPrivate = isProtected && propName[1] === "_";
 
       return (isPrivate || !isProtected) && propName in target;
-    }
+    },
   });
 
   modulesList.push(proxy);
