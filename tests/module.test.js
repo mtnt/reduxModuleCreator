@@ -11,7 +11,9 @@ const MODULE_REDUCER = () => {
 };
 
 afterEach(() => {
-  unlinkStore();
+  try {
+    unlinkStore();
+  } catch (e) {}
 });
 
 describe("module", () => {
@@ -183,5 +185,33 @@ describe("module", () => {
 
     expect(result0).toBe(undefined);
     expect(result1).toBe(undefined);
+  });
+
+  it("should call controllers method `_didLinkedWithStore` on get linked", () => {
+    const testFunc = jest.fn();
+    class Ctl extends VALID_CLASS {
+      _didLinkedWithStore() {
+        testFunc();
+      }
+    }
+
+    creator(MODULE_REDUCER, Ctl);
+
+    expect(testFunc).toHaveBeenCalledTimes(1);
+  });
+
+  it("should call controllers method `_didUnlinkedWithStore` on get unlinked", () => {
+    const testFunc = jest.fn();
+    class Ctl extends VALID_CLASS {
+      _didUnlinkedWithStore() {
+        testFunc();
+      }
+    }
+
+    creator(MODULE_REDUCER, Ctl);
+
+    unlinkStore();
+
+    expect(testFunc).toHaveBeenCalledTimes(1);
   });
 });

@@ -64,12 +64,20 @@ export class RMCCtl {
 
       this.__stateUpdateListenerCtl(state);
     });
+
+    if (isFunction(this._didLinkedWithStore)) {
+      this._didLinkedWithStore();
+    }
   }
 
   __deinitializeCtl() {
     this.__unsubscribeStoreCtl();
 
     this.__storeCtl = undefined;
+
+    if (isFunction(this._didUnlinkedWithStore)) {
+      this._didUnlinkedWithStore();
+    }
   }
 
   __getOwnStateCtl(outerState = this.__storeCtl.getState()) {
