@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 describe("module.dispatch", () => {
-  it("does not affect deinitialized module", () => {
+  it("does not affect module after unlink store", () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
@@ -48,7 +48,7 @@ describe("module.dispatch", () => {
     }
     const store = createStore(rootReducer);
 
-    module.deinitialize();
+    unlinkStore();
     store.dispatch(actionCreator(payload0));
 
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);

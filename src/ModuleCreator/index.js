@@ -23,7 +23,7 @@ export function unlinkStore() {
   isStoreLinked = false;
 
   for (const module of modulesList) {
-    module.deinitialize();
+    module.__deinitialize();
   }
 }
 
@@ -131,8 +131,9 @@ const deprecatedMethodsForCtl = [
   "__pathMdl",
   "__reducerMdl",
   "__controllerMdl",
+  "__deinitialize",
 ];
-const warnMethodsForCtl = ["deinitialize", "integrator"];
+const warnMethodsForCtl = ["integrator"];
 class Module {
   constructor(reducer, CtlClass) {
     if (!isFunction(reducer)) {
@@ -178,7 +179,7 @@ class Module {
     this.__controllerMdl.__initializeCtl(store, this.__pathMdl);
   }
 
-  deinitialize() {
+  __deinitialize() {
     this.__controllerMdl.__deinitializeCtl();
   }
 
