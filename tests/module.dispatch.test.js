@@ -1,6 +1,6 @@
 import {noop} from "lodash";
 
-import {unlinkStore, RMCCtl} from "../src";
+import {createStore, unlinkStore, RMCCtl, createModule} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const payload0 = {
@@ -14,9 +14,12 @@ const payload1 = {
 const initialData = {
   name: "initial",
 };
+const VALID_CLASS = class SCtl extends RMCCtl {};
 
 afterEach(() => {
-  unlinkStore();
+  try {
+    unlinkStore();
+  } catch (e) {}
 });
 
 describe("module.dispatch", () => {
@@ -37,10 +40,16 @@ describe("module.dispatch", () => {
         stateDidUpdate(...args);
       }
     }
-    const module = creator(reducer, Ctl);
+    const module = createModule(reducer, Ctl);
+    function rootReducer(state = {}, action) {
+      return {
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
+      };
+    }
+    const store = createStore(rootReducer);
 
     module.deinitialize();
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
@@ -158,5 +167,25 @@ describe("module.dispatch", () => {
 
     // should not call `stateDidUpdate` at all
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
+  });
+
+  it("should throw an error while store is unlinked", () => {
+    const actionCreator = getActionCreator();
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    const module = creator(reducer, VALID_CLASS);
+
+    unlinkStore();
+
+    expect(() => {
+      module.dispatch(actionCreator(payload0));
+    }).toThrow();
   });
 });

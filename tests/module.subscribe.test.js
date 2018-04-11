@@ -22,7 +22,9 @@ const MODULE_REDUCER = () => {
 };
 
 afterEach(() => {
-  unlinkStore();
+  try {
+    unlinkStore();
+  } catch (e) {}
 });
 
 describe("module.subscribe", () => {
@@ -167,6 +169,34 @@ describe("module.subscribe", () => {
 
     unsubscriber();
     module.dispatch(actionCreator(payload0));
+
+    expect(listener).toHaveBeenCalledTimes(0);
+  });
+
+  it("should not call listener after unlink store", () => {
+    const actionCreator = getActionCreator();
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    const module = createModule(reducer, VALID_CLASS);
+    function rootReducer(state = {}, action) {
+      return {
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
+      };
+    }
+    const store = createStore(rootReducer);
+    const listener = jest.fn();
+    module.subscribe(listener);
+
+    unlinkStore();
+
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(0);
   });

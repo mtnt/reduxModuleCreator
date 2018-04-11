@@ -34,6 +34,10 @@ export class RMCCtl {
     let ownProperty;
     Object.defineProperty(this, "ownState", {
       get() {
+        if (isNil(this.__storeCtl)) {
+          return;
+        }
+
         return cloneDeep(ownProperty);
       },
       set(value) {
@@ -64,6 +68,8 @@ export class RMCCtl {
 
   __deinitializeCtl() {
     this.__unsubscribeStoreCtl();
+
+    this.__storeCtl = undefined;
   }
 
   __getOwnStateCtl(outerState = this.__storeCtl.getState()) {
@@ -111,6 +117,10 @@ export class RMCCtl {
   }
 
   dispatch(action) {
+    if (isNil(this.__storeCtl)) {
+      throw new WrongInterfaceError("Can not dispatch while store is not linked");
+    }
+
     this.__storeCtl.dispatch(action);
   }
 }
