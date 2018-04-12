@@ -141,12 +141,6 @@ Integrate your module into reducers tree.
 #### dispatch(action)
 Dispatch an action to the store.
 
-#### subscribe(listener)
-Subscribe to the own state changes.
-- `listener` is a function that gets `prevState` and `currentState` parameters.
-
-Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
-
 ## RMCCtl
 Base class for controller.
 
@@ -161,7 +155,10 @@ Protected method that will be called after the controller get linked with a stor
 Protected method that will be called after the controller get unlinked with a store (if exists).
 
 #### subscribe(listener)
-Subscribes to the own state changes. `listener` get `previousState` and `new state` as params.
+Subscribe to the own state changes.
+- `listener` is a function that gets `prevState` and `currentState` parameters.
+
+Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
 
 ## createStore(reducer, preloadedState, enchancer)
 Store creator. The arguments exactly as for redux.createStore.
