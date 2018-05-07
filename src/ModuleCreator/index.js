@@ -101,7 +101,11 @@ export class RMCCtl {
 
     this.__setOwnStateCtl(ownState);
 
-    if (isFunction(this._stateDidUpdate) && !isEqual(ownState, prevOwnState)) {
+    if (isEqual(ownState, prevOwnState)) {
+      return;
+    }
+
+    if (isFunction(this._stateDidUpdate)) {
       this._stateDidUpdate(prevOwnState);
     }
 
