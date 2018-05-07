@@ -232,4 +232,33 @@ describe("module.subscribe", () => {
 
     expect(listener).toHaveBeenCalledTimes(1);
   });
+
+  it("should not call listener if state is not actually changed", () => {
+    const actionCreator = getActionCreator();
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    const module = createModule(reducer, VALID_CLASS);
+
+    function rootReducer(state = {}, action) {
+      return {
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
+      };
+    }
+
+    const store = createStore(rootReducer);
+    const listener = jest.fn();
+
+    module.subscribe(listener);
+
+    module.dispatch(actionCreator(initialData));
+
+    expect(listener).toHaveBeenCalledTimes(0);
+  });
 });
