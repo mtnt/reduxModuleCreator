@@ -160,6 +160,11 @@ Subscribe to the own state changes.
 
 Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
 
+## combineReducers({path: Module, anotherPath: reducer})
+Turns an object whose values are different reducing functions or modules into a single reducing function you can pass to createStore.
+
+>For modules it will call the `module.integrator` function and pass the module `path` into the integrator result reducer as third param.
+
 ## createStore(reducer, preloadedState, enchancer)
 Store creator. The arguments exactly as for redux.createStore.
 
@@ -167,7 +172,8 @@ Store creator. The arguments exactly as for redux.createStore.
 Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
-## unlinkStore()
+
+## unlinkStore() \[DEPRECATED\]
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
 
 > Be careful - while a store is unlinked:
