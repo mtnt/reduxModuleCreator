@@ -160,6 +160,11 @@ Subscribe to the own state changes.
 
 Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
 
+## combineReducers({path: Module, anotherPath: reducer})
+Turns an object whose values are different reducing functions or modules into a single reducing function you can pass to createStore.
+
+>For modules it will call the `module.integrator` function and pass the module `path` into the integrator result reducer as third param.
+
 ## createStore(reducer, preloadedState, enchancer)
 Store creator. The arguments exactly as for redux.createStore.
 
