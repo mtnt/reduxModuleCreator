@@ -16,10 +16,17 @@ export function linkStore(globalStore) {
 }
 
 export function unlinkStore() {
-  if (process.env.NODE_ENV === "production") {
-    const msg = "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
-      " dependency breaks";
-    throw new WrongInterfaceError(msg);
+  switch (process.env.NODE_ENV) {
+    case "production": {
+      const msg = "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
+        " dependency breaks";
+
+      throw new WrongInterfaceError(msg);
+    }
+
+    case "development": {
+      console.warn("The deprecated method unlinkStore was called. It will cause an exception in production mode.");
+    }
   }
 
   if (!isStoreLinked) {
