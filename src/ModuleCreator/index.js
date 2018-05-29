@@ -16,6 +16,12 @@ export function linkStore(globalStore) {
 }
 
 export function unlinkStore() {
+  if (process.env.NODE_ENV === "production") {
+    const msg = "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
+      " dependency breaks";
+    throw new WrongInterfaceError(msg);
+  }
+
   if (!isStoreLinked) {
     throw new InsufficientDataError("Attempt to unlink not linked store");
   }

@@ -172,7 +172,8 @@ Store creator. The arguments exactly as for redux.createStore.
 Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
-## unlinkStore()
+
+## unlinkStore() \[DEPRECATED\]
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
 
 > Be careful - while a store is unlinked:
