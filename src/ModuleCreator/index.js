@@ -67,7 +67,7 @@ export class RMCCtl {
       this.actions[actionName] = (...args) => {
         const action = creator(...args);
 
-        this.dispatch(action);
+        this.__dispatch(action);
       };
       this.actions[actionName].type = type;
     });
@@ -141,6 +141,14 @@ export class RMCCtl {
     this.__stateChangeListeners.delete(listener);
   }
 
+  __dispatch(action) {
+    if (isNil(this.__storeCtl)) {
+      throw new WrongInterfaceError("Can not dispatch while store is not linked");
+    }
+
+    this.__storeCtl.dispatch(action);
+  }
+
   subscribe(listener) {
     if (!isFunction(listener)) {
       throw new InvalidParamsError("Attempt to subscribe, but listener is not a function");
@@ -149,14 +157,6 @@ export class RMCCtl {
     this.__stateChangeListeners.add(listener);
 
     return this.__unsubscribeCtl.bind(this, listener);
-  }
-
-  dispatch(action) {
-    if (isNil(this.__storeCtl)) {
-      throw new WrongInterfaceError("Can not dispatch while store is not linked");
-    }
-
-    this.__storeCtl.dispatch(action);
   }
 }
 

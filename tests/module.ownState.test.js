@@ -1,7 +1,7 @@
 import {cloneDeep} from "lodash";
 import {createStore as reduxCreateStore} from "redux";
 
-import {unlinkStore, RMCCtl, createModule} from "../src";
+import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -93,9 +93,12 @@ describe("module.ownState", () => {
           someFunc(this.ownState);
         }
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
 
-      module.dispatch(actionCreator(ownState));
+      const store = createStore(rootReducer);
+
+      store.dispatch(actionCreator(ownState));
 
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
@@ -122,9 +125,12 @@ describe("module.ownState", () => {
           someFunc(this.ownState);
         };
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
 
-      module.dispatch(actionCreator(ownState));
+      const store = createStore(rootReducer);
+
+      store.dispatch(actionCreator(ownState));
 
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
@@ -218,10 +224,13 @@ describe("module.ownState", () => {
           this.ownState = {};
         }
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
+
+      const store = createStore(rootReducer);
 
       expect(() => {
-        module.dispatch(actionCreator());
+        store.dispatch(actionCreator());
       }).toThrow();
     });
 
@@ -241,10 +250,13 @@ describe("module.ownState", () => {
           this.ownState = {};
         };
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
+
+      const store = createStore(rootReducer);
 
       expect(() => {
-        module.dispatch(actionCreator());
+        store.dispatch(actionCreator());
       }).toThrow();
     });
   });
@@ -327,9 +339,12 @@ describe("module.ownState", () => {
           this.ownState.foo = {};
         }
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
 
-      module.dispatch(actionCreator());
+      const store = createStore(rootReducer);
+
+      store.dispatch(actionCreator(ownState));
 
       expect(module.ownState).toEqual(expected);
     });
@@ -350,9 +365,12 @@ describe("module.ownState", () => {
           this.ownState.foo = {};
         };
       }
-      const module = creator(reducer, Ctl);
+      const module = createModule(reducer, Ctl);
+      const rootReducer = combineReducers({testPath: module});
 
-      module.dispatch(actionCreator());
+      const store = createStore(rootReducer);
+
+      store.dispatch(actionCreator(ownState));
 
       expect(module.ownState).toEqual(expected);
     });

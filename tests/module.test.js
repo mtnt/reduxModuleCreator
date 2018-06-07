@@ -1,6 +1,6 @@
 import {noop} from "lodash";
 
-import {unlinkStore, RMCCtl, createModule} from "../src";
+import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -143,7 +143,9 @@ describe("module", () => {
         super.subscribe(listener);
       }
     }
-    const module = creator(reducer, Ctl);
+    const module = createModule(reducer, Ctl);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
 
     module.subscribe(listener0);
     module.arrowSubscribe(listener1);
@@ -151,7 +153,7 @@ describe("module", () => {
     expect(someFunc0).toHaveBeenCalledTimes(1);
     expect(someFunc1).toHaveBeenCalledTimes(1);
 
-    module.dispatch(actionCreator("payload"));
+    store.dispatch(actionCreator("payload"));
 
     expect(listener0).toHaveBeenCalledTimes(1);
     expect(listener1).toHaveBeenCalledTimes(1);

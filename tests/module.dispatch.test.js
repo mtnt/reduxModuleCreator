@@ -1,7 +1,7 @@
 import {noop} from "lodash";
 
 import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
-import {getActionCreator, creator} from "./helpers";
+import {getActionCreator} from "./helpers";
 
 const payload0 = {
   name: "payload0",
@@ -111,9 +111,13 @@ describe("module.dispatch", () => {
         stateDidUpdate(...args);
       }
     }
-    const module = creator(reducer, Ctl);
 
-    module.dispatch(actionCreator1(payload1));
+    const module = createModule(reducer, Ctl);
+    const rootReducer = combineReducers({testPath: module});
+
+    const store = createStore(rootReducer);
+
+    store.dispatch(actionCreator1(payload1));
 
     // should not call `stateDidUpdate` at all
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
