@@ -261,4 +261,35 @@ describe("module.subscribe", () => {
 
     expect(listener).toHaveBeenCalledTimes(0);
   });
+
+  it("actions does not affects module after unlink store", () => {
+    const stateDidUpdate = jest.fn();
+    const actionCreator = getActionCreator();
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    class Ctl extends RMCCtl {
+      _stateDidUpdate(...args) {
+        stateDidUpdate(...args);
+      }
+    }
+    const module = createModule(reducer, Ctl);
+    function rootReducer(state = {}, action) {
+      return {
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
+      };
+    }
+    const store = createStore(rootReducer);
+
+    unlinkStore();
+    store.dispatch(actionCreator(payload0));
+
+    expect(stateDidUpdate).toHaveBeenCalledTimes(0);
+  });
 });

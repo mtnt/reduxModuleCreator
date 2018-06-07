@@ -1,6 +1,6 @@
 import {noop} from "lodash";
 
-import {createStore, unlinkStore, RMCCtl, createModule} from "../src";
+import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const payload0 = {
@@ -15,6 +15,11 @@ const initialData = {
   name: "initial",
 };
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const MODULE_REDUCER = () => {
+  return {
+    name: "initial",
+  };
+};
 
 afterEach(() => {
   try {
@@ -23,124 +28,69 @@ afterEach(() => {
 });
 
 describe("module.dispatch", () => {
-  it("does not affect module after unlink store", () => {
-    const stateDidUpdate = jest.fn();
+  it("called single time", () => {
     const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
 
-        default:
-          return state;
-      }
-    }
-    class Ctl extends RMCCtl {
-      _stateDidUpdate(...args) {
-        stateDidUpdate(...args);
-      }
-    }
-    const module = createModule(reducer, Ctl);
-    function rootReducer(state = {}, action) {
-      return {
-        modulePath: module.integrator("modulePath")(state.modulePath, action),
-      };
-    }
+    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const rootReducer = combineReducers({testPath: module});
     const store = createStore(rootReducer);
 
-    unlinkStore();
-    store.dispatch(actionCreator(payload0));
+    const dispatchSpy = jest.spyOn(store, "dispatch");
 
-    expect(stateDidUpdate).toHaveBeenCalledTimes(0);
-  });
+    module.actions.action();
 
-  it("called single time", () => {
-    const stateDidUpdate = jest.fn();
-    const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
-
-        default:
-          return state;
-      }
-    }
-    class Ctl extends RMCCtl {
-      _stateDidUpdate(...args) {
-        stateDidUpdate(...args);
-      }
-    }
-    const module = creator(reducer, Ctl);
-
-    module.dispatch(actionCreator(payload0));
-
-    // should call `_stateDidUpdate`
-    expect(stateDidUpdate).toHaveBeenCalledTimes(1);
-
-    // should call `_stateDidUpdate` with previousState
-    expect(stateDidUpdate).toHaveBeenCalledWith(initialData);
-
-    // should change own state property to new state
-    expect(module.ownState).toEqual(payload0);
+    expect(dispatchSpy).toHaveBeenCalledTimes(1);
   });
 
   it("called several times with a same action but different payloads", () => {
-    const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
 
-        default:
-          return state;
-      }
-    }
-    class Ctl extends RMCCtl {
-      _stateDidUpdate(...args) {
-        stateDidUpdate(...args);
-      }
-    }
-    const module = creator(reducer, Ctl);
+    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
 
-    module.dispatch(actionCreator(payload0));
-    module.dispatch(actionCreator(payload1));
+    const dispatchSpy = jest.spyOn(store, "dispatch");
 
-    // should call `stateDidUpdate` each time
-    expect(stateDidUpdate).toHaveBeenCalledTimes(2);
+    module.actions.action(payload0);
 
-    // should call `stateDidUpdate` with a result of handling a last action
-    expect(stateDidUpdate).toHaveBeenLastCalledWith(payload0); // previous state
+    expect(dispatchSpy).toHaveBeenCalledTimes(1);
+    expect(dispatchSpy).toHaveBeenLastCalledWith({
+      type: module.actions.action.type,
+      payload: payload0,
+    });
 
-    // should change own state property a result of handling a last action
-    expect(module.ownState).toEqual(payload1);
+    module.actions.action(payload1);
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(2);
+    expect(dispatchSpy).toHaveBeenLastCalledWith({
+      type: module.actions.action.type,
+      payload: payload1,
+    });
   });
 
   it("called several times with totally same actions including payloads", () => {
-    const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
 
-        default:
-          return state;
-      }
-    }
-    class Ctl extends RMCCtl {
-      _stateDidUpdate(...args) {
-        stateDidUpdate(...args);
-      }
-    }
-    const module = creator(reducer, Ctl);
+    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
 
-    module.dispatch(actionCreator(payload0));
-    module.dispatch(actionCreator(payload0));
+    const dispatchSpy = jest.spyOn(store, "dispatch");
 
-    // should call `stateDidUpdate` just single time
-    expect(stateDidUpdate).toHaveBeenCalledTimes(1);
+    module.actions.action(payload0);
+    module.actions.action(payload0);
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(2);
+    expect(dispatchSpy).toHaveBeenLastCalledWith({
+      type: module.actions.action.type,
+      payload: payload0,
+    });
   });
 
   it("called with an action that shouldn`t affect module`s state", () => {
@@ -171,21 +121,18 @@ describe("module.dispatch", () => {
 
   it("should throw an error while store is unlinked", () => {
     const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
 
-        default:
-          return state;
-      }
-    }
-    const module = creator(reducer, VALID_CLASS);
+    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const rootReducer = combineReducers({testPath: module});
+
+    createStore(rootReducer);
 
     unlinkStore();
 
     expect(() => {
-      module.dispatch(actionCreator(payload0));
+      module.actions.action(payload0);
     }).toThrow();
   });
 });
