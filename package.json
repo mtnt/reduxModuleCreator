@@ -31,8 +31,8 @@
     "babel-jest": "23.0.1",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-preset-env": "1.7.0",
-    "jest": "23.0.1",
-    "prettier": "1.13.2",
+    "jest": "23.1.0",
+    "prettier": "1.13.4",
     "unit-tests-values-iterators": "0.2.1"
   }
 }
