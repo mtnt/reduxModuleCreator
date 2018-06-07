@@ -128,18 +128,25 @@ sampleModule.getSomeOwnData();
 
 # API reference
 
-## createModule(reducer, CtlClass)
+## createModule(reducer, CtlClass, actions) or createModule({reducer, actions, Ctl})
 Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store
+- `actions` is optional map of modules own actions
+  - key is an actionCreator name
+  - value is a map `{creator: actionCreator, type: actionType}`
 - `CtlClass` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
 
 Returns `module`:
 #### integrator(path)
 Integrate your module into reducers tree.
-- `path` is a path to module\`s data in a state. It can be dot separated string like `some.module.path` or array of strings - `['some', 'module', 'path']`. It\`s important to path full path (from a root)
+- `path` is a path to module\`s data in a state. It can be dot separated string like `some.module.path` or array of strings - `['some', 'module', 'path']`. It\`s important to pass full path (from a root).
 
-#### dispatch(action)
-Dispatch an action to the store.
+#### actions
+It\`s a map of actions.
+You can dispatch an action by `module.actions.actionName(params)`.
+And you can get the action type by `module.actions.actionName.type`.
+
+>NB: Do not rely to equality of `module.actions.actionName.type` and the type you did pass into the actions map while creating a module. It can be different in module reusability purpose.
 
 ## RMCCtl
 Base class for controller.
@@ -178,7 +185,7 @@ Breaks the links between a store and modules. Call it before `linkStore` when yo
 
 > Be careful - while a store is unlinked:
 > * `ownState` is undefined
-> * `module.dispatch` cause an error
+> * `module.actions.actionName()` cause an error
 > * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
 
 # Some subtleties

@@ -1,7 +1,7 @@
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 import {noop} from "lodash";
 
-import {linkStore, unlinkStore, createStore, RMCCtl, createModule} from "../src";
+import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from "../src";
 import {getActionCreator, creator} from "./helpers";
 
 const payload0 = {
@@ -71,11 +71,14 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = creator(reducer, VALID_CLASS);
+
+    const module = createModule(reducer, VALID_CLASS);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
     const listener = jest.fn();
 
     module.subscribe(listener);
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(1);
   });
@@ -91,12 +94,14 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = creator(reducer, VALID_CLASS);
+    const module = createModule(reducer, VALID_CLASS);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
     const listener = jest.fn();
 
     module.subscribe(listener);
     module.subscribe(listener);
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(1);
   });
@@ -112,13 +117,15 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = creator(reducer, VALID_CLASS);
+    const module = createModule(reducer, VALID_CLASS);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
     const listener0 = jest.fn();
     const listener1 = jest.fn();
 
     module.subscribe(listener0);
     module.subscribe(listener1);
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener0).toHaveBeenCalledTimes(1);
     expect(listener1).toHaveBeenCalledTimes(1);
@@ -135,11 +142,13 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = creator(reducer, VALID_CLASS);
+    const module = createModule(reducer, VALID_CLASS);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
     const listener = jest.fn();
 
     module.subscribe(listener);
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledWith(initialData, payload0);
   });
@@ -163,12 +172,14 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = creator(reducer, VALID_CLASS);
+    const module = createModule(reducer, VALID_CLASS);
+    const rootReducer = combineReducers({testPath: module});
+    const store = createStore(rootReducer);
     const listener = jest.fn();
     const unsubscriber = module.subscribe(listener);
 
     unsubscriber();
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(0);
   });
@@ -228,7 +239,7 @@ describe("module.subscribe", () => {
     unlinkStore();
     linkStore(store);
 
-    module.dispatch(actionCreator(payload0));
+    store.dispatch(actionCreator(payload0));
 
     expect(listener).toHaveBeenCalledTimes(1);
   });
@@ -257,8 +268,39 @@ describe("module.subscribe", () => {
 
     module.subscribe(listener);
 
-    module.dispatch(actionCreator(initialData));
+    store.dispatch(actionCreator(initialData));
 
     expect(listener).toHaveBeenCalledTimes(0);
+  });
+
+  it("actions does not affects module after unlink store", () => {
+    const stateDidUpdate = jest.fn();
+    const actionCreator = getActionCreator();
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case actionCreator.type:
+          return action.payload;
+
+        default:
+          return state;
+      }
+    }
+    class Ctl extends RMCCtl {
+      _stateDidUpdate(...args) {
+        stateDidUpdate(...args);
+      }
+    }
+    const module = createModule(reducer, Ctl);
+    function rootReducer(state = {}, action) {
+      return {
+        modulePath: module.integrator("modulePath")(state.modulePath, action),
+      };
+    }
+    const store = createStore(rootReducer);
+
+    unlinkStore();
+    store.dispatch(actionCreator(payload0));
+
+    expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 });

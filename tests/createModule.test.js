@@ -1,14 +1,34 @@
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 
+import {getActionCreator} from "./helpers";
+
 import {createStore, unlinkStore, createModule, RMCCtl} from "../src";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const MODULE_REDUCER = () => {
+  return {
+    name: "initial",
+  };
+};
 
 describe("createModule", () => {
   afterEach(() => {
     try {
       unlinkStore();
     } catch (e) {}
+  });
+
+  it("should get arguments as a list or an object", () => {
+    const actionCreator = getActionCreator();
+
+    const module0 = createModule(MODULE_REDUCER, VALID_CLASS, {action0: {creator: actionCreator, type: actionCreator.type}});
+    const module1 = createModule({
+      reducer: MODULE_REDUCER,
+      Ctl: VALID_CLASS,
+      actions: {action0: {creator: actionCreator, type: actionCreator.type}},
+    });
+
+    expect(JSON.stringify(module0)).toEqual(JSON.stringify(module1));
   });
 
   testAllValues(
@@ -29,6 +49,14 @@ describe("createModule", () => {
       }).toThrow();
     });
   });
+
+  testAllValues((actions, type) => {
+    it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
+      expect(() => {
+        createModule(MODULE_REDUCER, VALID_CLASS, actions);
+      }).toThrow();
+    });
+  }, {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.UNDEFINED]});
 
   it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
     class Ctl extends RMCCtl {}

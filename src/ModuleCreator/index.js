@@ -1,4 +1,4 @@
-import {get, cloneDeep, isNil, isFunction, isString, isArray, isEqual, isEmpty} from "lodash";
+import {get, cloneDeep, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach} from "lodash";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -41,7 +41,7 @@ export function unlinkStore() {
 }
 
 export class RMCCtl {
-  constructor() {
+  constructor(actions) {
     this.__writable = false;
 
     let ownProperty;
@@ -60,6 +60,16 @@ export class RMCCtl {
 
         ownProperty = value;
       },
+    });
+
+    this.actions = {};
+    forEach(actions, ({creator, type}, actionName) => {
+      this.actions[actionName] = (...args) => {
+        const action = creator(...args);
+
+        this.__dispatch(action);
+      };
+      this.actions[actionName].type = type;
     });
   }
 
@@ -131,6 +141,14 @@ export class RMCCtl {
     this.__stateChangeListeners.delete(listener);
   }
 
+  __dispatch(action) {
+    if (isNil(this.__storeCtl)) {
+      throw new WrongInterfaceError("Can not dispatch while store is not linked");
+    }
+
+    this.__storeCtl.dispatch(action);
+  }
+
   subscribe(listener) {
     if (!isFunction(listener)) {
       throw new InvalidParamsError("Attempt to subscribe, but listener is not a function");
@@ -139,14 +157,6 @@ export class RMCCtl {
     this.__stateChangeListeners.add(listener);
 
     return this.__unsubscribeCtl.bind(this, listener);
-  }
-
-  dispatch(action) {
-    if (isNil(this.__storeCtl)) {
-      throw new WrongInterfaceError("Can not dispatch while store is not linked");
-    }
-
-    this.__storeCtl.dispatch(action);
   }
 }
 
@@ -160,12 +170,27 @@ const deprecatedMethodsForCtl = [
 ];
 const warnMethodsForCtl = ["integrator"];
 class Module {
-  constructor(reducer, CtlClass) {
+  constructor(reducer, actions, CtlClass) {
     if (!isFunction(reducer)) {
       const msg = "Attempt to create a module, but reducer is not a function";
 
       throw new InvalidParamsError(msg);
     }
+
+    if (!isPlainObject(actions)) {
+      const msg = "Attempt to create a module, but actions is not an object";
+
+      throw new InvalidParamsError(msg);
+    }
+
+    forEach(actions, ({creator, type}, actionName) => {
+      if (!isFunction(creator)) {
+        throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
+      }
+      if (!isString(type)) {
+        throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
+      }
+    });
 
     if (!(CtlClass.prototype instanceof RMCCtl)) {
       const msg = `Attempt to create a module with a wrong ctl class "${CtlClass.name}"`;
@@ -175,7 +200,7 @@ class Module {
 
     this.__pathMdl = undefined;
     this.__reducerMdl = reducer;
-    this.__controllerMdl = new CtlClass();
+    this.__controllerMdl = new CtlClass(actions);
 
     this.__validateControllerMdl(this.__controllerMdl);
   }
@@ -232,8 +257,22 @@ class Module {
 
 const modulesList = [];
 
-export function createModule(reducer, Controller) {
-  const module = new Module(reducer, Controller);
+export function createModule(reducerArg, ControllerArg, actionsArg = {}) {
+  let reducer;
+  let actions;
+  let Controller;
+
+  if (isPlainObject(reducerArg)) {
+    reducer = reducerArg.reducer;
+    actions = get(reducerArg, "actions", {});
+    Controller = reducerArg.Ctl;
+  } else {
+    reducer = reducerArg;
+    actions = actionsArg;
+    Controller = ControllerArg;
+  }
+
+  const module = new Module(reducer, actions, Controller);
 
   const proxy = new Proxy(module, {
     get(target, propName) {
