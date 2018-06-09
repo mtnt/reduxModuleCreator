@@ -144,9 +144,9 @@ Integrate your module into reducers tree.
 #### actions
 It\`s a map of actions.
 You can dispatch an action by `module.actions.actionName(params)`.
-And you can get the action type by `module.actions.actionName.type`.
+And you can get the action type by `module.actions.actionName.actionType`.
 
->NB: Do not rely to equality of `module.actions.actionName.type` and the type you did pass into the actions map while creating a module. It can be different in module reusability purpose.
+>NB: Do not rely to equality of `module.actions.actionName.actionType` and the type you did pass into the actions map while creating a module. It can be different in module reusability purpose.
 
 ## RMCCtl
 Base class for controller.
