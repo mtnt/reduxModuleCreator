@@ -69,7 +69,7 @@ export class RMCCtl {
 
         this.__dispatch(action);
       };
-      this.actions[actionName].type = type;
+      this.actions[actionName].actionType = type;
     });
   }
 
