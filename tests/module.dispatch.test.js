@@ -59,7 +59,7 @@ describe("module.dispatch", () => {
 
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
     expect(dispatchSpy).toHaveBeenLastCalledWith({
-      type: module.actions.action.type,
+      type: module.actions.action.actionType,
       payload: payload0,
     });
 
@@ -67,7 +67,7 @@ describe("module.dispatch", () => {
 
     expect(dispatchSpy).toHaveBeenCalledTimes(2);
     expect(dispatchSpy).toHaveBeenLastCalledWith({
-      type: module.actions.action.type,
+      type: module.actions.action.actionType,
       payload: payload1,
     });
   });
@@ -88,7 +88,7 @@ describe("module.dispatch", () => {
 
     expect(dispatchSpy).toHaveBeenCalledTimes(2);
     expect(dispatchSpy).toHaveBeenLastCalledWith({
-      type: module.actions.action.type,
+      type: module.actions.action.actionType,
       payload: payload0,
     });
   });
