@@ -189,6 +189,6 @@ Breaks the links between a store and modules. Call it before `linkStore` when yo
 > * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
 
 # Some subtleties
-* you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method
-* you will get an error if you try to set whole `ownState` property, but you won\`t if you try to change a part of it: `ownState.foo = "bar"` (NB: you still can\`t change a part of `ownState` too, just without an error)
-* when you get `ownState`, you always get a deep clone of it
+* you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method by using `this`
+* yuo must be MUCH CAREFUL with operating `ownState` - it is a ref to a part of the state and changing it you change the state
+* you will get an error if you try to set whole `ownState` property, but you have an ability to change a part of it: `ownState.foo = "bar"`
