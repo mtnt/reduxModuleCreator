@@ -1,4 +1,4 @@
-import {get, cloneDeep, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach} from "lodash";
+import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach} from "lodash";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -51,7 +51,7 @@ export class RMCCtl {
           return;
         }
 
-        return cloneDeep(ownProperty);
+        return ownProperty;
       },
       set(value) {
         if (!this.__writable) {

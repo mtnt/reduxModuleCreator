@@ -1,4 +1,5 @@
 import {createStore, unlinkStore, RMCCtl, createModule} from "../src";
+import {getUniquePath} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const INVALID_CLASS = class SCtl extends RMCCtl {}; // there is no option to make class invalid (yet)
@@ -26,7 +27,7 @@ describe("createStore", () => {
     expect(() => {
       const module = createModule(() => {}, VALID_CLASS);
 
-      const modulePath = "modulePath";
+      const modulePath = getUniquePath();
       function rootReducer(state = {}, action) {
         return {
           [modulePath]: module.integrator(modulePath)(state[modulePath], action),

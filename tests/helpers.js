@@ -17,7 +17,7 @@ export function getActionCreator() {
   return actionCreator;
 }
 
-export function creator(reducer, ctl, modulePath = "modulePath") {
+export function creator(reducer, ctl, modulePath = getUniquePath()) {
   const module = createModule(reducer, ctl);
 
   function rootReducer(state = {}, action) {
@@ -29,4 +29,8 @@ export function creator(reducer, ctl, modulePath = "modulePath") {
   createStore(rootReducer);
 
   return module;
+}
+
+export function getUniquePath() {
+  return uniqueId("modulePath");
 }

@@ -2,7 +2,7 @@ import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 import {noop} from "lodash";
 
 import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from "../src";
-import {getActionCreator, creator} from "./helpers";
+import {getActionCreator, creator, getUniquePath} from "./helpers";
 
 const payload0 = {
   name: "payload0",
@@ -73,7 +73,7 @@ describe("module.subscribe", () => {
     }
 
     const module = createModule(reducer, VALID_CLASS);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -95,7 +95,7 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -118,7 +118,7 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener0 = jest.fn();
     const listener1 = jest.fn();
@@ -143,7 +143,7 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -173,7 +173,7 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
     const unsubscriber = module.subscribe(listener);
@@ -196,9 +196,10 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
+    const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
-        modulePath: module.integrator("modulePath")(state.modulePath, action),
+        [modulePath]: module.integrator(modulePath)(state[modulePath], action),
       };
     }
     const store = createStore(rootReducer);
@@ -224,10 +225,11 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
+    const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
       return {
-        modulePath: module.integrator("modulePath")(state.modulePath, action),
+        [modulePath]: module.integrator(modulePath)(state[modulePath], action),
       };
     }
 
@@ -256,10 +258,11 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, VALID_CLASS);
+    const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
       return {
-        modulePath: module.integrator("modulePath")(state.modulePath, action),
+        [modulePath]: module.integrator(modulePath)(state[modulePath], action),
       };
     }
 
@@ -291,9 +294,10 @@ describe("module.subscribe", () => {
       }
     }
     const module = createModule(reducer, Ctl);
+    const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
-        modulePath: module.integrator("modulePath")(state.modulePath, action),
+        [modulePath]: module.integrator(modulePath)(state[modulePath], action),
       };
     }
     const store = createStore(rootReducer);
