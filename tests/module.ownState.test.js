@@ -2,7 +2,7 @@ import {cloneDeep} from "lodash";
 import {createStore as reduxCreateStore} from "redux";
 
 import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
-import {getActionCreator, creator} from "./helpers";
+import {getActionCreator, creator, getUniquePath} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -325,53 +325,87 @@ describe("module.ownState", () => {
 
     it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
-      const ownState = {
+      const initialState = {
         foo: {
           bar: "foo",
         },
       };
-      const expected = cloneDeep(ownState);
-      function reducer(state = {}, action) {
-        return ownState;
+      const nextFoo = {};
+      const expected = {
+        foo: nextFoo,
+      };
+      function reducer(state = initialState, action) {
+        switch(action.type) {
+          case actionCreator.type: {
+            return {
+              ...state,
+              foo: action.payload,
+            };
+          }
+
+          default:
+            return state;
+        }
       }
+      const fn = jest.fn();
       class Ctl extends VALID_CLASS {
         _stateDidUpdate() {
-          this.ownState.foo = {};
+          fn();
+
+          this.ownState.foo = "wrong value";
         }
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
-      store.dispatch(actionCreator(ownState));
+      store.dispatch(actionCreator(nextFoo));
 
+      expect(fn).toHaveBeenCalledTimes(1);
       expect(module.ownState).toEqual(expected);
     });
 
     it("shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method", () => {
       const actionCreator = getActionCreator();
-      const ownState = {
+      const initialState = {
         foo: {
           bar: "foo",
         },
       };
-      const expected = cloneDeep(ownState);
-      function reducer(state = {}, action) {
-        return ownState;
+      const nextFoo = {};
+      const expected = {
+        foo: nextFoo,
+      };
+      function reducer(state = initialState, action) {
+        switch(action.type) {
+          case actionCreator.type: {
+            return {
+              ...state,
+              foo: action.payload,
+            };
+          }
+
+          default:
+            return state;
+        }
       }
+      const fn = jest.fn();
       class Ctl extends VALID_CLASS {
         _stateDidUpdate = () => {
-          this.ownState.foo = {};
+          fn();
+
+          this.ownState.foo = "wrong value";
         };
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
-      store.dispatch(actionCreator(ownState));
+      store.dispatch(actionCreator(nextFoo));
 
+      expect(fn).toHaveBeenCalledTimes(1);
       expect(module.ownState).toEqual(expected);
     });
   });
