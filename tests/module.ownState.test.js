@@ -262,36 +262,42 @@ describe("module.ownState", () => {
   });
 
   describe("for setting a part of the state", () => {
-    it("shouldn`t be accessible from outside", () => {
+    it("should be accessible from outside", () => {
       const ownState = {
         foo: {
           bar: "foo",
         },
       };
-      const expected = cloneDeep(ownState);
+      const nextFoo = "nextFoo";
+      const expected = {
+        foo: nextFoo,
+      };
       function reducer(state = {}, action) {
         return ownState;
       }
       const module = creator(reducer, VALID_CLASS);
 
-      module.ownState.foo = {};
+      module.ownState.foo = nextFoo;
 
       expect(module.ownState).toEqual(expected);
     });
 
-    it("shouldn`t be accessible from inside of controller`s method", () => {
+    it("should be accessible from inside of controller`s method", () => {
       const ownState = {
         foo: {
           bar: "foo",
         },
       };
-      const expected = cloneDeep(ownState);
+      const nextFoo = "nextFoo";
+      const expected = {
+        foo: nextFoo,
+      };
       function reducer(state = {}, action) {
         return ownState;
       }
       class Ctl extends VALID_CLASS {
         someMethod() {
-          this.ownState.foo = {};
+          this.ownState.foo = nextFoo;
         }
       }
       const module = creator(reducer, Ctl);
@@ -301,19 +307,22 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("shouldn`t be accessible from inside of controller`s arrow method", () => {
+    it("should be accessible from inside of controller`s arrow method", () => {
       const ownState = {
         foo: {
           bar: "foo",
         },
       };
-      const expected = cloneDeep(ownState);
+      const nextFoo = "nextFoo";
+      const expected = {
+        foo: nextFoo,
+      };
       function reducer(state = {}, action) {
         return ownState;
       }
       class Ctl extends VALID_CLASS {
         someMethod = () => {
-          this.ownState.foo = {};
+          this.ownState.foo = nextFoo;
         };
       }
       const module = creator(reducer, Ctl);
@@ -330,9 +339,10 @@ describe("module.ownState", () => {
           bar: "foo",
         },
       };
-      const nextFoo = {};
+      const actionFoo = {};
+      const manualFoo = "nextFoo";
       const expected = {
-        foo: nextFoo,
+        foo: manualFoo,
       };
       function reducer(state = initialState, action) {
         switch(action.type) {
@@ -352,7 +362,7 @@ describe("module.ownState", () => {
         _stateDidUpdate() {
           fn();
 
-          this.ownState.foo = "wrong value";
+          this.ownState.foo = manualFoo;
         }
       }
       const module = createModule(reducer, Ctl);
@@ -360,7 +370,7 @@ describe("module.ownState", () => {
 
       const store = createStore(rootReducer);
 
-      store.dispatch(actionCreator(nextFoo));
+      store.dispatch(actionCreator(actionFoo));
 
       expect(fn).toHaveBeenCalledTimes(1);
       expect(module.ownState).toEqual(expected);
@@ -373,9 +383,10 @@ describe("module.ownState", () => {
           bar: "foo",
         },
       };
-      const nextFoo = {};
+      const actionFoo = {};
+      const manualFoo = "nextFoo";
       const expected = {
-        foo: nextFoo,
+        foo: manualFoo,
       };
       function reducer(state = initialState, action) {
         switch(action.type) {
@@ -395,7 +406,7 @@ describe("module.ownState", () => {
         _stateDidUpdate = () => {
           fn();
 
-          this.ownState.foo = "wrong value";
+          this.ownState.foo = manualFoo;
         };
       }
       const module = createModule(reducer, Ctl);
@@ -403,7 +414,7 @@ describe("module.ownState", () => {
 
       const store = createStore(rootReducer);
 
-      store.dispatch(actionCreator(nextFoo));
+      store.dispatch(actionCreator(actionFoo));
 
       expect(fn).toHaveBeenCalledTimes(1);
       expect(module.ownState).toEqual(expected);
