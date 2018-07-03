@@ -1,7 +1,7 @@
 import {noop} from "lodash";
 
 import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
-import {getActionCreator} from "./helpers";
+import {getActionCreator, getUniquePath} from "./helpers";
 
 const payload0 = {
   name: "payload0",
@@ -34,7 +34,7 @@ describe("module.dispatch", () => {
     const module = createModule(MODULE_REDUCER, VALID_CLASS, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, "dispatch");
@@ -50,7 +50,7 @@ describe("module.dispatch", () => {
     const module = createModule(MODULE_REDUCER, VALID_CLASS, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, "dispatch");
@@ -78,7 +78,7 @@ describe("module.dispatch", () => {
     const module = createModule(MODULE_REDUCER, VALID_CLASS, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, "dispatch");
@@ -113,7 +113,7 @@ describe("module.dispatch", () => {
     }
 
     const module = createModule(reducer, Ctl);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
 
     const store = createStore(rootReducer);
 
@@ -129,7 +129,7 @@ describe("module.dispatch", () => {
     const module = createModule(MODULE_REDUCER, VALID_CLASS, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
 
     createStore(rootReducer);
 

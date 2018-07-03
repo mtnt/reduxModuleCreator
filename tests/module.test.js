@@ -1,7 +1,7 @@
 import {noop} from "lodash";
 
 import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
-import {getActionCreator, creator} from "./helpers";
+import {getActionCreator, creator, getUniquePath} from "./helpers";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -144,7 +144,7 @@ describe("module", () => {
       }
     }
     const module = createModule(reducer, Ctl);
-    const rootReducer = combineReducers({testPath: module});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
     module.subscribe(listener0);
@@ -170,7 +170,6 @@ describe("module", () => {
           return state;
       }
     }
-    const modulePath = "modulePath";
     class Ctl extends VALID_CLASS {
       someMethod() {
         return this.integrator;
@@ -180,7 +179,7 @@ describe("module", () => {
         return this.integrator;
       };
     }
-    const module = creator(reducer, Ctl, modulePath);
+    const module = creator(reducer, Ctl);
 
     const result0 = module.someMethod();
     const result1 = module.someArrowMethod();

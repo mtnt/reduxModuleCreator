@@ -94,7 +94,7 @@ describe("module.ownState", () => {
         }
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
@@ -126,7 +126,7 @@ describe("module.ownState", () => {
         };
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
@@ -144,7 +144,7 @@ describe("module.ownState", () => {
         return ownState;
       };
       const module = createModule(reducer, VALID_CLASS);
-      const modulePath = "modulePath";
+      const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
         return {
@@ -225,7 +225,7 @@ describe("module.ownState", () => {
         }
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
@@ -251,7 +251,7 @@ describe("module.ownState", () => {
         };
       }
       const module = createModule(reducer, Ctl);
-      const rootReducer = combineReducers({testPath: module});
+      const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
 
