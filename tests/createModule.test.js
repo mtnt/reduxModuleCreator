@@ -22,42 +22,42 @@ describe("createModule", () => {
     const actionCreator = getActionCreator();
 
     expect(() => {
-      createModule(MODULE_REDUCER, VALID_CLASS, {
+      createModule(VALID_CLASS, MODULE_REDUCER, {
         action0: {creator: actionCreator, type: actionCreator.type},
       });
 
       createModule({
-        reducer: MODULE_REDUCER,
         Ctl: VALID_CLASS,
+        reducer: MODULE_REDUCER,
         actions: {action0: {creator: actionCreator, type: actionCreator.type}},
       });
     }).not.toThrow();
   });
 
+  testAllValues((ctl, type) => {
+    it(`should throw an error if first argument is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
+      expect(() => {
+        createModule(ctl, () => {});
+      }).toThrow();
+    });
+  });
+
   testAllValues(
     (reducer, type) => {
-      it(`should throw an error if first argument is not a function: "${reducer}" of type "${type}"`, () => {
+      it(`should throw an error if second argument is not a function: "${reducer}" of type "${type}"`, () => {
         expect(() => {
-          createModule(reducer, VALID_CLASS);
+          createModule(VALID_CLASS, reducer);
         }).toThrow();
       });
     },
     {exclude: [allValuesTypes.FUNCTION]}
   );
 
-  testAllValues((ctl, type) => {
-    it(`should throw an error if second argument is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
-      expect(() => {
-        createModule(() => {}, ctl);
-      }).toThrow();
-    });
-  });
-
   testAllValues(
     (actions, type) => {
       it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
         expect(() => {
-          createModule(MODULE_REDUCER, VALID_CLASS, actions);
+          createModule(VALID_CLASS, MODULE_REDUCER, actions);
         }).toThrow();
       });
     },
@@ -68,7 +68,7 @@ describe("createModule", () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
-      createModule(() => {}, Ctl);
+      createModule(Ctl, () => {});
     }).not.toThrow();
   });
 
@@ -79,7 +79,7 @@ describe("createModule", () => {
 
     const warning = jest.spyOn(console, "warn");
 
-    createModule(() => {}, Ctl);
+    createModule(Ctl, () => {});
 
     expect(warning).toHaveBeenCalled();
   });
@@ -90,12 +90,12 @@ describe("createModule", () => {
     }
 
     expect(() => {
-      createModule(() => {}, Ctl);
+      createModule(Ctl, () => {});
     }).toThrow();
   });
 
   it("should return object with method integrator", () => {
-    const module = createModule(() => {}, VALID_CLASS);
+    const module = createModule(VALID_CLASS, () => {});
 
     expect(module.integrator).toEqual(expect.any(Function));
   });
@@ -103,8 +103,8 @@ describe("createModule", () => {
   it("should return different object on each call", () => {
     const reducer = () => {};
 
-    const module0 = createModule(reducer, VALID_CLASS);
-    const module1 = createModule(reducer, VALID_CLASS);
+    const module0 = createModule(VALID_CLASS, reducer);
+    const module1 = createModule(VALID_CLASS, reducer);
 
     expect(module0).not.toBe(module1);
   });

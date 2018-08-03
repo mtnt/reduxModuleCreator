@@ -31,7 +31,7 @@ describe("module.dispatch", () => {
   it("called single time", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -47,7 +47,7 @@ describe("module.dispatch", () => {
   it("called several times with a same action but different payloads", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -75,7 +75,7 @@ describe("module.dispatch", () => {
   it("called several times with totally same actions (including payloads)", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -112,7 +112,7 @@ describe("module.dispatch", () => {
       }
     }
 
-    const module = createModule(reducer, Ctl);
+    const module = createModule(Ctl, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
 
     const store = createStore(rootReducer);
@@ -126,7 +126,7 @@ describe("module.dispatch", () => {
   it("should throw an error while store is unlinked", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});

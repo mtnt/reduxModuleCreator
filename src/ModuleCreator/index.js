@@ -258,15 +258,15 @@ class Module {
 
 const modulesList = [];
 
-export function createModule(reducerArg, ControllerArg, actionsArg = {}) {
+export function createModule(ControllerArg, reducerArg, actionsArg = {}) {
   let reducer;
   let actions;
   let Controller;
 
-  if (isPlainObject(reducerArg)) {
-    reducer = reducerArg.reducer;
-    actions = get(reducerArg, "actions", {});
-    Controller = reducerArg.Ctl;
+  if (isPlainObject(ControllerArg)) {
+    reducer = ControllerArg.reducer;
+    actions = get(ControllerArg, "actions", {});
+    Controller = ControllerArg.Ctl;
   } else {
     reducer = reducerArg;
     actions = actionsArg;

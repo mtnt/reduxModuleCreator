@@ -40,7 +40,7 @@ function sampleReducer(state, action) {
     // some business logic
 }
 
-export default createModule(sampleReducer, SampleCtl);
+export default createModule(SampleCtl, sampleReducer);
 ```
 
 ## Integrate your module reducer into reducers tree wherever you want
@@ -128,7 +128,7 @@ sampleModule.getSomeOwnData();
 
 # API reference
 
-## createModule(reducer, CtlClass, actions) or createModule({reducer, actions, Ctl})
+## createModule(CtlClass, reducer, actions) or createModule({reducer, actions, Ctl})
 Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store
 - `actions` is optional map of modules own actions

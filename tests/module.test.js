@@ -36,7 +36,7 @@ describe("module", () => {
       };
     }
 
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
 
     expect(module.getter0()).toBe(0);
 
@@ -59,7 +59,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     expect(integrator).toHaveBeenCalledTimes(0);
   });
@@ -77,7 +77,7 @@ describe("module", () => {
         someFunc1();
       };
     }
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
     module._someMethod();
     module._arrowMethod();
 
@@ -106,7 +106,7 @@ describe("module", () => {
         someFunc1();
       }
     }
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
 
     module.someMethod();
     module.arrowMethod();
@@ -143,7 +143,7 @@ describe("module", () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule(reducer, Ctl);
+    const module = createModule(Ctl, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -179,7 +179,7 @@ describe("module", () => {
         return this.integrator;
       };
     }
-    const module = creator(reducer, Ctl);
+    const module = creator(Ctl, reducer);
 
     const result0 = module.someMethod();
     const result1 = module.someArrowMethod();
@@ -196,7 +196,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
@@ -209,7 +209,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     unlinkStore();
 
@@ -220,7 +220,7 @@ describe("module", () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action0: {creator: actionCreator0, type: actionCreator0.type},
       action1: {creator: actionCreator1, type: actionCreator1.type},
     });

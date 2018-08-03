@@ -17,8 +17,8 @@ export function getActionCreator() {
   return actionCreator;
 }
 
-export function creator(reducer, ctl, modulePath = getUniquePath()) {
-  const module = createModule(reducer, ctl);
+export function creator(Ctl, reducer, modulePath = getUniquePath()) {
+  const module = createModule(Ctl, reducer);
 
   function rootReducer(state = {}, action) {
     return {

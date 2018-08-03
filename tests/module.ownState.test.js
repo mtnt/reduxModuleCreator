@@ -28,7 +28,7 @@ describe("module.ownState", () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = creator(reducer, VALID_CLASS);
+      const module = creator(VALID_CLASS, reducer);
 
       expect(module.ownState).toEqual(expected);
     });
@@ -47,7 +47,7 @@ describe("module.ownState", () => {
           return this.ownState;
         }
       }
-      const module = creator(reducer, Ctl);
+      const module = creator(Ctl, reducer);
 
       expect(module.getOwnState()).toEqual(expected);
     });
@@ -66,7 +66,7 @@ describe("module.ownState", () => {
           return this.ownState;
         };
       }
-      const module = creator(reducer, Ctl);
+      const module = creator(Ctl, reducer);
 
       expect(module.getOwnState()).toEqual(expected);
     });
@@ -93,7 +93,7 @@ describe("module.ownState", () => {
           someFunc(this.ownState);
         }
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -125,7 +125,7 @@ describe("module.ownState", () => {
           someFunc(this.ownState);
         };
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -143,7 +143,7 @@ describe("module.ownState", () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = createModule(reducer, VALID_CLASS);
+      const module = createModule(VALID_CLASS, reducer);
       const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
@@ -165,7 +165,7 @@ describe("module.ownState", () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = creator(reducer, VALID_CLASS);
+      const module = creator(VALID_CLASS, reducer);
 
       unlinkStore();
 
@@ -175,7 +175,7 @@ describe("module.ownState", () => {
 
   describe("for setting whole state", () => {
     it("shouldn`t be accessible from outside", () => {
-      const module = creator(MODULE_REDUCER, VALID_CLASS);
+      const module = creator(VALID_CLASS, MODULE_REDUCER);
 
       expect(() => {
         module.ownState = {};
@@ -188,7 +188,7 @@ describe("module.ownState", () => {
           this.ownState = {};
         }
       }
-      const module = creator(MODULE_REDUCER, Ctl);
+      const module = creator(Ctl, MODULE_REDUCER);
 
       expect(() => {
         module.someMethod();
@@ -201,7 +201,7 @@ describe("module.ownState", () => {
           this.ownState = {};
         };
       }
-      const module = creator(MODULE_REDUCER, Ctl);
+      const module = creator(Ctl, MODULE_REDUCER);
 
       expect(() => {
         module.someMethod();
@@ -224,7 +224,7 @@ describe("module.ownState", () => {
           this.ownState = {};
         }
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -250,7 +250,7 @@ describe("module.ownState", () => {
           this.ownState = {};
         };
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -275,7 +275,7 @@ describe("module.ownState", () => {
       function reducer(state = {}, action) {
         return ownState;
       }
-      const module = creator(reducer, VALID_CLASS);
+      const module = creator(VALID_CLASS, reducer);
 
       module.ownState.foo = nextFoo;
 
@@ -300,7 +300,7 @@ describe("module.ownState", () => {
           this.ownState.foo = nextFoo;
         }
       }
-      const module = creator(reducer, Ctl);
+      const module = creator(Ctl, reducer);
 
       module.someMethod();
 
@@ -325,7 +325,7 @@ describe("module.ownState", () => {
           this.ownState.foo = nextFoo;
         };
       }
-      const module = creator(reducer, Ctl);
+      const module = creator(Ctl, reducer);
 
       module.someMethod();
 
@@ -365,7 +365,7 @@ describe("module.ownState", () => {
           this.ownState.foo = manualFoo;
         }
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -409,7 +409,7 @@ describe("module.ownState", () => {
           this.ownState.foo = manualFoo;
         };
       }
-      const module = createModule(reducer, Ctl);
+      const module = createModule(Ctl, reducer);
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
