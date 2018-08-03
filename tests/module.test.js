@@ -228,4 +228,28 @@ describe("module", () => {
     expect(module.actions.action0).toEqual(expect.any(Function));
     expect(module.actions.action1).toEqual(expect.any(Function));
   });
+
+  it("should contain actions with types based but not equal with specified", () => {
+    const actionCreator = getActionCreator();
+
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    expect(module.actions.action.actionType).not.toEqual(actionCreator.type);
+    expect(module.actions.action.actionType).toContain(actionCreator.type);
+  });
+
+  it("should contain actions with types different in instances", () => {
+    const actionCreator = getActionCreator();
+
+    const module0 = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const module1 = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    expect(module0.actions.action.actionType).not.toEqual(module1.actions.action.actionType);
+  });
 });

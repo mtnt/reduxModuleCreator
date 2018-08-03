@@ -1,4 +1,4 @@
-import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach} from "lodash";
+import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach, uniqueId} from "lodash";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -41,9 +41,14 @@ export function unlinkStore() {
   }
 }
 
+function generateActionType(origin, uniquePostfix) {
+  return `${origin}_${uniquePostfix}`;
+}
+
 export class RMCCtl {
   constructor(actions) {
     this.__writable = false;
+    this.__uniquePostfix = uniqueId();
 
     let ownProperty;
     Object.defineProperty(this, "ownState", {
@@ -68,9 +73,11 @@ export class RMCCtl {
       this.actions[actionName] = (...args) => {
         const action = creator(...args);
 
+        action.type = generateActionType(action.type, this.__uniquePostfix);
+
         this.__dispatch(action);
       };
-      this.actions[actionName].actionType = type;
+      this.actions[actionName].actionType = generateActionType(type, this.__uniquePostfix);
     });
   }
 

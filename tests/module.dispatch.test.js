@@ -123,6 +123,32 @@ describe("module.dispatch", () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 
+  it("should use action with type based on specified", () => {
+    const actionCreator = getActionCreator();
+
+    let module;
+
+    const spy = jest.fn();
+    const reducer = function(state = {}, action) {
+      switch (action.type) {
+        case module.actions.action.actionType:
+          spy(action.payload);
+      }
+    };
+
+    module = createModule(VALID_CLASS, reducer, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    const rootReducer = combineReducers({[getUniquePath()]: module});
+    createStore(rootReducer);
+
+    module.actions.action(payload0);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(payload0);
+  });
+
   it("should throw an error while store is unlinked", () => {
     const actionCreator = getActionCreator();
 
