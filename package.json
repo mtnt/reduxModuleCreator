@@ -21,6 +21,9 @@
   ],
   "author": "Kirill \"Mutant\" Glazunov <reg@webmutant.ru>",
   "license": "MIT",
+  "jest": {
+    "testURL": "http://localhost"
+  },
   "dependencies": {
     "es6-error": "4.1.1",
     "lodash": "4.17.10",
