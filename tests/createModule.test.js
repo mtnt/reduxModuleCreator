@@ -21,16 +21,17 @@ describe("createModule", () => {
   it("should get arguments as a list or an object", () => {
     const actionCreator = getActionCreator();
 
-    const module0 = createModule(MODULE_REDUCER, VALID_CLASS, {
-      action0: {creator: actionCreator, type: actionCreator.type},
-    });
-    const module1 = createModule({
-      reducer: MODULE_REDUCER,
-      Ctl: VALID_CLASS,
-      actions: {action0: {creator: actionCreator, type: actionCreator.type}},
-    });
+    expect(() => {
+      createModule(MODULE_REDUCER, VALID_CLASS, {
+        action0: {creator: actionCreator, type: actionCreator.type},
+      });
 
-    expect(JSON.stringify(module0)).toEqual(JSON.stringify(module1));
+      createModule({
+        reducer: MODULE_REDUCER,
+        Ctl: VALID_CLASS,
+        actions: {action0: {creator: actionCreator, type: actionCreator.type}},
+      });
+    }).not.toThrow();
   });
 
   testAllValues(
@@ -71,7 +72,7 @@ describe("createModule", () => {
     }).not.toThrow();
   });
 
-  it("should fire warning if a controller has a same named method or property with Module", () => {
+  it("should fire a warning if a controller has a same named method or property with Module", () => {
     class Ctl extends VALID_CLASS {
       integrator() {}
     }
@@ -83,7 +84,7 @@ describe("createModule", () => {
     expect(warning).toHaveBeenCalled();
   });
 
-  it("should fire error if a controller has a same named private method or property with Module", () => {
+  it("should throw an error if a controller has a same named private method or property with Module", () => {
     class Ctl extends VALID_CLASS {
       __initializeMdl() {}
     }

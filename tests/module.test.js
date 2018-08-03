@@ -226,9 +226,6 @@ describe("module", () => {
     });
 
     expect(module.actions.action0).toEqual(expect.any(Function));
-    expect(module.actions.action0.actionType).toEqual(actionCreator0.type);
-
     expect(module.actions.action1).toEqual(expect.any(Function));
-    expect(module.actions.action1.actionType).toEqual(actionCreator1.type);
   });
 });

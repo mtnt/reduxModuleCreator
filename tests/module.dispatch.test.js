@@ -72,7 +72,7 @@ describe("module.dispatch", () => {
     });
   });
 
-  it("called several times with totally same actions including payloads", () => {
+  it("called several times with totally same actions (including payloads)", () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(MODULE_REDUCER, VALID_CLASS, {

@@ -59,7 +59,7 @@ describe("module.integrator()", () => {
     }).toThrow();
   });
 
-  it("should return a function the same as a reducer in the arguments list", () => {
+  it("should return a function that is the reducer in the arguments list", () => {
     const module = createModule(MODULE_REDUCER, VALID_CLASS);
     const resultReducer = module.integrator("path");
 
