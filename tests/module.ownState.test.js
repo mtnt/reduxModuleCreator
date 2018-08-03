@@ -345,7 +345,7 @@ describe("module.ownState", () => {
         foo: manualFoo,
       };
       function reducer(state = initialState, action) {
-        switch(action.type) {
+        switch (action.type) {
           case actionCreator.type: {
             return {
               ...state,
@@ -389,7 +389,7 @@ describe("module.ownState", () => {
         foo: manualFoo,
       };
       function reducer(state = initialState, action) {
-        switch(action.type) {
+        switch (action.type) {
           case actionCreator.type: {
             return {
               ...state,

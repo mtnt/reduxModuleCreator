@@ -18,7 +18,8 @@ export function linkStore(globalStore) {
 export function unlinkStore() {
   switch (process.env.NODE_ENV) {
     case "production": {
-      const msg = "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
+      const msg =
+        "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
         " dependency breaks";
 
       throw new WrongInterfaceError(msg);

@@ -21,7 +21,9 @@ describe("createModule", () => {
   it("should get arguments as a list or an object", () => {
     const actionCreator = getActionCreator();
 
-    const module0 = createModule(MODULE_REDUCER, VALID_CLASS, {action0: {creator: actionCreator, type: actionCreator.type}});
+    const module0 = createModule(MODULE_REDUCER, VALID_CLASS, {
+      action0: {creator: actionCreator, type: actionCreator.type},
+    });
     const module1 = createModule({
       reducer: MODULE_REDUCER,
       Ctl: VALID_CLASS,
@@ -50,13 +52,16 @@ describe("createModule", () => {
     });
   });
 
-  testAllValues((actions, type) => {
-    it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
-      expect(() => {
-        createModule(MODULE_REDUCER, VALID_CLASS, actions);
-      }).toThrow();
-    });
-  }, {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.UNDEFINED]});
+  testAllValues(
+    (actions, type) => {
+      it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
+        expect(() => {
+          createModule(MODULE_REDUCER, VALID_CLASS, actions);
+        }).toThrow();
+      });
+    },
+    {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.UNDEFINED]}
+  );
 
   it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
     class Ctl extends RMCCtl {}
