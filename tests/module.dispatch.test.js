@@ -31,7 +31,7 @@ describe("module.dispatch", () => {
   it("called single time", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -47,7 +47,7 @@ describe("module.dispatch", () => {
   it("called several times with a same action but different payloads", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -72,10 +72,10 @@ describe("module.dispatch", () => {
     });
   });
 
-  it("called several times with totally same actions including payloads", () => {
+  it("called several times with totally same actions (including payloads)", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -112,7 +112,7 @@ describe("module.dispatch", () => {
       }
     }
 
-    const module = createModule(reducer, Ctl);
+    const module = createModule(Ctl, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
 
     const store = createStore(rootReducer);
@@ -123,10 +123,36 @@ describe("module.dispatch", () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 
+  it("should use action with type based on specified", () => {
+    const actionCreator = getActionCreator();
+
+    let module;
+
+    const spy = jest.fn();
+    const reducer = function(state = {}, action) {
+      switch (action.type) {
+        case module.actions.action.actionType:
+          spy(action.payload);
+      }
+    };
+
+    module = createModule(VALID_CLASS, reducer, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    const rootReducer = combineReducers({[getUniquePath()]: module});
+    createStore(rootReducer);
+
+    module.actions.action(payload0);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(payload0);
+  });
+
   it("should throw an error while store is unlinked", () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action: {creator: actionCreator, type: actionCreator.type},
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});

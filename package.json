@@ -1,6 +1,6 @@
 {
   "name": "redux-module-creator",
-  "version": "0.12.0",
+  "version": "1.0.0",
   "description": "Create you redux modules orthogonal.",
   "main": "dist/index.js",
   "scripts": {
@@ -21,6 +21,9 @@
   ],
   "author": "Kirill \"Mutant\" Glazunov <reg@webmutant.ru>",
   "license": "MIT",
+  "jest": {
+    "testURL": "http://localhost"
+  },
   "dependencies": {
     "es6-error": "4.1.1",
     "lodash": "4.17.10",
@@ -28,11 +31,11 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-jest": "23.0.1",
+    "babel-jest": "23.4.2",
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-preset-env": "1.7.0",
-    "jest": "23.1.0",
-    "prettier": "1.13.4",
+    "jest": "23.4.2",
+    "prettier": "1.14.0",
     "unit-tests-values-iterators": "0.2.1"
   }
 }

@@ -36,7 +36,7 @@ describe("module", () => {
       };
     }
 
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
 
     expect(module.getter0()).toBe(0);
 
@@ -59,7 +59,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     expect(integrator).toHaveBeenCalledTimes(0);
   });
@@ -77,7 +77,7 @@ describe("module", () => {
         someFunc1();
       };
     }
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
     module._someMethod();
     module._arrowMethod();
 
@@ -106,7 +106,7 @@ describe("module", () => {
         someFunc1();
       }
     }
-    const module = creator(MODULE_REDUCER, Ctl);
+    const module = creator(Ctl, MODULE_REDUCER);
 
     module.someMethod();
     module.arrowMethod();
@@ -143,7 +143,7 @@ describe("module", () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule(reducer, Ctl);
+    const module = createModule(Ctl, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -179,7 +179,7 @@ describe("module", () => {
         return this.integrator;
       };
     }
-    const module = creator(reducer, Ctl);
+    const module = creator(Ctl, reducer);
 
     const result0 = module.someMethod();
     const result1 = module.someArrowMethod();
@@ -196,7 +196,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
@@ -209,7 +209,7 @@ describe("module", () => {
       }
     }
 
-    creator(MODULE_REDUCER, Ctl);
+    creator(Ctl, MODULE_REDUCER);
 
     unlinkStore();
 
@@ -220,15 +220,36 @@ describe("module", () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
-    const module = createModule(MODULE_REDUCER, VALID_CLASS, {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
       action0: {creator: actionCreator0, type: actionCreator0.type},
       action1: {creator: actionCreator1, type: actionCreator1.type},
     });
 
     expect(module.actions.action0).toEqual(expect.any(Function));
-    expect(module.actions.action0.actionType).toEqual(actionCreator0.type);
-
     expect(module.actions.action1).toEqual(expect.any(Function));
-    expect(module.actions.action1.actionType).toEqual(actionCreator1.type);
+  });
+
+  it("should contain actions with types based but not equal with specified", () => {
+    const actionCreator = getActionCreator();
+
+    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    expect(module.actions.action.actionType).not.toEqual(actionCreator.type);
+    expect(module.actions.action.actionType).toContain(actionCreator.type);
+  });
+
+  it("should contain actions with types different in instances", () => {
+    const actionCreator = getActionCreator();
+
+    const module0 = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+    const module1 = createModule(VALID_CLASS, MODULE_REDUCER, {
+      action: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    expect(module0.actions.action.actionType).not.toEqual(module1.actions.action.actionType);
   });
 });

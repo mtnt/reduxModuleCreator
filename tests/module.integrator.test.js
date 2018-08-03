@@ -15,7 +15,7 @@ describe("module.integrator()", () => {
       const desc_100 =
         `should throw an error if single argument "${path}" of type` + ` "${type}" is not compatible with path type`;
       it(desc_100, () => {
-        const module = createModule(MODULE_REDUCER, VALID_CLASS);
+        const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
         expect(() => {
           module.integrator(path);
@@ -26,7 +26,7 @@ describe("module.integrator()", () => {
   );
 
   it("should throw an error if path is empty string", () => {
-    const module = createModule(MODULE_REDUCER, VALID_CLASS);
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
       module.integrator("");
@@ -34,7 +34,7 @@ describe("module.integrator()", () => {
   });
 
   it("should throw an error if path is empty array", () => {
-    const module = createModule(MODULE_REDUCER, VALID_CLASS);
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
       module.integrator([]);
@@ -42,7 +42,7 @@ describe("module.integrator()", () => {
   });
 
   it("should throw an error if path is array with at least one nonestring value", () => {
-    const module = createModule(MODULE_REDUCER, VALID_CLASS);
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
       module.integrator(["foo", 1, "bar"]);
@@ -50,7 +50,7 @@ describe("module.integrator()", () => {
   });
 
   it("should throw an error if path is changed", () => {
-    const module = createModule(MODULE_REDUCER, VALID_CLASS);
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     module.integrator("path0");
 
@@ -59,8 +59,8 @@ describe("module.integrator()", () => {
     }).toThrow();
   });
 
-  it("should return a function the same as a reducer in the arguments list", () => {
-    const module = createModule(MODULE_REDUCER, VALID_CLASS);
+  it("should return a function that is the reducer in the arguments list", () => {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
     const resultReducer = module.integrator("path");
 
     expect(resultReducer).toBe(MODULE_REDUCER);

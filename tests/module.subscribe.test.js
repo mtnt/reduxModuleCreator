@@ -31,7 +31,7 @@ describe("module.subscribe", () => {
   testAllValues(
     (listener, type) => {
       it(`should throw an error if get none function argument: ${listener} of type ${type}`, () => {
-        const module = creator(MODULE_REDUCER, VALID_CLASS);
+        const module = creator(VALID_CLASS, MODULE_REDUCER, );
 
         expect(() => {
           module.subscribe(listener);
@@ -42,7 +42,7 @@ describe("module.subscribe", () => {
   );
 
   it("should be able to get called several times with different listeners", () => {
-    const module = creator(MODULE_REDUCER, VALID_CLASS);
+    const module = creator(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
       module.subscribe(function() {});
@@ -51,7 +51,7 @@ describe("module.subscribe", () => {
   });
 
   it("should be able to get called several times with same listener", () => {
-    const module = creator(MODULE_REDUCER, VALID_CLASS);
+    const module = creator(VALID_CLASS, MODULE_REDUCER);
     const listener = function() {};
 
     expect(() => {
@@ -72,7 +72,7 @@ describe("module.subscribe", () => {
       }
     }
 
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -94,7 +94,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -117,7 +117,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener0 = jest.fn();
@@ -142,7 +142,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -154,7 +154,7 @@ describe("module.subscribe", () => {
   });
 
   it("should return function unsubscriber", () => {
-    const module = creator(MODULE_REDUCER, VALID_CLASS);
+    const module = creator(VALID_CLASS, MODULE_REDUCER);
 
     const unsubscriber = module.subscribe(function() {});
 
@@ -172,7 +172,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -195,7 +195,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
@@ -224,7 +224,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -257,7 +257,7 @@ describe("module.subscribe", () => {
           return state;
       }
     }
-    const module = createModule(reducer, VALID_CLASS);
+    const module = createModule(VALID_CLASS, reducer);
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -293,7 +293,7 @@ describe("module.subscribe", () => {
         stateDidUpdate(...args);
       }
     }
-    const module = createModule(reducer, Ctl);
+    const module = createModule(Ctl, reducer);
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {

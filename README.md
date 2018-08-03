@@ -1,7 +1,7 @@
-# Attention
-The work is still in progress. Be careful to take it in your project - use exactly first downloaded version and store its documentation somewhere.
-
-An interface and the docs can be changed without some notices until the lib will get a major version.
+# Attention! v0.x.x users!
+Breaking changes:
+ - createModule get a controller class and a reducer in reverse order now: `createModule(CtlClass, reducer)`;
+ - passed actions are modifying now, use action types directly from module: `module.actions.actionName.actionType`;
 
 # Why?
 
@@ -36,11 +36,15 @@ class SampleCtl extends RMCCtl {
     }
 }
 
+let module;
+
 function sampleReducer(state, action) {
     // some business logic
 }
 
-export default createModule(sampleReducer, SampleCtl);
+module = createModule(SampleCtl, sampleReducer);
+
+export default module;
 ```
 
 ## Integrate your module reducer into reducers tree wherever you want
@@ -126,9 +130,46 @@ import sampleModule from "SampleModule";
 sampleModule.getSomeOwnData();
 ```
 
+# Cook Book
+
+## Using module action inside an own reducer
+
+It is used to use module\`s actions inside its own reducers. But in a module instance (module.actions) action has different types with origin:
+```
+const fooAction = {
+    type: "fooAT",
+};
+
+function reducer(state, action) {
+    switch (action.type) {
+        case fooAction.type:
+            ...
+    }
+}
+
+const module = createModule(CtlClass, reducer, {fooAction: {creator: () => fooAction, type: fooAction.type}});
+
+// module.actions.fooAction.actionType !== "fooAT", it is something like "fooAT_module_instance_key"
+```
+
+So, for using module\`s actions you should get it directly from the module:
+```
+let module;
+
+function reducer(state, action) {
+    switch (action.type) {
+        case module.actions.fooAction.actionType:
+            ...
+    }
+}
+
+module = createModule(...);
+```
+
+
 # API reference
 
-## createModule(reducer, CtlClass, actions) or createModule({reducer, actions, Ctl})
+## createModule(CtlClass, reducer, actions) or createModule({reducer, actions, Ctl})
 Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store
 - `actions` is optional map of modules own actions
@@ -146,7 +187,7 @@ It\`s a map of actions.
 You can dispatch an action by `module.actions.actionName(params)`.
 And you can get the action type by `module.actions.actionName.actionType`.
 
->NB: Do not rely to equality of `module.actions.actionName.actionType` and the type you did pass into the actions map while creating a module. It can be different in module reusability purpose.
+>NB: DO NOT RELY to equality of `module.actions.actionName.actionType` and the type you did pass into the actions map while creating a module. It is different in module reusability purpose.
 
 ## RMCCtl
 Base class for controller.

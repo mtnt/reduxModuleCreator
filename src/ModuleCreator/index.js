@@ -1,4 +1,4 @@
-import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach} from "lodash";
+import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach, uniqueId} from "lodash";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -18,7 +18,8 @@ export function linkStore(globalStore) {
 export function unlinkStore() {
   switch (process.env.NODE_ENV) {
     case "production": {
-      const msg = "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
+      const msg =
+        "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
         " dependency breaks";
 
       throw new WrongInterfaceError(msg);
@@ -40,9 +41,14 @@ export function unlinkStore() {
   }
 }
 
+function generateActionType(origin, uniquePostfix) {
+  return `${origin}_${uniquePostfix}`;
+}
+
 export class RMCCtl {
   constructor(actions) {
     this.__writable = false;
+    this.__uniquePostfix = uniqueId();
 
     let ownProperty;
     Object.defineProperty(this, "ownState", {
@@ -67,9 +73,11 @@ export class RMCCtl {
       this.actions[actionName] = (...args) => {
         const action = creator(...args);
 
+        action.type = generateActionType(action.type, this.__uniquePostfix);
+
         this.__dispatch(action);
       };
-      this.actions[actionName].actionType = type;
+      this.actions[actionName].actionType = generateActionType(type, this.__uniquePostfix);
     });
   }
 
@@ -257,15 +265,15 @@ class Module {
 
 const modulesList = [];
 
-export function createModule(reducerArg, ControllerArg, actionsArg = {}) {
+export function createModule(ControllerArg, reducerArg, actionsArg = {}) {
   let reducer;
   let actions;
   let Controller;
 
-  if (isPlainObject(reducerArg)) {
-    reducer = reducerArg.reducer;
-    actions = get(reducerArg, "actions", {});
-    Controller = reducerArg.Ctl;
+  if (isPlainObject(ControllerArg)) {
+    reducer = ControllerArg.reducer;
+    actions = get(ControllerArg, "actions", {});
+    Controller = ControllerArg.Ctl;
   } else {
     reducer = reducerArg;
     actions = actionsArg;
