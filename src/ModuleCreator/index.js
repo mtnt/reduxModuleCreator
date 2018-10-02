@@ -70,14 +70,16 @@ export class RMCCtl {
 
     this.actions = {};
     forEach(actions, ({creator, type}, actionName) => {
+      const generatedType = generateActionType(type, this.__uniquePostfix);
+
       this.actions[actionName] = (...args) => {
         const action = creator(...args);
 
-        action.type = generateActionType(action.type, this.__uniquePostfix);
+        action.type = generatedType;
 
         this.__dispatch(action);
       };
-      this.actions[actionName].actionType = generateActionType(type, this.__uniquePostfix);
+      this.actions[actionName].actionType = generatedType;
     });
   }
 
