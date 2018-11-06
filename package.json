@@ -1,6 +1,6 @@
 {
   "name": "redux-module-creator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create you redux modules orthogonal.",
   "main": "dist/index.js",
   "scripts": {
