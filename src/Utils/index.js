@@ -1,11 +1,11 @@
-import {forEach, isFunction, get} from "lodash";
+import {isFunction, get} from "lodash";
 
 export function combineReducers(stateReducerMap) {
   return function(state, action) {
     let changed = false;
 
     const nextState = {};
-    forEach(stateReducerMap, (module, path) => {
+    Object.entries(stateReducerMap).forEach(([path, module]) => {
       if (isFunction(module.integrator)) {
         nextState[path] = module.integrator(path)(get(state, path), action, path);
       } else {

@@ -65,4 +65,12 @@ describe("module.integrator()", () => {
 
     expect(resultReducer).toBe(MODULE_REDUCER);
   });
+
+  it("should not throw an error if path is 'false digit'", () => {
+    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+
+    expect(() => {
+      module.integrator("0");
+    }).not.toThrow();
+  });
 });

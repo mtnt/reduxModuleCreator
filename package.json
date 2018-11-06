@@ -1,6 +1,6 @@
 {
   "name": "redux-module-creator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create you redux modules orthogonal.",
   "main": "dist/index.js",
   "scripts": {
@@ -24,10 +24,17 @@
   "jest": {
     "testURL": "http://localhost"
   },
+  "peerDependencies": {
+    "redux": ">=4.x.x"
+  },
   "dependencies": {
     "es6-error": "4.1.1",
-    "lodash": "4.17.10",
-    "redux": "4.0.0"
+    "lodash.get": "4.4.2",
+    "lodash.isequal": "4.5.0",
+    "lodash.isfunction": "3.0.9",
+    "lodash.isplainobject": "4.0.6",
+    "lodash.isstring": "4.0.1",
+    "lodash.uniqueid": "4.0.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -35,7 +42,10 @@
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-preset-env": "1.7.0",
     "jest": "23.4.2",
+    "lodash.clonedeep": "4.5.0",
+    "lodash.noop": "3.0.1",
     "prettier": "1.14.0",
+    "redux": "4.0.1",
     "unit-tests-values-iterators": "0.2.1"
   }
 }

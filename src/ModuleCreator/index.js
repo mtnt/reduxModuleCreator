@@ -1,4 +1,4 @@
-import {get, isNil, isFunction, isString, isArray, isEqual, isEmpty, isPlainObject, forEach, uniqueId} from "lodash";
+import {get, isFunction, isString, isEqual, isPlainObject, uniqueId} from "lodash";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -53,7 +53,7 @@ export class RMCCtl {
     let ownProperty;
     Object.defineProperty(this, "ownState", {
       get() {
-        if (isNil(this.__storeCtl)) {
+        if (!this.__storeCtl) {
           return;
         }
 
@@ -69,7 +69,7 @@ export class RMCCtl {
     });
 
     this.actions = {};
-    forEach(actions, ({creator, type}, actionName) => {
+    Object.entries(actions).forEach(([actionName, {creator, type}]) => {
       const generatedType = generateActionType(type, this.__uniquePostfix);
 
       this.actions[actionName] = (...args) => {
@@ -152,7 +152,7 @@ export class RMCCtl {
   }
 
   __dispatch(action) {
-    if (isNil(this.__storeCtl)) {
+    if (!this.__storeCtl) {
       throw new WrongInterfaceError("Can not dispatch while store is not linked");
     }
 
@@ -193,7 +193,7 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    forEach(actions, ({creator, type}, actionName) => {
+    Object.entries(actions).forEach(([actionName, {creator, type}]) => {
       if (!isFunction(creator)) {
         throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
       }
@@ -246,10 +246,10 @@ class Module {
   integrator(path) {
     const prevPath = this.__pathMdl;
 
-    if (isNil(prevPath)) {
+    if (!prevPath) {
       if (
         (!isString(path) || path === "") &&
-        (!isArray(path) || isEmpty(path) || path.some(pathPart => !isString(pathPart)))
+        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart)))
       ) {
         throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
       }
