@@ -221,13 +221,17 @@ Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
 
-## unlinkStore() \[DEPRECATED\]
+## unlinkStore(I_AM_SURE) \[DANGEROUS\]
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
+
+- `I_AM_SURE` is a boolean param that can be used to unlink store in production mode.
 
 > Be careful - while a store is unlinked:
 > * `ownState` is undefined
 > * `module.actions.actionName()` cause an error
 > * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
+>
+> It also can lead to memory leaks if you call the unlinkStore while some subscriptions is active
 
 # Some subtleties
 * you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method by using `this`
