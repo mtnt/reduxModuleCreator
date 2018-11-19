@@ -166,6 +166,16 @@ function reducer(state, action) {
 module = createModule(...);
 ```
 
+## Using RMC on server
+
+We used to recreate a store for each request at server side js. It is for preventing state sharing between separate requests.  
+But RMC can not be linked twice, so what should we do? Just clear the store:
+- make a unique action
+- add to a root reducer handling that action
+- reset state to initial values at the point
+
+That`s it.
+
 
 # API reference
 
