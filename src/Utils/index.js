@@ -1,15 +1,18 @@
 import {isFunction, get} from "lodash";
 
-export function combineReducers(stateReducerMap) {
+export function combineReducers(stateReducerMap, rootPath) {
   return function(state, action) {
     let changed = false;
 
     const nextState = {};
     Object.entries(stateReducerMap).forEach(([path, module]) => {
+      const fullPath = rootPath ? `${rootPath}.${path}` : path;
+      const ownState = get(state, path);
+
       if (isFunction(module.integrator)) {
-        nextState[path] = module.integrator(path)(get(state, path), action, path);
+        nextState[path] = module.integrator(fullPath)(ownState, action, fullPath);
       } else {
-        nextState[path] = module(get(state, path), action);
+        nextState[path] = module(ownState, action, fullPath);
       }
 
       if (nextState[path] !== get(state, path)) {

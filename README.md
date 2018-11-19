@@ -166,6 +166,16 @@ function reducer(state, action) {
 module = createModule(...);
 ```
 
+## Using RMC on server
+
+We used to recreate a store for each request at server side js. It is for preventing state sharing between separate requests.  
+But RMC can not be linked twice, so what should we do? Just clear the store:
+- make a unique action
+- add to a root reducer handling that action
+- reset state to initial values at the point
+
+That`s it.
+
 
 # API reference
 
@@ -221,17 +231,13 @@ Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
 
-## unlinkStore(I_AM_SURE) \[DANGEROUS\]
+## unlinkStore() \[DEPRECATED\]
 Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
-
-- `I_AM_SURE` is a boolean param that can be used to unlink store in production mode.
 
 > Be careful - while a store is unlinked:
 > * `ownState` is undefined
 > * `module.actions.actionName()` cause an error
 > * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
->
-> It also can lead to memory leaks if you call the unlinkStore while some subscriptions is active
 
 # Some subtleties
 * you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method by using `this`
