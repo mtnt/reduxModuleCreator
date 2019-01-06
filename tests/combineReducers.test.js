@@ -29,21 +29,24 @@ describe("combineReducers", () => {
     const fn0 = jest.fn(() => 1);
     const fn1 = jest.fn(() => 2);
 
+    const path0 = 'foo';
+    const path1 = 'bar';
+
     const reducer = combineReducers({
-      foo: fn0,
-      bar: fn1,
+      [path0]: fn0,
+      [path1]: fn1,
     });
 
     const state = {
-      foo: "oldFoo",
-      bar: "oldBar",
+      [path0]: "oldFoo",
+      [path1]: "oldBar",
     };
     const action = {type: "exampleAction"};
 
     reducer(state, action);
 
-    expect(fn0).toHaveBeenCalledWith(state.foo, action);
-    expect(fn1).toHaveBeenCalledWith(state.bar, action);
+    expect(fn0).toHaveBeenCalledWith(state[path0], action, path0);
+    expect(fn1).toHaveBeenCalledWith(state[path1], action, path1);
   });
 
   it("should return the original state if result values the same", () => {
