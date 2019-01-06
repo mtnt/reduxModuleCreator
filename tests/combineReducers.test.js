@@ -25,7 +25,7 @@ describe("combineReducers", () => {
     expect(reducer()).toEqual(expected);
   });
 
-  it("should pass into each reducer an appropriate state and action", () => {
+  it("should pass into each reducer an appropriate state, action and full path", () => {
     const fn0 = jest.fn(() => 1);
     const fn1 = jest.fn(() => 2);
 
