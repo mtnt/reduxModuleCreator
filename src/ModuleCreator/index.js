@@ -134,7 +134,7 @@ export class RMCCtl {
 
     this.__setOwnStateCtl(ownState);
 
-    if (isEqual(ownState, prevOwnState)) {
+    if (ownState === prevOwnState) {
       return;
     }
 
