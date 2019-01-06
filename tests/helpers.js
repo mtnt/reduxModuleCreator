@@ -1,4 +1,4 @@
-import {uniqueId} from "lodash";
+import uniqueId from "lodash.uniqueid";
 
 import {createStore, createModule} from "../src";
 

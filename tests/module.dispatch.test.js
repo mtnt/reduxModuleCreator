@@ -1,4 +1,4 @@
-import {noop} from "lodash";
+import noop from "lodash.noop";
 
 import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
 import {getActionCreator, getUniquePath} from "./helpers";
