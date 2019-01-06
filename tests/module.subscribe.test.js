@@ -1,5 +1,5 @@
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
-import {noop} from "lodash";
+import noop from "lodash.noop";
 
 import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from "../src";
 import {getActionCreator, creator, getUniquePath} from "./helpers";
