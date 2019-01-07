@@ -76,6 +76,63 @@ describe("createModule", () => {
     {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.UNDEFINED]}
   );
 
+  testAllValues(
+    (creator, creatorType) => {
+      testAllValues(
+        (type, actionTypeType) => {
+          const creatorString = `creator: ${creator} of type ${creatorType};`;
+          const typeString = `type: ${type} of type ${actionTypeType};`;
+
+          it(`should throw an error if some action has wrong creator or type; ${creatorString} ${typeString}`, () => {
+            expect(() => {
+              createModule(VALID_CLASS, MODULE_REDUCER, {
+                action0: {creator, type},
+              });
+            }).toThrow();
+          });
+        },
+        {exclude: [allValuesTypes.STRING]}
+      );
+    },
+    {exclude: [allValuesTypes.FUNCTION]}
+  );
+
+  testAllValues(
+    (proxy, type) => {
+      it(`should throw an error if some action has wrong proxy: ${proxy} of type ${type}`, () => {
+        expect(() => {
+          createModule(VALID_CLASS, MODULE_REDUCER, {
+            action0: {proxy},
+          });
+        }).toThrow();
+      });
+    },
+    {exclude: [allValuesTypes.FUNCTION]}
+  );
+
+  it('should not throw an error if action has a correct creator and a type', () => {
+    expect(() => {
+      const actionCreator = getActionCreator();
+
+      createModule(VALID_CLASS, MODULE_REDUCER, {
+        action0: {
+          creator: actionCreator,
+          type: actionCreator.type,
+        },
+      });
+    }).not.toThrow();
+  });
+
+  it('should not throw an error if action has a correct proxy', () => {
+    expect(() => {
+      createModule(VALID_CLASS, MODULE_REDUCER, {
+        action0: {
+          proxy: getActionCreator(),
+        },
+      });
+    }).not.toThrow();
+  });
+
   it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
     class Ctl extends RMCCtl {}
 
