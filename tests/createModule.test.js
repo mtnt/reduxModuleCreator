@@ -35,18 +35,26 @@ describe("createModule", () => {
   });
 
   testAllValues((ctl, type) => {
-    it(`should throw an error if first argument is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
+    it(`should throw an error if a controller is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
       expect(() => {
         createModule(ctl, () => {});
+      }).toThrow();
+
+      expect(() => {
+        createModule({Ctl: ctl, reducer: () => {}});
       }).toThrow();
     });
   });
 
   testAllValues(
     (reducer, type) => {
-      it(`should throw an error if second argument is not a function: "${reducer}" of type "${type}"`, () => {
+      it(`should throw an error if a reducer is not a function: "${reducer}" of type "${type}"`, () => {
         expect(() => {
           createModule(VALID_CLASS, reducer);
+        }).toThrow();
+
+        expect(() => {
+          createModule({Ctl: VALID_CLASS, reducer});
         }).toThrow();
       });
     },
@@ -58,6 +66,10 @@ describe("createModule", () => {
       it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
         expect(() => {
           createModule(VALID_CLASS, MODULE_REDUCER, actions);
+        }).toThrow();
+
+        expect(() => {
+          createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions});
         }).toThrow();
       });
     },
