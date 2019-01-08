@@ -1,8 +1,8 @@
-import get from 'lodash.get';
-import isFunction from 'lodash.isfunction';
-import isString from 'lodash.isstring';
-import isPlainObject from 'lodash.isplainobject';
-import uniqueId from 'lodash.uniqueid';
+import get from "lodash.get";
+import isFunction from "lodash.isfunction";
+import isString from "lodash.isstring";
+import isPlainObject from "lodash.isplainobject";
+import uniqueId from "lodash.uniqueid";
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -73,17 +73,21 @@ export class RMCCtl {
     });
 
     this.actions = {};
-    Object.entries(actions).forEach(([actionName, {creator, type}]) => {
-      const generatedType = generateActionType(type, this.__uniquePostfix);
+    Object.entries(actions).forEach(([actionName, {creator, type, proxy}]) => {
+      if (isFunction(proxy)) {
+        this.actions[actionName] = proxy;
+      } else {
+        const generatedType = generateActionType(type, this.__uniquePostfix);
 
-      this.actions[actionName] = (...args) => {
-        const action = creator(...args);
+        this.actions[actionName] = (...args) => {
+          const action = creator(...args);
 
-        action.type = generatedType;
+          action.type = generatedType;
 
-        this.__dispatch(action);
-      };
-      this.actions[actionName].actionType = generatedType;
+          this.__dispatch(action);
+        };
+        this.actions[actionName].actionType = generatedType;
+      }
     });
   }
 
@@ -197,11 +201,15 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    Object.entries(actions).forEach(([actionName, {creator, type}]) => {
-      if (!isFunction(creator)) {
+    Object.entries(actions).forEach(([actionName, {creator, type, proxy}]) => {
+      const badProxy = !isFunction(proxy);
+      const badCreator = !isFunction(creator);
+      const badType = !isString(type) || type.length === 0;
+
+      if (badCreator && badProxy) {
         throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
       }
-      if (!isString(type)) {
+      if (badType && badProxy) {
         throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
       }
     });
@@ -248,7 +256,7 @@ class Module {
   }
 
   integrator(path) {
-    const delimiter = '.';
+    const delimiter = ".";
     const prevPath = this.__pathMdl;
 
     if (!prevPath) {
@@ -260,7 +268,7 @@ class Module {
       }
 
       this.__pathMdl = Array.isArray(path) ? path.join(delimiter) : path;
-    } else if (isString(path) && path !== prevPath || Array.isArray(path) && path.join(delimiter) !== prevPath) {
+    } else if ((isString(path) && path !== prevPath) || (Array.isArray(path) && path.join(delimiter) !== prevPath)) {
       const msg = `Attempt to change a path of integration: "${prevPath}" -> "${path}"`;
 
       throw new InvalidParamsError(msg);

@@ -176,6 +176,47 @@ But RMC can not be linked twice, so what should we do? Just clear the store:
 
 That`s it.
 
+## Using a cascade of modules
+
+Since an RMC module is a blackbox, you may want to use one module with it\`s own logic inside another one. In this case you\`ll still need to have access to actions of the top level module.  
+For this purposes you should use `action proxy`:
+
+```javascript
+
+const storageActions = {
+  // ...
+    
+  setItem: {
+    creator: (key, value) => ({
+      payload: {key, value},
+    }),
+    type: 'set item into a storage',
+  },
+    
+  // ...
+};
+const dataStorage = createModule(StorageCtl, reducer, storageActions);
+const statusStorage = createModule(StorageCtl, reducer, storageActions);
+
+class StorageWSCtl extends RMCCtl {
+  waitItem(key) {
+    statusStorage.actions.setItem(key, true);
+  }
+  
+  setItem(key, value) {
+    dataStorage.actions.setItem(key, value);
+  }
+}
+
+const storageWithStatus = createModule(StorageWSCtl, swsReducer, {
+  itemIsWaiting: {proxy: statusStorage.actions.removeItem},
+  itemIsReady: {proxy: dataStorage.actions.setItem},
+});
+```
+After that you can use actions of the `storageWithStatus` wherever you want as `storageWithStatus.actions.itemIsWaiting`. But it still will be the `statusStorage.actions.setItem` behind the curtain.    
+
+This trick will help you hide an implementation and avoid redundant dependencies.
+
 
 # API reference
 
@@ -184,7 +225,7 @@ Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
-  - value is a map `{creator: actionCreator, type: actionType}`
+  - value is a map `{creator: actionCreator, type: actionType}` or `{proxy: existingActionCreator}`
 - `CtlClass` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
 
 Returns `module`:

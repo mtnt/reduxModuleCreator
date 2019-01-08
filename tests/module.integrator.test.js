@@ -1,6 +1,7 @@
+import get from "lodash.get";
 import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
 
-import {createModule, RMCCtl} from "../src";
+import {createModule, createStore, RMCCtl} from "../src";
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -57,6 +58,39 @@ describe("module.integrator()", () => {
     expect(() => {
       module.integrator("path1");
     }).toThrow();
+  });
+
+  it("should correct handle a combination of array and dot separated string", () => {
+    const testValue = "foo";
+    class Ctl extends RMCCtl {
+      getState() {
+        return this.ownState;
+      }
+    }
+
+    const module = createModule(Ctl, () => testValue);
+
+    const pathParts = ["first", "second", "third", "four", "fifth"];
+
+    function rootReducer(state = {}, action) {
+      return {
+        [pathParts[0]]: {
+          [pathParts[1]]: {
+            [pathParts[2]]: {
+              [pathParts[3]]: module.integrator([pathParts[0], `${pathParts[1]}.${pathParts[2]}`, pathParts[3]])(
+                state[pathParts[0]],
+                action,
+                pathParts[0]
+              ),
+            },
+          },
+        },
+      };
+    }
+
+    createStore(rootReducer);
+
+    expect(module.getState()).toBe(testValue);
   });
 
   it("should return a function that is the reducer in the arguments list", () => {

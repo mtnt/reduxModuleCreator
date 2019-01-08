@@ -1,5 +1,3 @@
-import noop from "lodash.noop";
-
 import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
 import {getActionCreator, getUniquePath} from "./helpers";
 
@@ -164,5 +162,43 @@ describe("module.dispatch", () => {
     expect(() => {
       module.actions.action(payload0);
     }).toThrow();
+  });
+
+  it("should use proxied action", () => {
+    const actionCreator = getActionCreator();
+
+    const innerModule = createModule(VALID_CLASS, MODULE_REDUCER, {
+      innerAction: {creator: actionCreator, type: actionCreator.type},
+    });
+
+    function outerReducer(state = {}, action, rootPath) {
+      const innerPath = "inner";
+
+      return {
+        [innerPath]: innerModule.integrator(innerPath)(state[innerPath], action, [rootPath, innerPath]),
+      };
+    }
+    const outerModule = createModule(VALID_CLASS, outerReducer, {
+      outerAction: {proxy: innerModule.actions.innerAction},
+    });
+
+    const spy = jest.fn();
+
+    function rootReducer(state = {}, action) {
+      const outerPath = "outer";
+
+      spy(action);
+
+      return {
+        [outerPath]: outerModule.integrator(outerPath)(state[outerPath], action, outerPath),
+      };
+    }
+
+    createStore(rootReducer);
+
+    outerModule.actions.outerAction();
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenLastCalledWith({type: innerModule.actions.innerAction.actionType});
   });
 });
