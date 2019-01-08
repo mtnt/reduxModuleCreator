@@ -220,13 +220,29 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 # API reference
 
-## createModule(CtlClass, reducer, actions) or createModule({reducer, actions, Ctl})
+## createModule()
+It has several variants of signature:
+- createModule(Ctl, reducer, actions);
+- createModule({Ctl, params}, reducer, actions);
+- createModule({Ctl, reducer, actions});
+- createModule({Ctl: {Ctl, params}, reducer, actions});
+
 Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
   - value is a map `{creator: actionCreator, type: actionType}` or `{proxy: existingActionCreator}`
-- `CtlClass` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
+- `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
+- `params` is an array of the controller params
+
+>NB: If a controller class has an own constructor, it`s your responsibility to pass basic ctl params through
+> ```javascript
+> // ...
+> constructor(param0, param1, ...rest) {
+>   super(...rest);
+> }
+> // ...
+> ``` 
 
 Returns `module`:
 #### integrator(path)

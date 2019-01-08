@@ -188,7 +188,7 @@ const deprecatedMethodsForCtl = [
 ];
 const warnMethodsForCtl = ["integrator"];
 class Module {
-  constructor(reducer, actions, CtlClass) {
+  constructor(reducer, actions, CtlClass, ctlParams) {
     if (!isFunction(reducer)) {
       const msg = "Attempt to create a module, but reducer is not a function";
 
@@ -220,9 +220,15 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
+    if (!Array.isArray(ctlParams)) {
+      const msg = `Attempt to create a module with a wrong ctl params. It MUST be an array.`;
+
+      throw new InvalidParamsError(msg);
+    }
+
     this.__pathMdl = undefined;
     this.__reducerMdl = reducer;
-    this.__controllerMdl = new CtlClass(actions);
+    this.__controllerMdl = new CtlClass(...ctlParams, actions);
 
     this.__validateControllerMdl(this.__controllerMdl);
   }
@@ -280,22 +286,27 @@ class Module {
 
 const modulesList = [];
 
-export function createModule(ControllerArg, reducerArg, actionsArg = {}) {
+export function createModule(...args) {
   let reducer;
   let actions;
   let Controller;
+  let CtlParams;
 
-  if (isPlainObject(ControllerArg)) {
-    reducer = ControllerArg.reducer;
-    actions = get(ControllerArg, "actions", {});
-    Controller = ControllerArg.Ctl;
+  if (args.length === 1) {
+    reducer = args[0].reducer;
+    actions = args[0].actions;
+    Controller = args[0].Ctl;
   } else {
-    reducer = reducerArg;
-    actions = actionsArg;
-    Controller = ControllerArg;
+    Controller = args[0];
+    reducer = args[1];
+    actions = args[2];
   }
 
-  const module = new Module(reducer, actions, Controller);
+  actions = typeof actions !== 'undefined' ? actions : {};
+  CtlParams = typeof Controller.params !== 'undefined' ? Controller.params : [];
+  Controller = Controller.Ctl || Controller;
+
+  const module = new Module(reducer, actions, Controller, CtlParams);
 
   const proxy = new Proxy(module, {
     get(target, propName) {

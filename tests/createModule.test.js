@@ -25,9 +25,17 @@ describe("createModule", () => {
       createModule(VALID_CLASS, MODULE_REDUCER, {
         action0: {creator: actionCreator, type: actionCreator.type},
       });
+      createModule({Ctl: VALID_CLASS}, MODULE_REDUCER, {
+        action0: {creator: actionCreator, type: actionCreator.type},
+      });
 
       createModule({
         Ctl: VALID_CLASS,
+        reducer: MODULE_REDUCER,
+        actions: {action0: {creator: actionCreator, type: actionCreator.type}},
+      });
+      createModule({
+        Ctl: {Ctl: VALID_CLASS},
         reducer: MODULE_REDUCER,
         actions: {action0: {creator: actionCreator, type: actionCreator.type}},
       });
@@ -37,13 +45,47 @@ describe("createModule", () => {
   testAllValues((ctl, type) => {
     it(`should throw an error if a controller is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
       expect(() => {
-        createModule(ctl, () => {});
+        createModule(ctl, MODULE_REDUCER);
       }).toThrow();
 
       expect(() => {
-        createModule({Ctl: ctl, reducer: () => {}});
+        createModule({Ctl: ctl}, MODULE_REDUCER);
+      }).toThrow();
+
+      expect(() => {
+        createModule({Ctl: ctl, reducer: MODULE_REDUCER});
+      }).toThrow();
+
+      expect(() => {
+        createModule({Ctl: {Ctl: ctl}, reducer: MODULE_REDUCER});
       }).toThrow();
     });
+  });
+
+  testAllValues((params, type) => {
+    it(`should throw an error if a controllers params is not an array: "${params}" of type "${type}"`, () => {
+      expect(() => {
+        createModule({Ctl: VALID_CLASS, params}, MODULE_REDUCER);
+      }).toThrow();
+
+      expect(() => {
+        createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
+      }).toThrow();
+    });
+  }, {
+    exclude: [allValuesTypes.ARRAY, allValuesTypes.UNDEFINED],
+  });
+
+  it('should not throw an error if a controller passed with params', () => {
+    const params = ['foo', true];
+
+    expect(() => {
+      createModule({Ctl: VALID_CLASS, params}, MODULE_REDUCER);
+    }).not.toThrow();
+
+    expect(() => {
+      createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
+    }).not.toThrow();
   });
 
   testAllValues(
@@ -131,6 +173,25 @@ describe("createModule", () => {
         },
       });
     }).not.toThrow();
+  });
+
+  it('should pass the controller params into the controller constructor before the actions', () => {
+    const param0 = 'foo';
+    const param1 = 1;
+    const param2 = false;
+    const params = [param0, param1, param2];
+    const spy = jest.fn();
+
+    class Ctl extends RMCCtl {
+      constructor(param0, param1, param2, ...rest) {
+        super(...rest);
+
+        spy(param0, param1, param2);
+      }
+    }
+    createModule({Ctl, params}, MODULE_REDUCER);
+
+    expect(spy).toHaveBeenCalledWith(...params);
   });
 
   it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
