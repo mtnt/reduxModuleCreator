@@ -1,9 +1,9 @@
-import uniqueId from "lodash.uniqueid";
+import uniqueId from 'lodash.uniqueid';
 
-import {createStore, createModule} from "../src";
+import {createStore, createModule} from '../src';
 
 export function getActionCreator() {
-  const type = uniqueId("action");
+  const type = uniqueId('action');
 
   const actionCreator = function(payload) {
     return {
@@ -32,5 +32,5 @@ export function creator(Ctl, reducer, modulePath = getUniquePath()) {
 }
 
 export function getUniquePath() {
-  return uniqueId("modulePath");
+  return uniqueId('modulePath');
 }

@@ -1,5 +1,5 @@
-import get from "lodash.get";
-import isFunction from "lodash.isfunction";
+import get from 'lodash.get';
+import isFunction from 'lodash.isfunction';
 
 export function combineReducers(stateReducerMap, rootPath) {
   return function(state, action) {
@@ -23,4 +23,8 @@ export function combineReducers(stateReducerMap, rootPath) {
 
     return changed ? nextState : state;
   };
+}
+
+export function isString(str) {
+  return typeof str === 'string';
 }

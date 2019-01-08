@@ -1,16 +1,16 @@
-import get from "lodash.get";
-import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
+import get from 'lodash.get';
+import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 
-import {createModule, createStore, RMCCtl} from "../src";
+import {createModule, createStore, RMCCtl} from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
-    name: "initial",
+    name: 'initial',
   };
 };
 
-describe("module.integrator()", () => {
+describe('module.integrator()', () => {
   testAllValues(
     (path, type) => {
       const desc_100 =
@@ -26,15 +26,15 @@ describe("module.integrator()", () => {
     {exclude: [allValuesTypes.STRING, allValuesTypes.ARRAY]}
   );
 
-  it("should throw an error if path is empty string", () => {
+  it('should throw an error if path is empty string', () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
-      module.integrator("");
+      module.integrator('');
     }).toThrow();
   });
 
-  it("should throw an error if path is empty array", () => {
+  it('should throw an error if path is empty array', () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
@@ -42,26 +42,26 @@ describe("module.integrator()", () => {
     }).toThrow();
   });
 
-  it("should throw an error if path is array with at least one nonestring value", () => {
+  it('should throw an error if path is array with at least one nonestring value', () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
-      module.integrator(["foo", 1, "bar"]);
+      module.integrator(['foo', 1, 'bar']);
     }).toThrow();
   });
 
-  it("should throw an error if path is changed", () => {
+  it('should throw an error if path is changed', () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
-    module.integrator("path0");
+    module.integrator('path0');
 
     expect(() => {
-      module.integrator("path1");
+      module.integrator('path1');
     }).toThrow();
   });
 
-  it("should correct handle a combination of array and dot separated string", () => {
-    const testValue = "foo";
+  it('should correct handle a combination of array and dot separated string', () => {
+    const testValue = 'foo';
     class Ctl extends RMCCtl {
       getState() {
         return this.ownState;
@@ -70,7 +70,7 @@ describe("module.integrator()", () => {
 
     const module = createModule(Ctl, () => testValue);
 
-    const pathParts = ["first", "second", "third", "four", "fifth"];
+    const pathParts = ['first', 'second', 'third', 'four', 'fifth'];
 
     function rootReducer(state = {}, action) {
       return {
@@ -93,9 +93,9 @@ describe("module.integrator()", () => {
     expect(module.getState()).toBe(testValue);
   });
 
-  it("should return a function that is the reducer in the arguments list", () => {
+  it('should return a function that is the reducer in the arguments list', () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
-    const resultReducer = module.integrator("path");
+    const resultReducer = module.integrator('path');
 
     expect(resultReducer).toBe(MODULE_REDUCER);
   });
@@ -104,7 +104,7 @@ describe("module.integrator()", () => {
     const module = createModule(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
-      module.integrator("0");
+      module.integrator('0');
     }).not.toThrow();
   });
 });

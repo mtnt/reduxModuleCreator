@@ -1,9 +1,9 @@
-import {createModule, RMCCtl, combineReducers} from "../src";
+import {createModule, RMCCtl, combineReducers} from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 
-describe("combineReducers", () => {
-  it("should return a function", () => {
+describe('combineReducers', () => {
+  it('should return a function', () => {
     const reducer = combineReducers({
       foo: () => 1,
       bar: () => 2,
@@ -12,7 +12,7 @@ describe("combineReducers", () => {
     expect(reducer).toEqual(expect.any(Function));
   });
 
-  it("should call each reducer in the state map and map results into new state", () => {
+  it('should call each reducer in the state map and map results into new state', () => {
     const expected = {
       foo: 1,
       bar: 2,
@@ -25,7 +25,7 @@ describe("combineReducers", () => {
     expect(reducer()).toEqual(expected);
   });
 
-  it("should pass into each reducer an appropriate state, action and full path", () => {
+  it('should pass into each reducer an appropriate state, action and full path', () => {
     const fn0 = jest.fn(() => 1);
     const fn1 = jest.fn(() => 2);
 
@@ -38,10 +38,10 @@ describe("combineReducers", () => {
     });
 
     const state = {
-      [path0]: "oldFoo",
-      [path1]: "oldBar",
+      [path0]: 'oldFoo',
+      [path1]: 'oldBar',
     };
-    const action = {type: "exampleAction"};
+    const action = {type: 'exampleAction'};
 
     reducer(state, action);
 
@@ -49,14 +49,14 @@ describe("combineReducers", () => {
     expect(fn1).toHaveBeenCalledWith(state[path1], action, path1);
   });
 
-  it("should return the original state if result values the same", () => {
+  it('should return the original state if result values the same', () => {
     const state = {
       foo: 1,
-      bar: "bar",
+      bar: 'bar',
       baz: {
         foo: [23],
       },
-      some: ["ff", 11, true],
+      some: ['ff', 11, true],
     };
 
     const reducer = combineReducers({
@@ -69,7 +69,7 @@ describe("combineReducers", () => {
     expect(reducer(state)).toBe(state);
   });
 
-  it("should work ok either with usual reducers or a module`s integrator result", () => {
+  it('should work ok either with usual reducers or a module`s integrator result', () => {
     const module0 = createModule(VALID_CLASS, () => 0);
     const module1 = createModule(VALID_CLASS, () => 1);
 

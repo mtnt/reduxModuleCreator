@@ -1,11 +1,11 @@
-import {linkStore, unlinkStore} from "../src";
+import {linkStore, unlinkStore} from '../src';
 
-describe("linkStore", () => {
+describe('linkStore', () => {
   afterEach(() => {
     unlinkStore();
   });
 
-  it("should throw an error if called twice", () => {
+  it('should throw an error if called twice', () => {
     linkStore({});
 
     expect(() => {
@@ -13,7 +13,7 @@ describe("linkStore", () => {
     }).toThrow();
   });
 
-  it("should be ok after unlink store", () => {
+  it('should be ok after unlink store', () => {
     linkStore({});
     unlinkStore();
 
@@ -23,8 +23,8 @@ describe("linkStore", () => {
   });
 });
 
-describe("unlinkStore", () => {
-  it("should throw an error if unlink before link", () => {
+describe('unlinkStore', () => {
+  it('should throw an error if unlink before link', () => {
     expect(() => {
       unlinkStore();
     }).toThrow();

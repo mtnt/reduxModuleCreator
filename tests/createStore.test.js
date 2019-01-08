@@ -1,17 +1,17 @@
-import {createStore, unlinkStore, RMCCtl, createModule} from "../src";
-import {getUniquePath} from "./helpers";
+import {createStore, unlinkStore, RMCCtl, createModule} from '../src';
+import {getUniquePath} from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const INVALID_CLASS = class SCtl extends RMCCtl {}; // there is no option to make class invalid (yet)
 
-describe("createStore", () => {
+describe('createStore', () => {
   afterEach(() => {
     try {
       unlinkStore();
     } catch (e) {}
   });
 
-  it("should throw an error if called twice", () => {
+  it('should throw an error if called twice', () => {
     createStore(() => {});
 
     expect(() => {
@@ -19,7 +19,7 @@ describe("createStore", () => {
     }).toThrow();
   });
 
-  it("should link store with valid module after invalid one", () => {
+  it('should link store with valid module after invalid one', () => {
     try {
       createModule(INVALID_CLASS, () => {});
     } catch (e) {}

@@ -1,9 +1,9 @@
-import ExtendableError from "es6-error";
+import ExtendableError from 'es6-error';
 
 export class RMCError extends ExtendableError {
-  static domain = "RMCError";
+  static domain = 'RMCError';
 
-  constructor(message = "") {
+  constructor(message = '') {
     super(message);
 
     const domains = [];
@@ -14,7 +14,7 @@ export class RMCError extends ExtendableError {
       prototype = prototype.__proto__;
     } while (prototype.constructor !== ExtendableError);
 
-    this.message = domains.join(".") + (message ? `: ${message}` : "");
+    this.message = domains.join('.') + (message ? `: ${message}` : '');
   }
 
   get domain() {
@@ -23,17 +23,17 @@ export class RMCError extends ExtendableError {
 }
 
 export class InvalidParamsError extends RMCError {
-  static domain = "InvalidParams";
+  static domain = 'InvalidParams';
 }
 
 export class InsufficientDataError extends RMCError {
-  static domain = "InsufficientData";
+  static domain = 'InsufficientData';
 }
 
 export class WrongInterfaceError extends RMCError {
-  static domain = "WrongInterface";
+  static domain = 'WrongInterface';
 }
 
 export class DuplicateError extends RMCError {
-  static domain = "Duplicate";
+  static domain = 'Duplicate';
 }

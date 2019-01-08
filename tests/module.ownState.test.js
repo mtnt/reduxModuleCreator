@@ -1,13 +1,13 @@
-import cloneDeep from "lodash.clonedeep";
-import {createStore as reduxCreateStore} from "redux";
+import cloneDeep from 'lodash.clonedeep';
+import {createStore as reduxCreateStore} from 'redux';
 
-import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
-import {getActionCreator, creator, getUniquePath} from "./helpers";
+import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from '../src';
+import {getActionCreator, creator, getUniquePath} from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
-    name: "initial",
+    name: 'initial',
   };
 };
 
@@ -17,12 +17,12 @@ afterEach(() => {
   } catch (e) {}
 });
 
-describe("module.ownState", () => {
-  describe("for getting data", () => {
-    it("should be accessible from outside", () => {
+describe('module.ownState', () => {
+  describe('for getting data', () => {
+    it('should be accessible from outside', () => {
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const expected = cloneDeep(ownState);
       const reducer = (state = {}, action) => {
@@ -33,10 +33,10 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("should be accessible from inside of controller`s method", () => {
+    it('should be accessible from inside of controller`s method', () => {
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const expected = cloneDeep(ownState);
       const reducer = (state = {}, action) => {
@@ -52,10 +52,10 @@ describe("module.ownState", () => {
       expect(module.getOwnState()).toEqual(expected);
     });
 
-    it("should be accessible from inside of controller`s arrow method", () => {
+    it('should be accessible from inside of controller`s arrow method', () => {
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const expected = cloneDeep(ownState);
       const reducer = (state = {}, action) => {
@@ -71,12 +71,12 @@ describe("module.ownState", () => {
       expect(module.getOwnState()).toEqual(expected);
     });
 
-    it("should be accessible from inside of the `_stateDidUpdate` method", () => {
+    it('should be accessible from inside of the `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
@@ -103,12 +103,12 @@ describe("module.ownState", () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it("should be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+    it('should be accessible from inside of the arrow `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
@@ -135,10 +135,10 @@ describe("module.ownState", () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it("should be `undefined` before store get linked", () => {
+    it('should be `undefined` before store get linked', () => {
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const reducer = (state = {}, action) => {
         return ownState;
@@ -157,10 +157,10 @@ describe("module.ownState", () => {
       expect(module.ownState).toBe(undefined);
     });
 
-    it("should be `undefined` while store is unlinked", () => {
+    it('should be `undefined` while store is unlinked', () => {
       const ownState = {
-        foo: "bar",
-        bar: "foo",
+        foo: 'bar',
+        bar: 'foo',
       };
       const reducer = (state = {}, action) => {
         return ownState;
@@ -173,8 +173,8 @@ describe("module.ownState", () => {
     });
   });
 
-  describe("for setting whole state", () => {
-    it("shouldn`t be accessible from outside", () => {
+  describe('for setting whole state', () => {
+    it('shouldn`t be accessible from outside', () => {
       const module = creator(VALID_CLASS, MODULE_REDUCER);
 
       expect(() => {
@@ -182,7 +182,7 @@ describe("module.ownState", () => {
       }).toThrow();
     });
 
-    it("shouldn`t be accessible from inside of controller`s method", () => {
+    it('shouldn`t be accessible from inside of controller`s method', () => {
       class Ctl extends VALID_CLASS {
         someMethod() {
           this.ownState = {};
@@ -195,7 +195,7 @@ describe("module.ownState", () => {
       }).toThrow();
     });
 
-    it("shouldn`t be accessible from inside of controller`s arrow method", () => {
+    it('shouldn`t be accessible from inside of controller`s arrow method', () => {
       class Ctl extends VALID_CLASS {
         someMethod = () => {
           this.ownState = {};
@@ -208,7 +208,7 @@ describe("module.ownState", () => {
       }).toThrow();
     });
 
-    it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
+    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
@@ -234,7 +234,7 @@ describe("module.ownState", () => {
       }).toThrow();
     });
 
-    it("shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
@@ -261,14 +261,14 @@ describe("module.ownState", () => {
     });
   });
 
-  describe("for setting a part of the state", () => {
-    it("should be accessible from outside", () => {
+  describe('for setting a part of the state', () => {
+    it('should be accessible from outside', () => {
       const ownState = {
         foo: {
-          bar: "foo",
+          bar: 'foo',
         },
       };
-      const nextFoo = "nextFoo";
+      const nextFoo = 'nextFoo';
       const expected = {
         foo: nextFoo,
       };
@@ -282,13 +282,13 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("should be accessible from inside of controller`s method", () => {
+    it('should be accessible from inside of controller`s method', () => {
       const ownState = {
         foo: {
-          bar: "foo",
+          bar: 'foo',
         },
       };
-      const nextFoo = "nextFoo";
+      const nextFoo = 'nextFoo';
       const expected = {
         foo: nextFoo,
       };
@@ -307,13 +307,13 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("should be accessible from inside of controller`s arrow method", () => {
+    it('should be accessible from inside of controller`s arrow method', () => {
       const ownState = {
         foo: {
-          bar: "foo",
+          bar: 'foo',
         },
       };
-      const nextFoo = "nextFoo";
+      const nextFoo = 'nextFoo';
       const expected = {
         foo: nextFoo,
       };
@@ -332,15 +332,15 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("shouldn`t be accessible from inside of the `_stateDidUpdate` method", () => {
+    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
-          bar: "foo",
+          bar: 'foo',
         },
       };
       const actionFoo = {};
-      const manualFoo = "nextFoo";
+      const manualFoo = 'nextFoo';
       const expected = {
         foo: manualFoo,
       };
@@ -376,15 +376,15 @@ describe("module.ownState", () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it("shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method", () => {
+    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
-          bar: "foo",
+          bar: 'foo',
         },
       };
       const actionFoo = {};
-      const manualFoo = "nextFoo";
+      const manualFoo = 'nextFoo';
       const expected = {
         foo: manualFoo,
       };
