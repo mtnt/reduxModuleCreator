@@ -24,3 +24,7 @@ export function combineReducers(stateReducerMap, rootPath) {
     return changed ? nextState : state;
   };
 }
+
+export function isString(str) {
+  return typeof str === 'string';
+}
