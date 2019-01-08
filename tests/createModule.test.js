@@ -1,24 +1,24 @@
-import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
+import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 
-import {getActionCreator} from "./helpers";
+import {getActionCreator} from './helpers';
 
-import {createStore, unlinkStore, createModule, RMCCtl} from "../src";
+import {createStore, unlinkStore, createModule, RMCCtl} from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
-    name: "initial",
+    name: 'initial',
   };
 };
 
-describe("createModule", () => {
+describe('createModule', () => {
   afterEach(() => {
     try {
       unlinkStore();
     } catch (e) {}
   });
 
-  it("should get arguments as a list or an object", () => {
+  it('should get arguments as a list or an object', () => {
     const actionCreator = getActionCreator();
 
     expect(() => {
@@ -62,19 +62,22 @@ describe("createModule", () => {
     });
   });
 
-  testAllValues((params, type) => {
-    it(`should throw an error if a controllers params is not an array: "${params}" of type "${type}"`, () => {
-      expect(() => {
-        createModule({Ctl: VALID_CLASS, params}, MODULE_REDUCER);
-      }).toThrow();
+  testAllValues(
+    (params, type) => {
+      it(`should throw an error if a controllers params is not an array: "${params}" of type "${type}"`, () => {
+        expect(() => {
+          createModule({Ctl: VALID_CLASS, params}, MODULE_REDUCER);
+        }).toThrow();
 
-      expect(() => {
-        createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
-      }).toThrow();
-    });
-  }, {
-    exclude: [allValuesTypes.ARRAY, allValuesTypes.UNDEFINED],
-  });
+        expect(() => {
+          createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
+        }).toThrow();
+      });
+    },
+    {
+      exclude: [allValuesTypes.ARRAY, allValuesTypes.UNDEFINED],
+    }
+  );
 
   it('should not throw an error if a controller passed with params', () => {
     const params = ['foo', true];
@@ -194,7 +197,7 @@ describe("createModule", () => {
     expect(spy).toHaveBeenCalledWith(...params);
   });
 
-  it("should not throw an error if ctl class doesn`t have `_stateDidUpdate` method", () => {
+  it('should not throw an error if ctl class doesn`t have `_stateDidUpdate` method', () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
@@ -202,19 +205,19 @@ describe("createModule", () => {
     }).not.toThrow();
   });
 
-  it("should fire a warning if a controller has a same named method or property with Module", () => {
+  it('should fire a warning if a controller has a same named method or property with Module', () => {
     class Ctl extends VALID_CLASS {
       integrator() {}
     }
 
-    const warning = jest.spyOn(console, "warn");
+    const warning = jest.spyOn(console, 'warn');
 
     createModule(Ctl, () => {});
 
     expect(warning).toHaveBeenCalled();
   });
 
-  it("should throw an error if a controller has a same named private method or property with Module", () => {
+  it('should throw an error if a controller has a same named private method or property with Module', () => {
     class Ctl extends VALID_CLASS {
       __initializeMdl() {}
     }
@@ -224,13 +227,13 @@ describe("createModule", () => {
     }).toThrow();
   });
 
-  it("should return object with method integrator", () => {
+  it('should return object with method integrator', () => {
     const module = createModule(VALID_CLASS, () => {});
 
     expect(module.integrator).toEqual(expect.any(Function));
   });
 
-  it("should return different object on each call", () => {
+  it('should return different object on each call', () => {
     const reducer = () => {};
 
     const module0 = createModule(VALID_CLASS, reducer);

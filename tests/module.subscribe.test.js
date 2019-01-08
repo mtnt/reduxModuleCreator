@@ -1,19 +1,19 @@
-import {allValuesTypes, testAllValues} from "unit-tests-values-iterators";
-import noop from "lodash.noop";
+import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
+import noop from 'lodash.noop';
 
-import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from "../src";
-import {getActionCreator, creator, getUniquePath} from "./helpers";
+import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from '../src';
+import {getActionCreator, creator, getUniquePath} from './helpers';
 
 const payload0 = {
-  name: "payload0",
+  name: 'payload0',
   value: true,
 };
 const payload1 = {
-  name: "payload1",
+  name: 'payload1',
   value: false,
 };
 const initialData = {
-  name: "initial",
+  name: 'initial',
 };
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -27,11 +27,11 @@ afterEach(() => {
   } catch (e) {}
 });
 
-describe("module.subscribe", () => {
+describe('module.subscribe', () => {
   testAllValues(
     (listener, type) => {
       it(`should throw an error if get none function argument: ${listener} of type ${type}`, () => {
-        const module = creator(VALID_CLASS, MODULE_REDUCER, );
+        const module = creator(VALID_CLASS, MODULE_REDUCER);
 
         expect(() => {
           module.subscribe(listener);
@@ -41,7 +41,7 @@ describe("module.subscribe", () => {
     {exclude: [allValuesTypes.FUNCTION]}
   );
 
-  it("should be able to get called several times with different listeners", () => {
+  it('should be able to get called several times with different listeners', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
@@ -50,7 +50,7 @@ describe("module.subscribe", () => {
     }).not.toThrow();
   });
 
-  it("should be able to get called several times with same listener", () => {
+  it('should be able to get called several times with same listener', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
     const listener = function() {};
 
@@ -60,7 +60,7 @@ describe("module.subscribe", () => {
     }).not.toThrow();
   });
 
-  it("should call listener single time when state get changed once", () => {
+  it('should call listener single time when state get changed once', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -83,7 +83,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it("should call listener single time even it was added twice", () => {
+  it('should call listener single time even it was added twice', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -106,7 +106,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it("should call each listener", () => {
+  it('should call each listener', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -131,7 +131,7 @@ describe("module.subscribe", () => {
     expect(listener1).toHaveBeenCalledTimes(1);
   });
 
-  it("should call listener with prev and new state arguments", () => {
+  it('should call listener with prev and new state arguments', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -153,7 +153,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledWith(initialData, payload0);
   });
 
-  it("should return function unsubscriber", () => {
+  it('should return function unsubscriber', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
 
     const unsubscriber = module.subscribe(function() {});
@@ -161,7 +161,7 @@ describe("module.subscribe", () => {
     expect(unsubscriber).toEqual(expect.any(Function));
   });
 
-  it("should not call listener after unsubscribe", () => {
+  it('should not call listener after unsubscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -184,7 +184,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(0);
   });
 
-  it("should not call listener after unlink store", () => {
+  it('should not call listener after unlink store', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -213,7 +213,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(0);
   });
 
-  it("should keep subscription even after relink store", () => {
+  it('should keep subscription even after relink store', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -246,7 +246,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it("should not call listener if state is not actually changed", () => {
+  it('should not call listener if state is not actually changed', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
@@ -276,7 +276,7 @@ describe("module.subscribe", () => {
     expect(listener).toHaveBeenCalledTimes(0);
   });
 
-  it("actions does not affects module after unlink store", () => {
+  it('actions does not affects module after unlink store', () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {

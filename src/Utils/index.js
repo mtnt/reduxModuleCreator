@@ -1,5 +1,5 @@
-import get from "lodash.get";
-import isFunction from "lodash.isfunction";
+import get from 'lodash.get';
+import isFunction from 'lodash.isfunction';
 
 export function combineReducers(stateReducerMap, rootPath) {
   return function(state, action) {

@@ -1,15 +1,15 @@
-import get from "lodash.get";
-import isFunction from "lodash.isfunction";
-import isPlainObject from "lodash.isplainobject";
-import uniqueId from "lodash.uniqueid";
+import get from 'lodash.get';
+import isFunction from 'lodash.isfunction';
+import isPlainObject from 'lodash.isplainobject';
+import uniqueId from 'lodash.uniqueid';
 
-import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
-import {isString} from "../Utils";
+import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
+import {isString} from '../Utils';
 
 let isStoreLinked = false;
 export function linkStore(globalStore) {
   if (isStoreLinked) {
-    throw new DuplicateError("Attempt to link store twice");
+    throw new DuplicateError('Attempt to link store twice');
   }
 
   isStoreLinked = true;
@@ -21,21 +21,21 @@ export function linkStore(globalStore) {
 
 export function unlinkStore() {
   switch (process.env.NODE_ENV) {
-    case "production": {
+    case 'production': {
       const msg =
-        "It`s not possible to unlink a store on production. It may cause unpredictable issues related to" +
-        " dependency breaks";
+        'It`s not possible to unlink a store on production. It may cause unpredictable issues related to' +
+        ' dependency breaks';
 
       throw new WrongInterfaceError(msg);
     }
 
-    case "development": {
-      console.warn("The deprecated method unlinkStore was called. It will cause an exception in production mode.");
+    case 'development': {
+      console.warn('The deprecated method unlinkStore was called. It will cause an exception in production mode.');
     }
   }
 
   if (!isStoreLinked) {
-    throw new InsufficientDataError("Attempt to unlink not linked store");
+    throw new InsufficientDataError('Attempt to unlink not linked store');
   }
 
   isStoreLinked = false;
@@ -55,7 +55,7 @@ export class RMCCtl {
     this.__uniquePostfix = uniqueId();
 
     let ownProperty;
-    Object.defineProperty(this, "ownState", {
+    Object.defineProperty(this, 'ownState', {
       get() {
         if (!this.__storeCtl) {
           return;
@@ -65,7 +65,7 @@ export class RMCCtl {
       },
       set(value) {
         if (!this.__writable) {
-          throw new WrongInterfaceError("Attempt to set ownState. This property changes via dispatching actions only.");
+          throw new WrongInterfaceError('Attempt to set ownState. This property changes via dispatching actions only.');
         }
 
         ownProperty = value;
@@ -161,7 +161,7 @@ export class RMCCtl {
 
   __dispatch(action) {
     if (!this.__storeCtl) {
-      throw new WrongInterfaceError("Can not dispatch while store is not linked");
+      throw new WrongInterfaceError('Can not dispatch while store is not linked');
     }
 
     this.__storeCtl.dispatch(action);
@@ -169,7 +169,7 @@ export class RMCCtl {
 
   subscribe(listener) {
     if (!isFunction(listener)) {
-      throw new InvalidParamsError("Attempt to subscribe, but listener is not a function");
+      throw new InvalidParamsError('Attempt to subscribe, but listener is not a function');
     }
 
     this.__stateChangeListeners.add(listener);
@@ -179,24 +179,24 @@ export class RMCCtl {
 }
 
 const deprecatedMethodsForCtl = [
-  "__validateControllerMdl",
-  "__initializeMdl",
-  "__pathMdl",
-  "__reducerMdl",
-  "__controllerMdl",
-  "__deinitialize",
+  '__validateControllerMdl',
+  '__initializeMdl',
+  '__pathMdl',
+  '__reducerMdl',
+  '__controllerMdl',
+  '__deinitialize',
 ];
-const warnMethodsForCtl = ["integrator"];
+const warnMethodsForCtl = ['integrator'];
 class Module {
   constructor(reducer, actions, CtlClass, ctlParams) {
     if (!isFunction(reducer)) {
-      const msg = "Attempt to create a module, but reducer is not a function";
+      const msg = 'Attempt to create a module, but reducer is not a function';
 
       throw new InvalidParamsError(msg);
     }
 
     if (!isPlainObject(actions)) {
-      const msg = "Attempt to create a module, but actions is not an object";
+      const msg = 'Attempt to create a module, but actions is not an object';
 
       throw new InvalidParamsError(msg);
     }
@@ -262,13 +262,13 @@ class Module {
   }
 
   integrator(path) {
-    const delimiter = ".";
+    const delimiter = '.';
     const prevPath = this.__pathMdl;
 
     if (!prevPath) {
       if (
-        (!isString(path) || path === "") &&
-        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart) || pathPart === ""))
+        (!isString(path) || path === '') &&
+        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart) || pathPart === ''))
       ) {
         throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
       }
@@ -333,8 +333,8 @@ export function createModule(...args) {
     },
 
     _useTarget(target, propName) {
-      const isProtected = propName[0] === "_";
-      const isPrivate = isProtected && propName[1] === "_";
+      const isProtected = propName[0] === '_';
+      const isPrivate = isProtected && propName[1] === '_';
 
       return (isPrivate || !isProtected) && propName in target;
     },

@@ -1,21 +1,21 @@
-import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from "../src";
-import {getActionCreator, getUniquePath} from "./helpers";
+import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from '../src';
+import {getActionCreator, getUniquePath} from './helpers';
 
 const payload0 = {
-  name: "payload0",
+  name: 'payload0',
   value: true,
 };
 const payload1 = {
-  name: "payload1",
+  name: 'payload1',
   value: false,
 };
 const initialData = {
-  name: "initial",
+  name: 'initial',
 };
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
-    name: "initial",
+    name: 'initial',
   };
 };
 
@@ -25,8 +25,8 @@ afterEach(() => {
   } catch (e) {}
 });
 
-describe("module.dispatch", () => {
-  it("called single time", () => {
+describe('module.dispatch', () => {
+  it('called single time', () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -35,14 +35,14 @@ describe("module.dispatch", () => {
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
-    const dispatchSpy = jest.spyOn(store, "dispatch");
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
 
     module.actions.action();
 
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("called several times with a same action but different payloads", () => {
+  it('called several times with a same action but different payloads', () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -51,7 +51,7 @@ describe("module.dispatch", () => {
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
-    const dispatchSpy = jest.spyOn(store, "dispatch");
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
 
     module.actions.action(payload0);
 
@@ -70,7 +70,7 @@ describe("module.dispatch", () => {
     });
   });
 
-  it("called several times with totally same actions (including payloads)", () => {
+  it('called several times with totally same actions (including payloads)', () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -79,7 +79,7 @@ describe("module.dispatch", () => {
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
-    const dispatchSpy = jest.spyOn(store, "dispatch");
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
 
     module.actions.action(payload0);
     module.actions.action(payload0);
@@ -91,7 +91,7 @@ describe("module.dispatch", () => {
     });
   });
 
-  it("called with an action that shouldn`t affect module`s state", () => {
+  it('called with an action that shouldn`t affect module`s state', () => {
     const stateDidUpdate = jest.fn();
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
@@ -121,7 +121,7 @@ describe("module.dispatch", () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 
-  it("should use action with type based on specified", () => {
+  it('should use action with type based on specified', () => {
     const actionCreator = getActionCreator();
 
     let module;
@@ -147,7 +147,7 @@ describe("module.dispatch", () => {
     expect(spy).toHaveBeenCalledWith(payload0);
   });
 
-  it("should throw an error while store is unlinked", () => {
+  it('should throw an error while store is unlinked', () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -164,7 +164,7 @@ describe("module.dispatch", () => {
     }).toThrow();
   });
 
-  it("should use proxied action", () => {
+  it('should use proxied action', () => {
     const actionCreator = getActionCreator();
 
     const innerModule = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -172,7 +172,7 @@ describe("module.dispatch", () => {
     });
 
     function outerReducer(state = {}, action, rootPath) {
-      const innerPath = "inner";
+      const innerPath = 'inner';
 
       return {
         [innerPath]: innerModule.integrator(innerPath)(state[innerPath], action, [rootPath, innerPath]),
@@ -185,7 +185,7 @@ describe("module.dispatch", () => {
     const spy = jest.fn();
 
     function rootReducer(state = {}, action) {
-      const outerPath = "outer";
+      const outerPath = 'outer';
 
       spy(action);
 

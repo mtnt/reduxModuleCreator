@@ -1,12 +1,10 @@
-import noop from "lodash.noop";
-
-import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from "../src";
-import {getActionCreator, creator, getUniquePath} from "./helpers";
+import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from '../src';
+import {getActionCreator, creator, getUniquePath} from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
   return {
-    name: "initial",
+    name: 'initial',
   };
 };
 
@@ -16,8 +14,8 @@ afterEach(() => {
   } catch (e) {}
 });
 
-describe("module", () => {
-  it("should have access to the controller`s methods and properties directly from the module", () => {
+describe('module', () => {
+  it('should have access to the controller`s methods and properties directly from the module', () => {
     class Ctl extends VALID_CLASS {
       getter0() {
         return 0;
@@ -50,7 +48,7 @@ describe("module", () => {
     expect(module.getter1()).toBe(3);
   });
 
-  it("should use Module`s method if same named public methods exists in a module and a controller", () => {
+  it('should use Module`s method if same named public methods exists in a module and a controller', () => {
     const integrator = jest.fn();
 
     class Ctl extends VALID_CLASS {
@@ -64,7 +62,7 @@ describe("module", () => {
     expect(integrator).toHaveBeenCalledTimes(0);
   });
 
-  it("should have access to controller`s protected methods from the module", () => {
+  it('should have access to controller`s protected methods from the module', () => {
     const someFunc0 = jest.fn();
     const someFunc1 = jest.fn();
 
@@ -85,7 +83,7 @@ describe("module", () => {
     expect(someFunc1).toHaveBeenCalledTimes(1);
   });
 
-  it("should have access to controller`s protected method from inside another controller`s methods", () => {
+  it('should have access to controller`s protected method from inside another controller`s methods', () => {
     const someFunc0 = jest.fn();
     const someFunc1 = jest.fn();
 
@@ -117,7 +115,7 @@ describe("module", () => {
 
   it("should have access to parent`s method using 'super'", () => {
     const actionCreator = getActionCreator();
-    function reducer(state = "initial", action) {
+    function reducer(state = 'initial', action) {
       switch (action.type) {
         case actionCreator.type:
           return action.payload;
@@ -153,13 +151,13 @@ describe("module", () => {
     expect(someFunc0).toHaveBeenCalledTimes(1);
     expect(someFunc1).toHaveBeenCalledTimes(1);
 
-    store.dispatch(actionCreator("payload"));
+    store.dispatch(actionCreator('payload'));
 
     expect(listener0).toHaveBeenCalledTimes(1);
     expect(listener1).toHaveBeenCalledTimes(1);
   });
 
-  it("should have access to actions from the controller methods", () => {
+  it('should have access to actions from the controller methods', () => {
     const payload = 'foo';
     class Ctl extends RMCCtl {
       method0() {
@@ -175,7 +173,7 @@ describe("module", () => {
           return {payload};
         },
         type: 'sampleAction',
-      }
+      },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
     createStore(rootReducer);
@@ -185,9 +183,9 @@ describe("module", () => {
     expect(spy).toHaveBeenCalledWith(payload);
   });
 
-  it("should not use Module`s method if called from controller`s method", () => {
+  it('should not use Module`s method if called from controller`s method', () => {
     const actionCreator = getActionCreator();
-    function reducer(state = "initial", action) {
+    function reducer(state = 'initial', action) {
       switch (action.type) {
         case actionCreator.type:
           return action.payload;
@@ -214,7 +212,7 @@ describe("module", () => {
     expect(result1).toBe(undefined);
   });
 
-  it("should call controllers method `_didLinkedWithStore` on get linked", () => {
+  it('should call controllers method `_didLinkedWithStore` on get linked', () => {
     const testFunc = jest.fn();
     class Ctl extends VALID_CLASS {
       _didLinkedWithStore() {
@@ -227,7 +225,7 @@ describe("module", () => {
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
 
-  it("should call controllers method `_didUnlinkedWithStore` on get unlinked", () => {
+  it('should call controllers method `_didUnlinkedWithStore` on get unlinked', () => {
     const testFunc = jest.fn();
     class Ctl extends VALID_CLASS {
       _didUnlinkedWithStore() {
@@ -242,7 +240,7 @@ describe("module", () => {
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
 
-  it("should contain methods equally named with actions", () => {
+  it('should contain methods equally named with actions', () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
@@ -255,7 +253,7 @@ describe("module", () => {
     expect(module.actions.action1).toEqual(expect.any(Function));
   });
 
-  it("should contain actions with types based but not equal with specified", () => {
+  it('should contain actions with types based but not equal with specified', () => {
     const actionCreator = getActionCreator();
 
     const module = createModule(VALID_CLASS, MODULE_REDUCER, {
@@ -266,7 +264,7 @@ describe("module", () => {
     expect(module.actions.action.actionType).toContain(actionCreator.type);
   });
 
-  it("should contain actions with types different in instances", () => {
+  it('should contain actions with types different in instances', () => {
     const actionCreator = getActionCreator();
 
     const module0 = createModule(VALID_CLASS, MODULE_REDUCER, {
