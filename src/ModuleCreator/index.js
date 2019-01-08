@@ -1,4 +1,8 @@
-import {get, isFunction, isString, isEqual, isPlainObject, uniqueId} from "lodash";
+import get from 'lodash.get';
+import isFunction from 'lodash.isfunction';
+import isString from 'lodash.isstring';
+import isPlainObject from 'lodash.isplainobject';
+import uniqueId from 'lodash.uniqueid';
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from "../lib/baseErrors";
 
@@ -134,7 +138,7 @@ export class RMCCtl {
 
     this.__setOwnStateCtl(ownState);
 
-    if (isEqual(ownState, prevOwnState)) {
+    if (ownState === prevOwnState) {
       return;
     }
 
@@ -244,18 +248,19 @@ class Module {
   }
 
   integrator(path) {
+    const delimiter = '.';
     const prevPath = this.__pathMdl;
 
     if (!prevPath) {
       if (
         (!isString(path) || path === "") &&
-        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart)))
+        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart) || pathPart === ""))
       ) {
         throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
       }
 
-      this.__pathMdl = path;
-    } else if (!isEqual(prevPath, path)) {
+      this.__pathMdl = Array.isArray(path) ? path.join(delimiter) : path;
+    } else if (isString(path) && path !== prevPath || Array.isArray(path) && path.join(delimiter) !== prevPath) {
       const msg = `Attempt to change a path of integration: "${prevPath}" -> "${path}"`;
 
       throw new InvalidParamsError(msg);
