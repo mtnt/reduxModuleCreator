@@ -159,6 +159,32 @@ describe("module", () => {
     expect(listener1).toHaveBeenCalledTimes(1);
   });
 
+  it("should have access to actions from the controller methods", () => {
+    const payload = 'foo';
+    class Ctl extends RMCCtl {
+      method0() {
+        this.actions.action0(payload);
+      }
+    }
+    const spy = jest.fn();
+    const module = createModule(Ctl, MODULE_REDUCER, {
+      action0: {
+        creator: payload => {
+          spy(payload);
+
+          return {payload};
+        },
+        type: 'sampleAction',
+      }
+    });
+    const rootReducer = combineReducers({[getUniquePath()]: module});
+    createStore(rootReducer);
+
+    module.method0();
+
+    expect(spy).toHaveBeenCalledWith(payload);
+  });
+
   it("should not use Module`s method if called from controller`s method", () => {
     const actionCreator = getActionCreator();
     function reducer(state = "initial", action) {
