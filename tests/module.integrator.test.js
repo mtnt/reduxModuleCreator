@@ -1,7 +1,7 @@
-import get from 'lodash.get';
 import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 
 import {createModule, createStore, RMCCtl} from '../src';
+import {pathDelimiter} from '../src/lib/constansts';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -70,18 +70,35 @@ describe('module.integrator()', () => {
 
     const module = createModule(Ctl, () => testValue);
 
-    const pathParts = ['first', 'second', 'third', 'four', 'fifth'];
+    const pathParts = ['first', 'second', 'third', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    const testPath = [
+      pathParts[0],
+      `${pathParts[1]}${pathDelimiter}${pathParts[2]}`,
+      pathParts[3],
+      [pathParts[4], [pathParts[5], pathParts[6]]],
+      [[pathParts[7], pathParts[8]]],
+    ];
 
     function rootReducer(state = {}, action) {
       return {
         [pathParts[0]]: {
           [pathParts[1]]: {
             [pathParts[2]]: {
-              [pathParts[3]]: module.integrator([pathParts[0], `${pathParts[1]}.${pathParts[2]}`, pathParts[3]])(
-                state[pathParts[0]],
-                action,
-                pathParts[0]
-              ),
+              [pathParts[3]]: {
+                [pathParts[4]]: {
+                  [pathParts[5]]: {
+                    [pathParts[6]]: {
+                      [pathParts[7]]: {
+                        [pathParts[8]]: module.integrator(testPath)(
+                          state[pathParts.join(pathDelimiter)],
+                          action,
+                          testPath
+                        ),
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },

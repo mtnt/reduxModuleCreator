@@ -247,7 +247,9 @@ Create a module with the reducer and the controller
 Returns `module`:
 #### integrator(path)
 Integrate your module into reducers tree.
-- `path` is a path to module\`s data in a state. It can be dot separated string like `some.module.path` or array of strings - `['some', 'module', 'path']`. It\`s important to pass full path (from a root).
+- `path` is a path to module\`s data in a state. It can be dot separated string like `some.module.path` or array of strings - `['some', 'module', 'path']`. It\`s important to pass full path (from a root).  
+
+>NB: In spite of a path may be a deeply nested array of strings like `[[[[['foo', 'bar'], 'baz']]]]` it\`s strongly recommended to keep it a string for performance purpose.  
 
 #### actions
 It\`s a map of actions.

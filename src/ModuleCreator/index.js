@@ -4,7 +4,8 @@ import isPlainObject from 'lodash.isplainobject';
 import uniqueId from 'lodash.uniqueid';
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
-import {isString} from '../Utils';
+import {pathDelimiter} from '../lib/constansts';
+import {validatePath, normalizePath, isString} from '../Utils';
 
 let isStoreLinked = false;
 export function linkStore(globalStore) {
@@ -262,19 +263,18 @@ class Module {
   }
 
   integrator(path) {
-    const delimiter = '.';
+    try {
+      validatePath(path);
+    } catch(e) {
+      throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
+    }
+
     const prevPath = this.__pathMdl;
+    const nextPath = normalizePath(path);
 
     if (!prevPath) {
-      if (
-        (!isString(path) || path === '') &&
-        (!Array.isArray(path) || path.length === 0 || path.some(pathPart => !isString(pathPart) || pathPart === ''))
-      ) {
-        throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
-      }
-
-      this.__pathMdl = Array.isArray(path) ? path.join(delimiter) : path;
-    } else if ((isString(path) && path !== prevPath) || (Array.isArray(path) && path.join(delimiter) !== prevPath)) {
+      this.__pathMdl = nextPath;
+    } else if (nextPath !== prevPath) {
       const msg = `Attempt to change a path of integration: "${prevPath}" -> "${path}"`;
 
       throw new InvalidParamsError(msg);
