@@ -1,6 +1,28 @@
 import get from 'lodash.get';
 import isFunction from 'lodash.isfunction';
 
+import {pathDelimiter} from '../lib/constansts';
+
+export function validatePath(path) {
+  const isArray = Array.isArray(path);
+
+  if (!isString(path) && !isArray || path.length === 0) {
+    throw new Error('A path part is not compatible');
+  }
+
+  if (isArray) {
+    path.forEach(validatePath);
+  }
+}
+
+export function normalizePath(path) {
+  if (isString(path)) {
+    return path;
+  }
+
+  return path.map(normalizePath).join(pathDelimiter);
+}
+
 export function combineReducers(stateReducerMap, rootPath) {
   return function(state, action) {
     let changed = false;
