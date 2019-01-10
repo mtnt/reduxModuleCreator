@@ -7,7 +7,7 @@ export function combineReducers(stateReducerMap, rootPath) {
 
     const nextState = {};
     Object.entries(stateReducerMap).forEach(([path, module]) => {
-      const fullPath = rootPath ? `${rootPath}.${path}` : path;
+      const fullPath = rootPath ? [rootPath, path] : path;
       const ownState = get(state, path);
 
       if (isFunction(module.integrator)) {
