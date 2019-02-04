@@ -110,11 +110,25 @@ describe('module.integrator()', () => {
     expect(module.getState()).toBe(testValue);
   });
 
-  it('should return a function that is the reducer in the arguments list', () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+  it('should return a function that is the reducer like in the arguments list but not exactly', () => {
+    const value = 'foo';
+    const reducer = () => value;
+
+    const module = createModule(VALID_CLASS, reducer);
     const resultReducer = module.integrator('path');
 
-    expect(resultReducer).toBe(MODULE_REDUCER);
+    expect(resultReducer).not.toBe(reducer);
+    expect(resultReducer()).toBe(value);
+  });
+
+  it('should return a function that has the module as a context', () => {
+    const reducer = function() {
+      expect(this.integrator).toEqual(expect.any(Function));
+    };
+    const module = createModule(VALID_CLASS, reducer);
+    const resultReducer = module.integrator('path');
+
+    resultReducer();
   });
 
   it("should not throw an error if path is 'false digit'", () => {

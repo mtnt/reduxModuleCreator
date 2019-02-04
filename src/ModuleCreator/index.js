@@ -228,7 +228,7 @@ class Module {
     }
 
     this.__pathMdl = undefined;
-    this.__reducerMdl = reducer;
+    this.__reducerMdl = reducer.bind(this);
     this.__controllerMdl = new CtlClass(...ctlParams, actions);
 
     this.__validateControllerMdl(this.__controllerMdl);
