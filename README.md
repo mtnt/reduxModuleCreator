@@ -1,8 +1,3 @@
-# Attention! v0.x.x users!
-Breaking changes:
- - createModule get a controller class and a reducer in reverse order now: `createModule(CtlClass, reducer)`;
- - passed actions are modifying now, use action types directly from module: `module.actions.actionName.actionType`;
-
 # Why?
 
 Imagine that:
