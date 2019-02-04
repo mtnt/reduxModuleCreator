@@ -161,6 +161,22 @@ function reducer(state, action) {
 module = createModule(...);
 ```
 
+Or, that\`s more convenient, use a typically function as a reducer and use the actions from `this`:
+```
+const fooAction = {
+    type: "fooAT",
+};
+
+function reducer(state, action) { // it is important to be not an arrow function
+    switch (action.type) {
+        case this.actions.fooAction.actionType:
+            ...
+    }
+}
+
+const module = createModule(CtlClass, reducer, {fooAction: {creator: () => fooAction, type: fooAction.type}});
+```
+
 ## Using RMC on server
 
 We used to recreate a store for each request at server side js. It is for preventing state sharing between separate requests.  
@@ -223,7 +239,7 @@ It has several variants of signature:
 - createModule({Ctl: {Ctl, params}, reducer, actions});
 
 Create a module with the reducer and the controller
-- `reducer` is a typically reducer, that will be injected into a store
+- `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
   - value is a map `{creator: actionCreator, type: actionType}` or `{proxy: existingActionCreator}`
