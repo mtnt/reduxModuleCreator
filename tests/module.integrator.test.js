@@ -121,9 +121,9 @@ describe('module.integrator()', () => {
     expect(resultReducer()).toBe(value);
   });
 
-  it('should return a function that has the module as a context', () => {
+  it('should return a function that has access to the action via context', () => {
     const reducer = function() {
-      expect(this.integrator).toEqual(expect.any(Function));
+      expect(this.actions).toEqual(expect.any(Object));
     };
     const module = createModule(VALID_CLASS, reducer);
     const resultReducer = module.integrator('path');
