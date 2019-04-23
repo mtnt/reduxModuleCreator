@@ -16,7 +16,7 @@ describe('module.integrator()', () => {
       const desc_100 =
         `should throw an error if single argument "${path}" of type` + ` "${type}" is not compatible with path type`;
       it(desc_100, () => {
-        const module = createModule(VALID_CLASS, MODULE_REDUCER);
+        const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
         expect(() => {
           module.integrator(path);
@@ -27,7 +27,7 @@ describe('module.integrator()', () => {
   );
 
   it('should throw an error if path is empty string', () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
     expect(() => {
       module.integrator('');
@@ -35,7 +35,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is empty array', () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
     expect(() => {
       module.integrator([]);
@@ -43,7 +43,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is array with at least one nonestring value', () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
     expect(() => {
       module.integrator(['foo', 1, 'bar']);
@@ -51,7 +51,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is changed', () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
     module.integrator('path0');
 
@@ -68,7 +68,7 @@ describe('module.integrator()', () => {
       }
     }
 
-    const module = createModule(Ctl, () => testValue);
+    const module = createModule({Ctl, reducer: () => testValue});
 
     const pathParts = ['first', 'second', 'third', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
     const testPath = [
@@ -114,7 +114,7 @@ describe('module.integrator()', () => {
     const value = 'foo';
     const reducer = () => value;
 
-    const module = createModule(VALID_CLASS, reducer);
+    const module = createModule({Ctl: VALID_CLASS, reducer});
     const resultReducer = module.integrator('path');
 
     expect(resultReducer).not.toBe(reducer);
@@ -125,14 +125,14 @@ describe('module.integrator()', () => {
     const reducer = function() {
       expect(this.actions).toEqual(expect.any(Object));
     };
-    const module = createModule(VALID_CLASS, reducer);
+    const module = createModule({Ctl: VALID_CLASS, reducer});
     const resultReducer = module.integrator('path');
 
     resultReducer();
   });
 
   it("should not throw an error if path is 'false digit'", () => {
-    const module = createModule(VALID_CLASS, MODULE_REDUCER);
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
     expect(() => {
       module.integrator('0');

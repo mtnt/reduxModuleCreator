@@ -286,25 +286,9 @@ class Module {
 
 const modulesList = [];
 
-export function createModule(...args) {
-  let reducer;
-  let actions;
-  let Controller;
-  let CtlParams;
-
-  if (args.length === 1) {
-    reducer = args[0].reducer;
-    actions = args[0].actions;
-    Controller = args[0].Ctl;
-  } else {
-    Controller = args[0];
-    reducer = args[1];
-    actions = args[2];
-  }
-
-  actions = typeof actions !== 'undefined' ? actions : {};
-  CtlParams = typeof Controller.params !== 'undefined' ? Controller.params : [];
-  Controller = Controller.Ctl || Controller;
+export function createModule({Ctl, reducer, actions = {}}) {
+  const CtlParams = typeof Ctl.params !== 'undefined' ? Ctl.params : [];
+  const Controller = Ctl.Ctl || Ctl;
 
   const module = new Module(reducer, actions, Controller, CtlParams);
 

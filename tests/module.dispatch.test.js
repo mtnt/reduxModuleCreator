@@ -29,9 +29,9 @@ describe('module.dispatch', () => {
   it('called single time', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -45,9 +45,9 @@ describe('module.dispatch', () => {
   it('called several times with a same action but different payloads', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -73,9 +73,9 @@ describe('module.dispatch', () => {
   it('called several times with totally same actions (including payloads)', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -110,7 +110,7 @@ describe('module.dispatch', () => {
       }
     }
 
-    const module = createModule(Ctl, reducer);
+    const module = createModule({Ctl, reducer});
     const rootReducer = combineReducers({[getUniquePath()]: module});
 
     const store = createStore(rootReducer);
@@ -134,9 +134,9 @@ describe('module.dispatch', () => {
       }
     };
 
-    module = createModule(VALID_CLASS, reducer, {
+    module = createModule({Ctl: VALID_CLASS, reducer, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
 
     const rootReducer = combineReducers({[getUniquePath()]: module});
     createStore(rootReducer);
@@ -150,9 +150,9 @@ describe('module.dispatch', () => {
   it('should throw an error while store is unlinked', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
     const rootReducer = combineReducers({[getUniquePath()]: module});
 
     createStore(rootReducer);
@@ -167,9 +167,9 @@ describe('module.dispatch', () => {
   it('should use proxied action', () => {
     const actionCreator = getActionCreator();
 
-    const innerModule = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const innerModule = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       innerAction: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
 
     function outerReducer(state = {}, action, rootPath) {
       const innerPath = 'inner';
@@ -178,9 +178,9 @@ describe('module.dispatch', () => {
         [innerPath]: innerModule.integrator(innerPath)(state[innerPath], action, [rootPath, innerPath]),
       };
     }
-    const outerModule = createModule(VALID_CLASS, outerReducer, {
+    const outerModule = createModule({Ctl: VALID_CLASS, reducer: outerReducer, actions: {
       outerAction: {proxy: innerModule.actions.innerAction},
-    });
+    }});
 
     const spy = jest.fn();
 
