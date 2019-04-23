@@ -31,15 +31,12 @@ class SampleCtl extends RMCCtl {
     }
 }
 
-let module;
-
 function sampleReducer(state, action) {
     // some business logic
+    // you can use `this.actions` here because `this` refer to the module instance
 }
 
-module = createModule(SampleCtl, sampleReducer);
-
-export default module;
+export default createModule(SampleCtl, sampleReducer);
 ```
 
 ## Integrate your module reducer into reducers tree wherever you want
@@ -47,7 +44,6 @@ export default module;
 ```javascript
 // Some reducer
 import sampleModule from "SampleModule";
-
 
 export default function reducerOfAnotherModule(state, action, outerPath) {
     return {
@@ -88,7 +84,7 @@ const store = createStore(rootReducer, preloadedState, enhancer);
 
 After linking the store all modules will see it and will be subscribed to changes of their part of state.
 
-> NB: if you want to create new modules after having store linked, you need to unlink it with `unlinkStore()` and link it again.
+> NB: you __MUST NOT__ call `createStore` or `linkStore` twice, there is only one store can exist
 
 ## Get a module and use it
 
@@ -147,34 +143,14 @@ const module = createModule(CtlClass, reducer, {fooAction: {creator: () => fooAc
 // module.actions.fooAction.actionType !== "fooAT", it is something like "fooAT_module_instance_key"
 ```
 
-So, for using module\`s actions you should get it directly from the module:
+So, for using module\`s actions you should get it directly from the module via `this`:
 ```
-let module;
-
 function reducer(state, action) {
-    switch (action.type) {
-        case module.actions.fooAction.actionType:
-            ...
-    }
-}
-
-module = createModule(...);
-```
-
-Or, that\`s more convenient, use a typically function as a reducer and use the actions from `this`:
-```
-const fooAction = {
-    type: "fooAT",
-};
-
-function reducer(state, action) { // it is important to be not an arrow function
     switch (action.type) {
         case this.actions.fooAction.actionType:
             ...
     }
 }
-
-const module = createModule(CtlClass, reducer, {fooAction: {creator: () => fooAction, type: fooAction.type}});
 ```
 
 ## Using RMC on server
@@ -186,6 +162,8 @@ But RMC can not be linked twice, so what should we do? Just clear the store:
 - reset state to initial values at the point
 
 That`s it.
+
+> NB: Make sure your server side code did not trying to create a store for each request. It frequently happens while developing in progress and hot module reload is active.
 
 ## Using a cascade of modules
 
@@ -233,8 +211,6 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 ## createModule()
 It has several variants of signature:
-- createModule(Ctl, reducer, actions);
-- createModule({Ctl, params}, reducer, actions);
 - createModule({Ctl, reducer, actions});
 - createModule({Ctl: {Ctl, params}, reducer, actions});
 
@@ -300,16 +276,7 @@ Store creator. The arguments exactly as for redux.createStore.
 Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
-
-## unlinkStore() \[DEPRECATED\]
-Breaks the links between a store and modules. Call it before `linkStore` when you need to create new module (you can\`t link a store twice in a line)
-
-> Be careful - while a store is unlinked:
-> * `ownState` is undefined
-> * `module.actions.actionName()` cause an error
-> * `_stateDidUpdate` and `listeners` doesn\`t reacts to a state changes
-
 # Some subtleties
-* you have access to a controller\`s methods on a module, but you can get access to the module\`s method from inside the controller\`s method by using `this`
-* yuo must be MUCH CAREFUL with operating `ownState` - it is a ref to a part of the state and changing it you change the state
+* you have access to a controller\`s methods on a module, but you can\`t get access to the module\`s method from inside the controller\`s method by using `this`
+* you must be MUCH CAREFUL with operating `ownState` - it is a ref to a part of the state and changing it you change the state
 * you will get an error if you try to set whole `ownState` property, but you have an ability to change a part of it: `ownState.foo = "bar"`

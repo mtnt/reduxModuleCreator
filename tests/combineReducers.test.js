@@ -70,8 +70,8 @@ describe('combineReducers', () => {
   });
 
   it('should work ok either with usual reducers or a module`s integrator result', () => {
-    const module0 = createModule(VALID_CLASS, () => 0);
-    const module1 = createModule(VALID_CLASS, () => 1);
+    const module0 = createModule({Ctl: VALID_CLASS, reducer: () => 0});
+    const module1 = createModule({Ctl: VALID_CLASS, reducer: () => 1});
 
     const expected = {
       path0: 0,

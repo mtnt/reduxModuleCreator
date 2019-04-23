@@ -141,7 +141,7 @@ describe('module', () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule(Ctl, reducer);
+    const module = createModule({Ctl, reducer});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -165,7 +165,7 @@ describe('module', () => {
       }
     }
     const spy = jest.fn();
-    const module = createModule(Ctl, MODULE_REDUCER, {
+    const module = createModule({Ctl, reducer: MODULE_REDUCER, actions: {
       action0: {
         creator: payload => {
           spy(payload);
@@ -174,7 +174,7 @@ describe('module', () => {
         },
         type: 'sampleAction',
       },
-    });
+    }});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     createStore(rootReducer);
 
@@ -244,10 +244,10 @@ describe('module', () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action0: {creator: actionCreator0, type: actionCreator0.type},
       action1: {creator: actionCreator1, type: actionCreator1.type},
-    });
+    }});
 
     expect(module.actions.action0).toEqual(expect.any(Function));
     expect(module.actions.action1).toEqual(expect.any(Function));
@@ -256,9 +256,9 @@ describe('module', () => {
   it('should contain actions with types based but not equal with specified', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
 
     expect(module.actions.action.actionType).not.toEqual(actionCreator.type);
     expect(module.actions.action.actionType).toContain(actionCreator.type);
@@ -267,12 +267,12 @@ describe('module', () => {
   it('should contain actions with types different in instances', () => {
     const actionCreator = getActionCreator();
 
-    const module0 = createModule(VALID_CLASS, MODULE_REDUCER, {
+    const module0 = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
-    const module1 = createModule(VALID_CLASS, MODULE_REDUCER, {
+    }});
+    const module1 = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
       action: {creator: actionCreator, type: actionCreator.type},
-    });
+    }});
 
     expect(module0.actions.action.actionType).not.toEqual(module1.actions.action.actionType);
   });

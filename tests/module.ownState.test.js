@@ -93,7 +93,7 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         }
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -125,7 +125,7 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         };
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -143,7 +143,7 @@ describe('module.ownState', () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = createModule(VALID_CLASS, reducer);
+      const module = createModule({Ctl: VALID_CLASS, reducer});
       const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
@@ -224,7 +224,7 @@ describe('module.ownState', () => {
           this.ownState = {};
         }
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -250,7 +250,7 @@ describe('module.ownState', () => {
           this.ownState = {};
         };
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -365,7 +365,7 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         }
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
@@ -409,7 +409,7 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         };
       }
-      const module = createModule(Ctl, reducer);
+      const module = createModule({Ctl, reducer});
       const rootReducer = combineReducers({[getUniquePath()]: module});
 
       const store = createStore(rootReducer);
