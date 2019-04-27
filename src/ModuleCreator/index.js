@@ -286,11 +286,8 @@ class Module {
 
 const modulesList = [];
 
-export function createModule({Ctl, reducer, actions = {}}) {
-  const CtlParams = typeof Ctl.params !== 'undefined' ? Ctl.params : [];
-  const Controller = Ctl.Ctl || Ctl;
-
-  const module = new Module(reducer, actions, Controller, CtlParams);
+export function createModule({Ctl, ctlParams = [], reducer, actions = {}}) {
+  const module = new Module(reducer, actions, Ctl, ctlParams);
 
   const proxy = new Proxy(module, {
     get(target, propName) {
