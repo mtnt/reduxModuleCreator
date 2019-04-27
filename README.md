@@ -36,7 +36,7 @@ function sampleReducer(state, action) {
     // you can use `this.actions` here because `this` refer to the module instance
 }
 
-export default createModule(SampleCtl, sampleReducer);
+export default createModule({Ctl: SampleCtl, reducer: sampleReducer});
 ```
 
 ## Integrate your module reducer into reducers tree wherever you want
@@ -138,7 +138,7 @@ function reducer(state, action) {
     }
 }
 
-const module = createModule(CtlClass, reducer, {fooAction: {creator: () => fooAction, type: fooAction.type}});
+const module = createModule({Ctl: CtlClass, reducer, actions: {fooAction: {creator: () => fooAction, type: fooAction.type}}});
 
 // module.actions.fooAction.actionType !== "fooAT", it is something like "fooAT_module_instance_key"
 ```
@@ -184,8 +184,9 @@ const storageActions = {
     
   // ...
 };
-const dataStorage = createModule(StorageCtl, reducer, storageActions);
-const statusStorage = createModule(StorageCtl, reducer, storageActions);
+const options = {Ctl: StorageCtl, reducer, actions: storageActions};
+const dataStorage = createModule(options);
+const statusStorage = createModule(options);
 
 class StorageWSCtl extends RMCCtl {
   waitItem(key) {
@@ -197,9 +198,13 @@ class StorageWSCtl extends RMCCtl {
   }
 }
 
-const storageWithStatus = createModule(StorageWSCtl, swsReducer, {
-  itemIsWaiting: {proxy: statusStorage.actions.removeItem},
-  itemIsReady: {proxy: dataStorage.actions.setItem},
+const storageWithStatus = createModule({
+  Ctl: StorageWSCtl,
+  reducer: swsReducer,
+  actions: {
+      itemIsWaiting: {proxy: statusStorage.actions.removeItem},
+      itemIsReady: {proxy: dataStorage.actions.setItem},
+  }
 });
 ```
 After that you can use actions of the `storageWithStatus` wherever you want as `storageWithStatus.actions.itemIsWaiting`. But it still will be the `statusStorage.actions.setItem` behind the curtain.    
@@ -211,8 +216,7 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 ## createModule()
 It has several variants of signature:
-- createModule({Ctl, reducer, actions});
-- createModule({Ctl: {Ctl, params}, reducer, actions});
+- createModule({Ctl, ctlParams, reducer, actions});
 
 Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
@@ -220,7 +224,7 @@ Create a module with the reducer and the controller
   - key is an actionCreator name
   - value is a map `{creator: actionCreator, type: actionType}` or `{proxy: existingActionCreator}`
 - `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
-- `params` is an array of the controller params
+- `ctlParams` is an array of the controller params
 
 >NB: If a controller class has an own constructor, it`s your responsibility to pass basic ctl params through
 > ```javascript

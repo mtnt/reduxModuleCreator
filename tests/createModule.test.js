@@ -31,18 +31,14 @@ describe('createModule', () => {
       expect(() => {
         createModule({Ctl: ctl, reducer: MODULE_REDUCER});
       }).toThrow();
-
-      expect(() => {
-        createModule({Ctl: {Ctl: ctl}, reducer: MODULE_REDUCER});
-      }).toThrow();
     });
   });
 
   testAllValues(
-    (params, type) => {
-      it(`should throw an error if a controllers params is not an array: "${params}" of type "${type}"`, () => {
+    (ctlParams, type) => {
+      it(`should throw an error if a controllers params is not an array: "${ctlParams}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
+          createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER});
         }).toThrow();
       });
     },
@@ -52,10 +48,10 @@ describe('createModule', () => {
   );
 
   it('should not throw an error if a controller passed with params', () => {
-    const params = ['foo', true];
+    const ctlParams = ['foo', true];
 
     expect(() => {
-      createModule({Ctl: {Ctl: VALID_CLASS, params}, reducer: MODULE_REDUCER});
+      createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER});
     }).not.toThrow();
   });
 
@@ -158,7 +154,7 @@ describe('createModule', () => {
     const param0 = 'foo';
     const param1 = 1;
     const param2 = false;
-    const params = [param0, param1, param2];
+    const ctlParams = [param0, param1, param2];
     const spy = jest.fn();
 
     class Ctl extends RMCCtl {
@@ -168,9 +164,9 @@ describe('createModule', () => {
         spy(param0, param1, param2);
       }
     }
-    createModule({Ctl: {Ctl, params}, reducer: MODULE_REDUCER});
+    createModule({Ctl, ctlParams, reducer: MODULE_REDUCER});
 
-    expect(spy).toHaveBeenCalledWith(...params);
+    expect(spy).toHaveBeenCalledWith(...ctlParams);
   });
 
   it('should not throw an error if ctl class doesn`t have `_stateDidUpdate` method', () => {
