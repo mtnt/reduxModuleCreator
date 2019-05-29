@@ -1,7 +1,22 @@
-import get from 'lodash.get';
 import isFunction from 'lodash.isfunction';
 
 import {pathDelimiter} from '../lib/constansts';
+
+export function get(obj, path, def) {
+  try {
+    let arrPath = path;
+    if (!Array.isArray(path)) {
+      arrPath = path.split(pathDelimiter);
+    }
+
+    const firstPathPart = arrPath[0];
+    const nextObj = obj[firstPathPart];
+
+    return arrPath.length === 1 ? nextObj : get(nextObj, arrPath.slice(1));
+  } catch (e) {
+    return def;
+  }
+}
 
 export function validatePath(path) {
   const isArray = Array.isArray(path);

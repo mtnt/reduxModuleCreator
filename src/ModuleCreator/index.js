@@ -1,11 +1,9 @@
-import get from 'lodash.get';
 import isFunction from 'lodash.isfunction';
 import isPlainObject from 'lodash.isplainobject';
 import uniqueId from 'lodash.uniqueid';
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
-import {pathDelimiter} from '../lib/constansts';
-import {validatePath, normalizePath, isString} from '../Utils';
+import {validatePath, normalizePath, isString, get} from '../Utils';
 
 let isStoreLinked = false;
 export function linkStore(globalStore) {
