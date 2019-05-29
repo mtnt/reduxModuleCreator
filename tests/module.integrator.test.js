@@ -50,6 +50,14 @@ describe('module.integrator()', () => {
     }).toThrow();
   });
 
+  it('should throw an error if path is array with at least one empty string value', () => {
+    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
+
+    expect(() => {
+      module.integrator(['foo', '', 'bar']);
+    }).toThrow();
+  });
+
   it('should throw an error if path is changed', () => {
     const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER});
 
