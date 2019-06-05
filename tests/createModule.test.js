@@ -74,7 +74,7 @@ describe('createModule', () => {
         }).toThrow();
       });
     },
-    {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.UNDEFINED]}
+    {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.ARRAY, allValuesTypes.UNDEFINED]}
   );
 
   testAllValues(

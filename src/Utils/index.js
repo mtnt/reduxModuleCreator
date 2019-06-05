@@ -1,5 +1,3 @@
-import isFunction from 'lodash.isfunction';
-
 import {pathDelimiter} from '../lib/constansts';
 
 export function get(obj, path, def) {
@@ -64,4 +62,8 @@ export function combineReducers(stateReducerMap, rootPath) {
 
 export function isString(str) {
   return typeof str === 'string';
+}
+
+export function isFunction(obj) {
+  return typeof obj === 'function';
 }

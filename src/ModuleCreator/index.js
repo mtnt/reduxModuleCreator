@@ -1,9 +1,7 @@
-import isFunction from 'lodash.isfunction';
-import isPlainObject from 'lodash.isplainobject';
 import uniqueId from 'lodash.uniqueid';
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
-import {validatePath, normalizePath, isString, get} from '../Utils';
+import {validatePath, normalizePath, isString, isFunction, get} from '../Utils';
 
 let isStoreLinked = false;
 export function linkStore(globalStore) {
@@ -194,7 +192,7 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    if (!isPlainObject(actions)) {
+    if (typeof actions !== 'object') {
       const msg = 'Attempt to create a module, but actions is not an object';
 
       throw new InvalidParamsError(msg);
