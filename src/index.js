@@ -3,8 +3,8 @@ import {createStore as reduxCreateStore} from 'redux';
 import {linkStore, unlinkStore, createModule, RMCCtl} from './ModuleCreator';
 import {combineReducers} from './Utils';
 
-function createStore(rootReducer, preloadedState, enhancer) {
-  const store = reduxCreateStore(rootReducer, preloadedState, enhancer);
+function createStore(...args) {
+  const store = reduxCreateStore(...args);
 
   linkStore(store);
 
