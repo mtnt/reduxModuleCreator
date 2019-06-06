@@ -1,6 +1,6 @@
 {
   "name": "redux-module-creator",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "A tool for creating not coupled, reusable and testable modules based on Redux.",
   "main": "dist/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "es6-error": "4.1.1",
-    "lodash.uniqueid": "4.0.1"
+    "nanoid": "2.0.3"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

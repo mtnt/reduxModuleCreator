@@ -1,4 +1,4 @@
-import uniqueId from 'lodash.uniqueid';
+import nanoid from 'nanoid/non-secure';
 
 import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
 import {validatePath, normalizePath, isString, isFunction, get} from '../Utils';
@@ -49,7 +49,7 @@ function generateActionType(origin, uniquePostfix) {
 export class RMCCtl {
   constructor(actions) {
     this.__writable = false;
-    this.__uniquePostfix = uniqueId();
+    this.__uniquePostfix = `up_${nanoid()}`;
 
     let ownProperty;
     Object.defineProperty(this, 'ownState', {
