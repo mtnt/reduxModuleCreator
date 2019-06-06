@@ -10,7 +10,7 @@ It means that you:
 - can use a **same module in different projects or platforms** - all logic inside;
 - **can change the store data hierarchy** without troubles with refactoring each view that use it.
 
-Removing path dependency:
+Removing path dependency:  
 <img src="https://api.monosnap.com/file/download?id=zWmxHR7xat8rpuSS30Zi7k57nxxXy0" width="800" />
   
 Yes, you still need to know where **data is**, but at only single place - **in the module** because it is its responsibility.  
@@ -91,46 +91,79 @@ It means you need to make a dependency between main reducer and main controller 
 
 import {createModule, RMCCtl} from "redux-module-creator";
 
-
-class SampleCtl extends RMCCtl {
+class MeCtl extends RMCCtl {
     // will be called only if the module relative part of state is changed
     _stateDidUpdate(prevOwnState) {
         // some reaction to state changes
         // use `this.ownState` to get access to current state
     }
 
-    someSelector() {
-        return this.ownState.some.path;
+    getId = () => this.ownState.id;
+    getName = () => this.ownState.data.name;
+    getEmail = () => this.ownState.data.email;
+}
+
+const actions = {
+  addFriend: {
+    creator: userId => ({payload: userId}),
+    type: 'request to add a friend',
+  },
+  removeFriend: {
+    creator: userId => ({payload: userId}),
+    type: 'request to remove a friend',
+  },
+};
+
+function meReducer(state, action) {
+    // you can use `this.actions` here because `this` refer to the module instance
+    switch (action.type) {
+      case this.actions.addFriend.actionType:
+        return {
+          ...state,
+          friends: [
+            ...state.friends,
+            action.payload,
+          ],
+        };
+        
+      case this.actions.removeFriend.actionType:
+        return {
+          ...state,
+          friends: without(state.friends, action.payload),
+        }; 
+      
+      default:
+        return state;
     }
 }
 
-function sampleReducer(state, action) {
-    // some business logic
-    // you can use `this.actions` here because `this` refer to the module instance
-}
-
-export default createModule({Ctl: SampleCtl, reducer: sampleReducer});
+export default createModule({Ctl: MeCtl, reducer: meReducer, actions});
 ```
 
 ### Integrate your module reducer into reducers tree
 
 ```javascript
 // Some reducer
-import sampleModule from "SampleModule";
+import meModule from "meModule";
+import usersModule from "usersModule";
 
 export default function reducerOfAnotherModule(state, action, outerPath) {
-    const sampleKey = 'someKey';
-    const samplePath = outerPath + `.${sampleKey}`;
+    const meKey = 'meKey';
+    const meFullPath = outerPath + `.${meKey}`;
+    
+    const usersKey = 'usersKey';
+    const usersFullPath = outerPath + `.${usersKey}`;
   
     return {
-        [sampleKey]: sampleModule.integrator(samplePath)(state[sampleKey], action),
+        [meKey]: meModule.integrator(meFullPath)(state[meKey], action, meFullPath),
+        [usersKey]: usersModule.integrator(usersFullPath)(state[usersKey], action, usersFullPath),
     };
 };
 ```
 
-`sampleModule.integrator(path)` returns the `sampleReducer`, you can call it like usually call a
-reducer.
-`sampleKey` is up to you, it can be simple or complex (at any depth in a reducers tree). But, it must be absolute (from a root of a state).
+`meModule.integrator(path)` returns the `meReducer`, you can call it like usually call a
+reducer.  
+`meKey` is up to you, it can be simple or complex (at any depth in a reducers tree). But, it must be absolute (from a root of the state).
 
 > NB: as you can see in the last example, it is possible to inject one module into another - you just need to keep a path valid.
 
@@ -139,45 +172,48 @@ reducer.
 After that you can just call controller`s methods the module and use it.
 
 ```
-import sampleModule from "SampleModule";
+import meModule from "meModule";
+import usersModule from "usersModule";
 
-const someData = sampleModule.someSelector();
+const myId = meModule.getId();
+const myFriends = usersModule.getUserFriends(myId);
 ```
 
 ## Cook Book
 
-### Using module action inside an own reducer
+### Using module`s action inside an own reducer
 
 It is used to use module\`s actions inside its own reducers. But in a module instance (module.actions) action has different types with origin:
 ```javascript
-const fooAction = {
-    type: "fooAT",
+const addFriend = {
+    type: "request to add a friend",
+    payload: userId,
 };
 
 function reducer(state, action) {
     switch (action.type) {
-        case fooAction.type:
+        case addFriend.type:
             ...
     }
 }
 
 const actions = {
-  fooAction: {
-    creator: () => fooAction,
-     type: fooAction.type
+  addFriend: {
+    creator: () => addFriend,
+    type: addFriend.type
   }
 };
 
 const module = createModule({Ctl: CtlClass, reducer, actions});
 
-// module.actions.fooAction.actionType !== "fooAT", it is something like "fooAT_module_instance_key"
+// module.actions.addFriend.actionType !== "request to add a friend", it is something like "request to add a friend_module_instance_key"
 ```
 
 So, for using module\`s actions you should get it directly from the module via `this`:
 ```
 function reducer(state, action) {
     switch (action.type) {
-        case this.actions.fooAction.actionType:
+        case this.actions.addFriend.actionType:
             ...
     }
 }
