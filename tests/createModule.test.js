@@ -49,9 +49,14 @@ describe('createModule', () => {
 
   it('should not throw an error if a controller passed with params', () => {
     const ctlParams = ['foo', true];
+    class SCtl extends RMCCtl {
+      constructor(str, bool, ...rest) {
+        super(...rest);
+      }
+    }
 
     expect(() => {
-      createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER});
+      createModule({Ctl: SCtl, ctlParams, reducer: MODULE_REDUCER});
     }).not.toThrow();
   });
 
@@ -99,7 +104,7 @@ describe('createModule', () => {
         {exclude: [allValuesTypes.STRING]}
       );
     },
-    {exclude: [allValuesTypes.FUNCTION]}
+    {exclude: [allValuesTypes.FUNCTION, allValuesTypes.UNDEFINED]}
   );
 
   testAllValues(
@@ -118,6 +123,20 @@ describe('createModule', () => {
     },
     {exclude: [allValuesTypes.FUNCTION]}
   );
+
+  it('should not throw an error if action has not a creator', () => {
+    expect(() => {
+      createModule({
+        Ctl: VALID_CLASS,
+        reducer: MODULE_REDUCER,
+        actions: {
+          action0: {
+            type: 'type',
+          },
+        },
+      });
+    }).not.toThrow();
+  });
 
   it('should not throw an error if action has a correct creator and a type', () => {
     expect(() => {

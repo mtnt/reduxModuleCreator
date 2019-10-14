@@ -121,6 +121,39 @@ describe('module.dispatch', () => {
     expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 
+  it('should work ok if called with an action without creator', () => {
+    const stateDidUpdate = jest.fn();
+    class Ctl extends RMCCtl {
+      _stateDidUpdate(...args) {
+        stateDidUpdate(...args);
+      }
+    }
+    const actions = {
+      action0: {
+        type: 'foo',
+      }
+    };
+    const returnValue = 'bar';
+    function reducer(state = initialData, action) {
+      switch (action.type) {
+        case this.actions.action0.actionType:
+          return returnValue;
+
+        default:
+          return state;
+      }
+    }
+
+    const module = createModule({Ctl, reducer, actions});
+    const rootReducer = combineReducers({[getUniquePath()]: module});
+
+    const store = createStore(rootReducer);
+
+    module.actions.action0();
+
+    expect(stateDidUpdate).toHaveBeenCalledTimes(1);
+  });
+
   it('should use action with type based on specified', () => {
     const actionCreator = getActionCreator();
 
