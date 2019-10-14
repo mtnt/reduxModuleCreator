@@ -1,0 +1,5 @@
+v2.1.0 (14.10.19)
+
+- an action creator is no longer required, it is a function that returns an empty object by default;
+- actions can be dispatched by call an appropriate method directly from the module (not from the `actions` property);
+- the changelog is added;

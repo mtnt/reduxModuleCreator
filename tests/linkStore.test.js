@@ -1,4 +1,5 @@
 import {linkStore, unlinkStore} from '../src';
+import {DuplicateError, InsufficientDataError} from '../src/lib/baseErrors';
 
 describe('linkStore', () => {
   afterEach(() => {
@@ -10,7 +11,7 @@ describe('linkStore', () => {
 
     expect(() => {
       linkStore({});
-    }).toThrow();
+    }).toThrow(DuplicateError);
   });
 
   it('should be ok after unlink store', () => {
@@ -27,6 +28,6 @@ describe('unlinkStore', () => {
   it('should throw an error if unlink before link', () => {
     expect(() => {
       unlinkStore();
-    }).toThrow();
+    }).toThrow(InsufficientDataError);
   });
 });

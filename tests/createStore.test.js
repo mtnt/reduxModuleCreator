@@ -1,4 +1,5 @@
 import {createStore, unlinkStore, RMCCtl, createModule} from '../src';
+import {DuplicateError} from '../src/lib/baseErrors';
 import {getUniquePath} from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -16,7 +17,7 @@ describe('createStore', () => {
 
     expect(() => {
       createStore(() => {});
-    }).toThrow();
+    }).toThrow(DuplicateError);
   });
 
   it('should link store with valid module after invalid one', () => {

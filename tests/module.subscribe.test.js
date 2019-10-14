@@ -1,8 +1,8 @@
 import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
-import noop from 'lodash.noop';
 
 import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from '../src';
 import {getActionCreator, creator, getUniquePath} from './helpers';
+import {InvalidParamsError} from '../src/lib/baseErrors';
 
 const payload0 = {
   name: 'payload0',
@@ -35,7 +35,7 @@ describe('module.subscribe', () => {
 
         expect(() => {
           module.subscribe(listener);
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {exclude: [allValuesTypes.FUNCTION]}

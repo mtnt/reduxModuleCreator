@@ -70,10 +70,17 @@ export class RMCCtl {
     });
 
     this.actions = {};
-    Object.entries(actions).forEach(([actionName, {creator, type, proxy}]) => {
+    Object.entries(actions).forEach(([actionName, {creator = () => ({}), type, proxy}]) => {
       if (isFunction(proxy)) {
         this.actions[actionName] = proxy;
       } else {
+        if (!isFunction(creator)) {
+          throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
+        }
+        if (!isString(type) || type.length === 0) {
+          throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
+        }
+
         const generatedType = generateActionType(type, this.__uniquePostfix);
 
         this.actions[actionName] = (...args) => {
@@ -84,6 +91,10 @@ export class RMCCtl {
           this.__dispatch(action);
         };
         this.actions[actionName].actionType = generatedType;
+
+        if (typeof this[actionName] === 'undefined') {
+          this[actionName] = this.actions[actionName];
+        }
       }
     });
   }
@@ -192,24 +203,17 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    if (typeof actions !== 'object') {
+    if (typeof actions !== 'object' || actions === null) {
       const msg = 'Attempt to create a module, but actions is not an object';
 
       throw new InvalidParamsError(msg);
     }
 
-    Object.entries(actions).forEach(([actionName, {creator, type, proxy}]) => {
-      const badProxy = !isFunction(proxy);
-      const badCreator = !isFunction(creator);
-      const badType = !isString(type) || type.length === 0;
+    if (!CtlClass) {
+      const msg = `Attempt to create a module without a ctl class`;
 
-      if (badCreator && badProxy) {
-        throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
-      }
-      if (badType && badProxy) {
-        throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
-      }
-    });
+      throw new InvalidParamsError(msg);
+    }
 
     if (!(CtlClass.prototype instanceof RMCCtl)) {
       const msg = `Attempt to create a module with a wrong ctl class "${CtlClass.name}"`;
@@ -261,7 +265,7 @@ class Module {
   integrator(path) {
     try {
       validatePath(path);
-    } catch(e) {
+    } catch (e) {
       throw new InvalidParamsError(`Attempt to integrate bad path: "${path}"`);
     }
 

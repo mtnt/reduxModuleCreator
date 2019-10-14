@@ -1,5 +1,6 @@
 import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 
+import {InvalidParamsError} from '../src/lib/baseErrors'
 import {createModule, createStore, RMCCtl} from '../src';
 import {pathDelimiter} from '../src/lib/constansts';
 
@@ -20,7 +21,7 @@ describe('module.integrator()', () => {
 
         expect(() => {
           module.integrator(path);
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {exclude: [allValuesTypes.STRING, allValuesTypes.ARRAY]}
@@ -31,7 +32,7 @@ describe('module.integrator()', () => {
 
     expect(() => {
       module.integrator('');
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   it('should throw an error if path is empty array', () => {
@@ -39,7 +40,7 @@ describe('module.integrator()', () => {
 
     expect(() => {
       module.integrator([]);
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   it('should throw an error if path is array with at least one nonestring value', () => {
@@ -47,7 +48,7 @@ describe('module.integrator()', () => {
 
     expect(() => {
       module.integrator(['foo', 1, 'bar']);
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   it('should throw an error if path is array with at least one empty string value', () => {
@@ -55,7 +56,7 @@ describe('module.integrator()', () => {
 
     expect(() => {
       module.integrator(['foo', '', 'bar']);
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   it('should throw an error if path is changed', () => {
@@ -65,7 +66,7 @@ describe('module.integrator()', () => {
 
     expect(() => {
       module.integrator('path1');
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   it('should correct handle a combination of array and dot separated string', () => {

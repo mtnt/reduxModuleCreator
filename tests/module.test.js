@@ -165,16 +165,20 @@ describe('module', () => {
       }
     }
     const spy = jest.fn();
-    const module = createModule({Ctl, reducer: MODULE_REDUCER, actions: {
-      action0: {
-        creator: payload => {
-          spy(payload);
+    const module = createModule({
+      Ctl,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {
+          creator: payload => {
+            spy(payload);
 
-          return {payload};
+            return {payload};
+          },
+          type: 'sampleAction',
         },
-        type: 'sampleAction',
       },
-    }});
+    });
     const rootReducer = combineReducers({[getUniquePath()]: module});
     createStore(rootReducer);
 
@@ -240,25 +244,73 @@ describe('module', () => {
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
 
-  it('should contain methods equally named with actions', () => {
+  it('should contain methods equally named with actions in the `actions` property', () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action0: {creator: actionCreator0, type: actionCreator0.type},
-      action1: {creator: actionCreator1, type: actionCreator1.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {creator: actionCreator0, type: actionCreator0.type},
+        action1: {creator: actionCreator1, type: actionCreator1.type},
+      },
+    });
 
     expect(module.actions.action0).toEqual(expect.any(Function));
     expect(module.actions.action1).toEqual(expect.any(Function));
   });
 
+  it('should contain methods equally named with actions in the root', () => {
+    const actionCreator0 = getActionCreator();
+    const actionCreator1 = getActionCreator();
+
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {creator: actionCreator0, type: actionCreator0.type},
+        action1: {creator: actionCreator1, type: actionCreator1.type},
+      },
+    });
+
+    expect(module.action0).toEqual(expect.any(Function));
+    expect(module.action1).toEqual(expect.any(Function));
+  });
+
+  it('should use controller`s method if it`s name is equal with an action`s one', () => {
+    const actionCreator0 = getActionCreator();
+
+    const method = jest.fn();
+    class SCtl extends RMCCtl {
+      methodName() {
+        method();
+      }
+    }
+
+    const module = createModule({
+      Ctl: SCtl,
+      reducer: MODULE_REDUCER,
+      actions: {
+        methodName: {creator: actionCreator0, type: actionCreator0.type},
+      },
+    });
+
+    module.methodName();
+
+    expect(method).toHaveBeenCalled();
+  });
+
   it('should contain actions with types based but not equal with specified', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
 
     expect(module.actions.action.actionType).not.toEqual(actionCreator.type);
     expect(module.actions.action.actionType).toContain(actionCreator.type);
@@ -267,12 +319,20 @@ describe('module', () => {
   it('should contain actions with types different in instances', () => {
     const actionCreator = getActionCreator();
 
-    const module0 = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
-    const module1 = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module0 = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
+    const module1 = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
 
     expect(module0.actions.action.actionType).not.toEqual(module1.actions.action.actionType);
   });
