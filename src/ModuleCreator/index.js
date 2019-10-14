@@ -203,8 +203,14 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    if (typeof actions !== 'object') {
+    if (typeof actions !== 'object' || actions === null) {
       const msg = 'Attempt to create a module, but actions is not an object';
+
+      throw new InvalidParamsError(msg);
+    }
+
+    if (!CtlClass) {
+      const msg = `Attempt to create a module without a ctl class`;
 
       throw new InvalidParamsError(msg);
     }

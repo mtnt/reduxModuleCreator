@@ -1,4 +1,5 @@
 import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from '../src';
+import {WrongInterfaceError} from '../src/lib/baseErrors';
 import {getActionCreator, getUniquePath} from './helpers';
 
 const payload0 = {
@@ -29,9 +30,13 @@ describe('module.dispatch', () => {
   it('called single time', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -65,9 +70,13 @@ describe('module.dispatch', () => {
   it('called several times with a same action but different payloads', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -93,9 +102,13 @@ describe('module.dispatch', () => {
   it('called several times with totally same actions (including payloads)', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
@@ -151,7 +164,7 @@ describe('module.dispatch', () => {
     const actions = {
       action0: {
         type: 'foo',
-      }
+      },
     };
     const returnValue = 'bar';
     function reducer(state = initialData, action) {
@@ -187,9 +200,13 @@ describe('module.dispatch', () => {
       }
     };
 
-    module = createModule({Ctl: VALID_CLASS, reducer, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    module = createModule({
+      Ctl: VALID_CLASS,
+      reducer,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
 
     const rootReducer = combineReducers({[getUniquePath()]: module});
     createStore(rootReducer);
@@ -203,9 +220,13 @@ describe('module.dispatch', () => {
   it('should throw an error while store is unlinked', () => {
     const actionCreator = getActionCreator();
 
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      action: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
     const rootReducer = combineReducers({[getUniquePath()]: module});
 
     createStore(rootReducer);
@@ -214,15 +235,19 @@ describe('module.dispatch', () => {
 
     expect(() => {
       module.actions.action(payload0);
-    }).toThrow();
+    }).toThrow(WrongInterfaceError);
   });
 
   it('should use proxied action', () => {
     const actionCreator = getActionCreator();
 
-    const innerModule = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {
-      innerAction: {creator: actionCreator, type: actionCreator.type},
-    }});
+    const innerModule = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        innerAction: {creator: actionCreator, type: actionCreator.type},
+      },
+    });
 
     function outerReducer(state = {}, action, rootPath) {
       const innerPath = 'inner';
@@ -231,9 +256,13 @@ describe('module.dispatch', () => {
         [innerPath]: innerModule.integrator(innerPath)(state[innerPath], action, [rootPath, innerPath]),
       };
     }
-    const outerModule = createModule({Ctl: VALID_CLASS, reducer: outerReducer, actions: {
-      outerAction: {proxy: innerModule.actions.innerAction},
-    }});
+    const outerModule = createModule({
+      Ctl: VALID_CLASS,
+      reducer: outerReducer,
+      actions: {
+        outerAction: {proxy: innerModule.actions.innerAction},
+      },
+    });
 
     const spy = jest.fn();
 

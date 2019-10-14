@@ -1,5 +1,6 @@
 import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 
+import {InvalidParamsError, DuplicateError} from '../src/lib/baseErrors';
 import {getActionCreator} from './helpers';
 
 import {createStore, unlinkStore, createModule, RMCCtl} from '../src';
@@ -23,14 +24,14 @@ describe('createModule', () => {
 
     expect(() => {
       createModule(VALID_CLASS, MODULE_REDUCER, {action0: {creator: actionCreator, type: actionCreator.type}});
-    }).toThrow();
+    }).toThrow(InvalidParamsError);
   });
 
   testAllValues((ctl, type) => {
     it(`should throw an error if a controller is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
       expect(() => {
         createModule({Ctl: ctl, reducer: MODULE_REDUCER});
-      }).toThrow();
+      }).toThrow(InvalidParamsError);
     });
   });
 
@@ -39,7 +40,7 @@ describe('createModule', () => {
       it(`should throw an error if a controllers params is not an array: "${ctlParams}" of type "${type}"`, () => {
         expect(() => {
           createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER});
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {
@@ -65,7 +66,7 @@ describe('createModule', () => {
       it(`should throw an error if a reducer is not a function: "${reducer}" of type "${type}"`, () => {
         expect(() => {
           createModule({Ctl: VALID_CLASS, reducer});
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {exclude: [allValuesTypes.FUNCTION]}
@@ -76,7 +77,7 @@ describe('createModule', () => {
       it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
         expect(() => {
           createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions});
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.ARRAY, allValuesTypes.UNDEFINED]}
@@ -98,7 +99,7 @@ describe('createModule', () => {
                   action0: {creator, type},
                 },
               });
-            }).toThrow();
+            }).toThrow(InvalidParamsError);
           });
         },
         {exclude: [allValuesTypes.STRING]}
@@ -118,7 +119,7 @@ describe('createModule', () => {
               action0: {proxy},
             },
           });
-        }).toThrow();
+        }).toThrow(InvalidParamsError);
       });
     },
     {exclude: [allValuesTypes.FUNCTION]}
@@ -215,7 +216,7 @@ describe('createModule', () => {
 
     expect(() => {
       createModule({Ctl, reducer: () => {}});
-    }).toThrow();
+    }).toThrow(DuplicateError);
   });
 
   it('should return object with method integrator', () => {
