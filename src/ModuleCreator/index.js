@@ -91,6 +91,10 @@ export class RMCCtl {
           this.__dispatch(action);
         };
         this.actions[actionName].actionType = generatedType;
+
+        if (typeof this[actionName] === 'undefined') {
+          this[actionName] = this.actions[actionName];
+        }
       }
     });
   }

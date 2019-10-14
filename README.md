@@ -118,7 +118,7 @@ const actions = {
 function meReducer(state, action) {
     // you can use `this.actions` here because `this` refer to the module instance
     switch (action.type) {
-      case this.actions.addFriend.actionType:
+      case this.addFriend.actionType:
         return {
           ...state,
           friends: [
@@ -127,7 +127,7 @@ function meReducer(state, action) {
           ],
         };
         
-      case this.actions.removeFriend.actionType:
+      case this.removeFriend.actionType:
         return {
           ...state,
           friends: without(state.friends, action.payload),
@@ -178,6 +178,8 @@ import usersModule from "usersModule";
 
 const myId = meModule.getId();
 const myFriends = usersModule.getUserFriends(myId);
+
+const meModule.addFriend(friendUserId);
 ```
 
 ## Cook Book
@@ -214,7 +216,8 @@ So, for using module\`s actions you should get it directly from the module via `
 ```
 function reducer(state, action) {
     switch (action.type) {
-        case this.actions.addFriend.actionType:
+        case this.addFriend.actionType:
+        case this.actions.addFriend.actionType: // the both options is correct
             ...
     }
 }
@@ -255,11 +258,11 @@ const statusStorage = createModule(options);
 
 class StorageWithStatusCtl extends RMCCtl {
   waitItem(key) {
-    statusStorage.actions.setItem(key, true);
+    statusStorage.setItem(key, true);
   }
   
   setItem(key, value) {
-    dataStorage.actions.setItem(key, value);
+    dataStorage.setItem(key, value);
   }
 }
 
@@ -267,12 +270,12 @@ const storageWithStatus = createModule({
   Ctl: StorageWithStatusCtl,
   reducer: storageWithStatusReducer,
   actions: {
-      itemIsWaiting: {proxy: statusStorage.actions.removeItem},
-      itemIsReady: {proxy: dataStorage.actions.setItem},
+      itemIsWaiting: {proxy: statusStorage.removeItem},
+      itemIsReady: {proxy: dataStorage.setItem},
   }
 });
 ```
-After that you can use actions of the `storageWithStatus` wherever you want as `storageWithStatus.actions.itemIsWaiting`. But it still will be the `statusStorage.actions.setItem` behind the curtain.    
+After that you can use actions of the `storageWithStatus` wherever you want as `storageWithStatus.itemIsWaiting`. But it still will be the `statusStorage.setItem` behind the curtain.    
 
 This trick will help you hide an implementation and avoid redundant dependencies.
 
@@ -280,11 +283,9 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 ## API reference
 
-### createModule()
-It has several variants of signature:
-- createModule({Ctl, ctlParams, reducer, actions});
+### createModule({Ctl, ctlParams, reducer, actions})
 
-Create a module with the reducer and the controller
+Creates a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
@@ -309,11 +310,14 @@ Integrate your module into reducers tree.
 >NB: In spite of a path may be a deeply nested array of strings like `[[[[['foo', 'bar'], 'baz']]]]` it\`s strongly recommended to keep it a string for performance purpose.  
 
 #### actions
-It\`s a map of actions.
-You can dispatch an action by `module.actions.actionName(params)`.
-And you can get the action type by `module.actions.actionName.actionType`.
+It\`s a map of actions.  
+You can dispatch an action by `module.actionName(params)`.  
+And you can get the action type by `module.actionName.actionType`.
 
->NB: DO NOT RELY to equality of `module.actions.actionName.actionType` and the type you did pass into the actions map while creating a module. It is different in module reusability purpose.
+As you can see, **it is possible to call actions as the module\`s methods**, however the actions still accessible at the `actions` path.  
+If your controller has it`s own method or property with the same with an action name, it WILL NOT be overwritten.
+
+>NB: DO NOT RELY to equality of `module.actionName.actionType` and the type you did pass into the actions map while creating a module. It is different in module reusability purpose.
 
 ### RMCCtl
 Base class for controller.

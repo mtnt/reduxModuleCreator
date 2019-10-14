@@ -240,7 +240,7 @@ describe('module', () => {
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
 
-  it('should contain methods equally named with actions', () => {
+  it('should contain methods equally named with actions in the `actions` property', () => {
     const actionCreator0 = getActionCreator();
     const actionCreator1 = getActionCreator();
 
@@ -251,6 +251,46 @@ describe('module', () => {
 
     expect(module.actions.action0).toEqual(expect.any(Function));
     expect(module.actions.action1).toEqual(expect.any(Function));
+  });
+
+  it('should contain methods equally named with actions in the root', () => {
+    const actionCreator0 = getActionCreator();
+    const actionCreator1 = getActionCreator();
+
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {creator: actionCreator0, type: actionCreator0.type},
+        action1: {creator: actionCreator1, type: actionCreator1.type},
+      },
+    });
+
+    expect(module.action0).toEqual(expect.any(Function));
+    expect(module.action1).toEqual(expect.any(Function));
+  });
+
+  it('should use controller`s method if it`s name is equal with an action`s one', () => {
+    const actionCreator0 = getActionCreator();
+
+    const method = jest.fn();
+    class SCtl extends RMCCtl {
+      methodName() {
+        method();
+      }
+    }
+
+    const module = createModule({
+      Ctl: SCtl,
+      reducer: MODULE_REDUCER,
+      actions: {
+        methodName: {creator: actionCreator0, type: actionCreator0.type},
+      },
+    });
+
+    module.methodName();
+
+    expect(method).toHaveBeenCalled();
   });
 
   it('should contain actions with types based but not equal with specified', () => {
