@@ -13,8 +13,8 @@ It means that you:
 Removing path dependency:  
 <img src="https://api.monosnap.com/file/download?id=zWmxHR7xat8rpuSS30Zi7k57nxxXy0" width="800" />
   
-Yes, you still need to know where **data is**, but at only single place - **in the module** because it is its responsibility.  
-If you\`ll ever wish to **change** `me` or `users` **data structure**, you will need to change it **only in the module** because it is its responsibility.
+Yes, you still need to know where **data is**, but at only single place - **in the module** because it is its own responsibility.  
+If you\`ll ever wish to **change** `me` or `users` **data structure** (see example above), you will need to change it **only in the module** because it is its own responsibility.
 
 ## Contents
 - [FAQ](#faq)
@@ -46,7 +46,7 @@ If you\`ll ever wish to **change** `me` or `users` **data structure**, you will 
 
 ### Could I use RMC modules with my existent code?
 
-Sure! You can start to use RMC in your project at all or change it piece by piece or turn on RMC for some part of your project and do not it for another at all.
+Sure! You can start to use RMC in your project at all or change it piece by piece or turn on RMC for some part of your project and do not for another at all.
 
 ### Can I use one RMC module inside another one?
 
@@ -58,9 +58,9 @@ Yes it`s possible. Since a redux data tree is a composition of logical dependent
 
 For making a reference between future modules and a store you need to link it. There are two ways for it:
 
-#### you already have a store
+#### if you already have a store...
 
-And if you can\`t move this responsibility onto another side, you can just use
+...and if you can\`t move this responsibility onto another side, you can just use
 
 ```javascript
 import {linkStore} from "redux-module-creator"
@@ -77,10 +77,11 @@ import {createStore} from "redux-module-creator"
 
 const store = createStore(rootReducer, preloadedState, enhancer);
 ```
+> syntax the same with [https://redux.js.org/api/createstore] 
 
 After linking the store all modules will see it and will be subscribed to changes of their own part of state.
 
-> NB: you __MUST NOT__ call `createStore` or `linkStore` twice, there is only one store can exist
+> NB: you __MUST NOT__ call `createStore` or `linkStore` twice, the store can be linked only once
 
 ### Create a module
 
@@ -140,7 +141,7 @@ function meReducer(state, action) {
 export default createModule({Ctl: MeCtl, reducer: meReducer, actions});
 ```
 
-### Integrate your module reducer into reducers tree
+### Integrate your module`s reducer into reducers tree
 
 ```javascript
 // Some reducer
@@ -149,10 +150,10 @@ import usersModule from "usersModule";
 
 export default function reducerOfAnotherModule(state, action, outerPath) {
     const meKey = 'meKey';
-    const meFullPath = outerPath + `.${meKey}`;
+    const meFullPath = `${outerPath}.${meKey}`;
     
     const usersKey = 'usersKey';
-    const usersFullPath = outerPath + `.${usersKey}`;
+    const usersFullPath = `${outerPath}.${usersKey}`;
   
     return {
         [meKey]: meModule.integrator(meFullPath)(state[meKey], action, meFullPath),
@@ -161,7 +162,7 @@ export default function reducerOfAnotherModule(state, action, outerPath) {
 };
 ```
 
-`meModule.integrator(path)` returns the `meReducer`, you can call it like usually call a
+`meModule.integrator(path)` returns the `meReducer`, you can call it like used to call a
 reducer.  
 `meKey` is up to you, it can be simple or complex (at any depth in a reducers tree). But, it must be absolute (from a root of the state).
 
@@ -252,7 +253,7 @@ const options = {Ctl: StorageCtl, reducer, actions: storageActions};
 const dataStorage = createModule(options);
 const statusStorage = createModule(options);
 
-class StorageWSCtl extends RMCCtl {
+class StorageWithStatusCtl extends RMCCtl {
   waitItem(key) {
     statusStorage.actions.setItem(key, true);
   }
@@ -263,8 +264,8 @@ class StorageWSCtl extends RMCCtl {
 }
 
 const storageWithStatus = createModule({
-  Ctl: StorageWSCtl,
-  reducer: swsReducer,
+  Ctl: StorageWithStatusCtl,
+  reducer: storageWithStatusReducer,
   actions: {
       itemIsWaiting: {proxy: statusStorage.actions.removeItem},
       itemIsReady: {proxy: dataStorage.actions.setItem},
@@ -287,7 +288,7 @@ Create a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
-  - value is a map `{creator: actionCreator, type: actionType}` or `{proxy: existingActionCreator}`
+  - value is a map `{creator: actionCreator = () => ({}), type: actionType}` or `{proxy: existingActionCreator}`
 - `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
 - `ctlParams` is an array of the controller params
 
@@ -333,7 +334,7 @@ Subscribe to the own state changes.
 
 Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
 
-### combineReducers({path: Module, anotherPath: reducer})
+### combineReducers({path: Module, anotherPath: reducer} [, rootPath])
 Turns an object whose values are different reducing functions or modules into a single reducing function you can pass to createStore.
 
 >For modules it will call the `module.integrator` function and pass the module `path` into the integrator result reducer as third param.
