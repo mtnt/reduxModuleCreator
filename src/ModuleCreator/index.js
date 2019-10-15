@@ -292,30 +292,27 @@ export function createModule({Ctl, ctlParams = [], reducer, actions = {}}) {
   const proxy = new Proxy(module, {
     get(target, propName) {
       if (this._useTarget(target, propName)) {
-        return target[propName];
+        return Reflect.get(...arguments);
       }
 
       const result = target.__controllerMdl[propName];
-      if (isFunction(result)) {
-        return result.bind(target.__controllerMdl);
-      } else {
-        return result;
-      }
+
+      return isFunction(result) ? result.bind(target.__controllerMdl) : result;
     },
 
     set(target, propName, value) {
       if (this._useTarget(target, propName)) {
-        target[propName] = value;
-      } else {
-        target.__controllerMdl[propName] = value;
+        return Reflect.set(...arguments);
       }
+
+      target.__controllerMdl[propName] = value;
 
       return true;
     },
 
     _useTarget(target, propName) {
-      const isProtected = propName[0] === '_';
-      const isPrivate = isProtected && propName[1] === '_';
+      const isProtected = propName.startsWith('_');
+      const isPrivate = propName.startsWith('__');
 
       return (isPrivate || !isProtected) && propName in target;
     },
