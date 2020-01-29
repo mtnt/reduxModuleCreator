@@ -1,6 +1,6 @@
 {
   "name": "redux-module-creator",
-  "version": "2.1.1-beta.0",
+  "version": "2.2.0",
   "description": "A tool for creating not coupled, reusable and testable modules based on Redux.",
   "main": "dist/index.js",
   "scripts": {
