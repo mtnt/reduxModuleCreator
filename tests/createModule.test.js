@@ -3,7 +3,7 @@ import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
 import {InvalidParamsError, DuplicateError} from '../src/lib/baseErrors';
 import {getActionCreator} from './helpers';
 
-import {createStore, unlinkStore, createModule, RMCCtl} from '../src';
+import {unlinkStore, createModule, RMCCtl} from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -125,6 +125,23 @@ describe('createModule', () => {
     {exclude: [allValuesTypes.FUNCTION]}
   );
 
+  testAllValues(
+    (creatorName, type) => {
+      it(`should throw an error if some action has wrong proxy creatorName: ${creatorName} of type ${type}`, () => {
+        expect(() => {
+          createModule({
+            Ctl: VALID_CLASS,
+            reducer: MODULE_REDUCER,
+            actions: {
+              action0: {proxy: getActionCreator(), creatorName},
+            },
+          });
+        }).toThrow(InvalidParamsError);
+      });
+    },
+    {exclude: [allValuesTypes.STRING, allValuesTypes.UNDEFINED]}
+  );
+
   it('should not throw an error if action has not a creator', () => {
     expect(() => {
       createModule({
@@ -168,6 +185,25 @@ describe('createModule', () => {
         },
       });
     }).not.toThrow();
+  });
+
+  it('should throw an error if a creatorName for a proxy is similar with a module`s method', () => {
+    class SampleCtl extends RMCCtl {
+      method0() {}
+    }
+
+    expect(() => {
+      createModule({
+        Ctl: SampleCtl,
+        reducer: MODULE_REDUCER,
+        actions: {
+          action0: {
+            proxy: getActionCreator(),
+            creatorName: 'method0',
+          },
+        },
+      });
+    }).toThrow();
   });
 
   it('should pass the controller params into the controller constructor before the actions', () => {

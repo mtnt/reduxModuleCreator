@@ -70,31 +70,48 @@ export class RMCCtl {
     });
 
     this.actions = {};
-    Object.entries(actions).forEach(([actionName, {creator = () => ({}), type, proxy}]) => {
-      if (isFunction(proxy)) {
-        this.actions[actionName] = proxy;
-      } else {
-        if (!isFunction(creator)) {
-          throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
+    let actionEntries = Object.entries(actions);
+
+    actionEntries.filter(([,{proxy}]) => proxy === undefined).forEach(([actionName, {creator = () => ({}), type}]) => {
+      if (!isFunction(creator)) {
+        throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
+      }
+      if (!isString(type) || type.length === 0) {
+        throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
+      }
+
+      const generatedType = generateActionType(type, this.__uniquePostfix);
+
+      this.actions[actionName] = (...args) => {
+        const action = creator(...args);
+
+        action.type = generatedType;
+
+        this.__dispatch(action);
+      };
+      this.actions[actionName].actionType = generatedType;
+
+      if (this[actionName] === undefined) {
+        this[actionName] = this.actions[actionName];
+      }
+    });
+
+    actionEntries.filter(([,{proxy}]) => proxy !== undefined).forEach(([actionName, {proxy, creatorName}]) => {
+      if (!isFunction(proxy)) {
+        throw new InvalidParamsError(`Proxy type for "${actionName}" is not a function: "${proxy}"`);
+      }
+
+      this.actions[actionName] = proxy;
+
+      if (creatorName !== undefined) {
+        if (!isString(creatorName) || creatorName.length === 0) {
+          throw new InvalidParamsError(`Action creatorName type for "${actionName}" is not a string: "${creatorName}"`);
         }
-        if (!isString(type) || type.length === 0) {
-          throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
+        if (this[creatorName] !== undefined) {
+          throw new InvalidParamsError(`Names duplication with proxy\`s creatorName: "${creatorName}"`);
         }
 
-        const generatedType = generateActionType(type, this.__uniquePostfix);
-
-        this.actions[actionName] = (...args) => {
-          const action = creator(...args);
-
-          action.type = generatedType;
-
-          this.__dispatch(action);
-        };
-        this.actions[actionName].actionType = generatedType;
-
-        if (typeof this[actionName] === 'undefined') {
-          this[actionName] = this.actions[actionName];
-        }
+        this[creatorName] = proxy;
       }
     });
   }
