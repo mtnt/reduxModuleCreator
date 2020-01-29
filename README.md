@@ -289,7 +289,7 @@ Creates a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
 - `actions` is optional map of modules own actions
   - key is an actionCreator name
-  - value is a map `{type: actionType [, creator: actionCreator]}` or `{proxy: existingActionCreator}`
+  - value is a map `{type: actionType [, creator: actionCreator]}` or `{proxy: existingActionCreator [, creatorName]}`
 - `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
 - `ctlParams` is an array of the controller params
 
@@ -350,7 +350,7 @@ Store creator. The arguments exactly as for redux.createStore.
 Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
-## Some subtleties
+## Some caveats
 * you have access to a controller\`s methods on a module, but you can\`t get access to the module\`s method from inside the controller\`s method by using `this`
 * you must be MUCH CAREFUL with operating `ownState` - it is a ref to a part of the state and changing it you change the state
 * you will get an error if you try to set whole `ownState` property, but you have an ability to change a part of it: `ownState.foo = "bar"`

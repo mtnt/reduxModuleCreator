@@ -1,3 +1,6 @@
+v2.2.0 (29.01.20)
+- it`s possible to create an action creator for a proxy-action by supplying a `creatorName` property
+
 v2.1.0 (14.10.19)
 
 - an action creator is no longer required, it is a function that returns an empty object by default;

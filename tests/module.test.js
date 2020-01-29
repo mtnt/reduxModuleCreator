@@ -278,6 +278,34 @@ describe('module', () => {
     expect(module.action1).toEqual(expect.any(Function));
   });
 
+  it('should contain methods creators for proxied actions in the root', () => {
+    const actionCreator0 = getActionCreator();
+
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {proxy: actionCreator0, creatorName: 'callAction0'},
+      },
+    });
+
+    expect(module.callAction0).toEqual(expect.any(Function));
+  });
+
+  it('should not contain methods creators for proxied actions in the root if a creatorName wasn`t supplied', () => {
+    const actionCreator0 = getActionCreator();
+
+    const module = createModule({
+      Ctl: VALID_CLASS,
+      reducer: MODULE_REDUCER,
+      actions: {
+        action0: {proxy: actionCreator0},
+      },
+    });
+
+    expect(module.action0).toBe(undefined);
+  });
+
   it('should use controller`s method if it`s name is equal with an action`s one', () => {
     const actionCreator0 = getActionCreator();
 
