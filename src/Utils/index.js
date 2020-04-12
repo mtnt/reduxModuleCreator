@@ -38,6 +38,10 @@ export function normalizePath(path) {
 
 export function combineReducers(stateReducerMap, rootPath) {
   return function(state, action) {
+    if (Object.keys(stateReducerMap) === 0) {
+      return Object.keys(state) === 0 ? state : {};
+    }
+
     let changed = false;
 
     const nextState = {};
