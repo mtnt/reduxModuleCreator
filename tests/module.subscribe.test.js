@@ -64,7 +64,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -87,7 +87,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -110,7 +110,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -135,7 +135,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -165,7 +165,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -188,7 +188,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -217,7 +217,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -250,7 +250,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -281,7 +281,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:

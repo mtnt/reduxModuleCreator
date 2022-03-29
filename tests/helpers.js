@@ -12,7 +12,7 @@ export function getActionCreator() {
     };
   };
 
-  actionCreator.type = type;
+  actionCreator.actionType = type;
 
   return actionCreator;
 }

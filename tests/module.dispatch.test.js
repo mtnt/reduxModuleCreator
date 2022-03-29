@@ -34,7 +34,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -54,7 +54,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -74,7 +74,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -106,7 +106,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -130,7 +130,7 @@ describe('module.dispatch', () => {
     const actionCreator1 = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator0.type:
+        case actionCreator0.actionType:
           return action.payload;
 
         default:
@@ -204,7 +204,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
 
@@ -224,7 +224,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const rootReducer = combineReducers({[getUniquePath()]: module});
@@ -245,7 +245,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        innerAction: {creator: actionCreator, type: actionCreator.type},
+        innerAction: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
 

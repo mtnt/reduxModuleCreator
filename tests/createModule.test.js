@@ -23,7 +23,7 @@ describe('createModule', () => {
     const actionCreator = getActionCreator();
 
     expect(() => {
-      createModule(VALID_CLASS, MODULE_REDUCER, {action0: {creator: actionCreator, type: actionCreator.type}});
+      createModule(VALID_CLASS, MODULE_REDUCER, {action0: {creator: actionCreator, type: actionCreator.actionType}});
     }).toThrow(InvalidParamsError);
   });
 
@@ -166,7 +166,7 @@ describe('createModule', () => {
         actions: {
           action0: {
             creator: actionCreator,
-            type: actionCreator.type,
+            type: actionCreator.actionType,
           },
         },
       });

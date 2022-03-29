@@ -117,7 +117,7 @@ describe('module', () => {
     const actionCreator = getActionCreator();
     function reducer(state = 'initial', action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -191,7 +191,7 @@ describe('module', () => {
     const actionCreator = getActionCreator();
     function reducer(state = 'initial', action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -252,8 +252,8 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {creator: actionCreator0, type: actionCreator0.type},
-        action1: {creator: actionCreator1, type: actionCreator1.type},
+        action0: {creator: actionCreator0, type: actionCreator0.actionType},
+        action1: {creator: actionCreator1, type: actionCreator1.actionType},
       },
     });
 
@@ -269,8 +269,8 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {creator: actionCreator0, type: actionCreator0.type},
-        action1: {creator: actionCreator1, type: actionCreator1.type},
+        action0: {creator: actionCreator0, type: actionCreator0.actionType},
+        action1: {creator: actionCreator1, type: actionCreator1.actionType},
       },
     });
 
@@ -320,7 +320,7 @@ describe('module', () => {
       Ctl: SCtl,
       reducer: MODULE_REDUCER,
       actions: {
-        methodName: {creator: actionCreator0, type: actionCreator0.type},
+        methodName: {creator: actionCreator0, type: actionCreator0.actionType},
       },
     });
 
@@ -336,12 +336,12 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
 
-    expect(module.actions.action.actionType).not.toEqual(actionCreator.type);
-    expect(module.actions.action.actionType).toContain(actionCreator.type);
+    expect(module.actions.action.actionType).not.toEqual(actionCreator.actionType);
+    expect(module.actions.action.actionType).toContain(actionCreator.actionType);
   });
 
   it('should contain actions with types different in instances', () => {
@@ -351,14 +351,14 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
     const module1 = createModule({
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.type},
+        action: {creator: actionCreator, type: actionCreator.actionType},
       },
     });
 

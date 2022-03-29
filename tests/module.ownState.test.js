@@ -81,7 +81,7 @@ describe('module.ownState', () => {
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -113,7 +113,7 @@ describe('module.ownState', () => {
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -212,7 +212,7 @@ describe('module.ownState', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -238,7 +238,7 @@ describe('module.ownState', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -346,7 +346,7 @@ describe('module.ownState', () => {
       };
       function reducer(state = initialState, action) {
         switch (action.type) {
-          case actionCreator.type: {
+          case actionCreator.actionType: {
             return {
               ...state,
               foo: action.payload,
@@ -390,7 +390,7 @@ describe('module.ownState', () => {
       };
       function reducer(state = initialState, action) {
         switch (action.type) {
-          case actionCreator.type: {
+          case actionCreator.actionType: {
             return {
               ...state,
               foo: action.payload,
