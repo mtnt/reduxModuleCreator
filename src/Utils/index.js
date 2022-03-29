@@ -37,7 +37,7 @@ export function normalizePath(path) {
 }
 
 export function combineReducers(stateReducerMap, rootPath) {
-  return function(state, action) {
+  return function(state = {}, action) {
     let changed = false;
 
     const nextState = {};
