@@ -72,46 +72,38 @@ export class RMCCtl {
     this.actions = {};
     let actionEntries = Object.entries(actions);
 
-    actionEntries.filter(([,{proxy}]) => proxy === undefined).forEach(([actionName, {creator = () => ({}), type}]) => {
-      if (!isFunction(creator)) {
+    actionEntries.forEach(([actionName, {creator = () => ({}), type, proxy}]) => {
+      const haveProxy = proxy !== undefined;
+      if (haveProxy && (!isFunction(proxy) || !isString(proxy.actionType) || proxy.actionType.length === '')) {
+        throw new InvalidParamsError(
+          `Proxy type for "${actionName}" is not a function or has not an actionType: "${proxy}"`
+        );
+      }
+
+      if (!haveProxy && !isFunction(creator)) {
         throw new InvalidParamsError(`Action creator for "${actionName}" is not a function: "${creator}"`);
       }
-      if (!isString(type) || type.length === 0) {
+      if (!haveProxy && (!isString(type) || type.length === 0)) {
         throw new InvalidParamsError(`Action type for "${actionName}" is not a string: "${type}"`);
       }
 
-      const generatedType = generateActionType(type, this.__uniquePostfix);
+      if (haveProxy) {
+        this.actions[actionName] = proxy;
+      } else {
+        const generatedType = generateActionType(type, this.__uniquePostfix);
 
-      this.actions[actionName] = (...args) => {
-        const action = creator(...args);
+        this.actions[actionName] = (...args) => {
+          const action = creator(...args);
 
-        action.type = generatedType;
+          action.type = generatedType;
 
-        this.__dispatch(action);
-      };
-      this.actions[actionName].actionType = generatedType;
+          this.__dispatch(action);
+        };
+        this.actions[actionName].actionType = generatedType;
+      }
 
       if (this[actionName] === undefined) {
         this[actionName] = this.actions[actionName];
-      }
-    });
-
-    actionEntries.filter(([,{proxy}]) => proxy !== undefined).forEach(([actionName, {proxy, creatorName}]) => {
-      if (!isFunction(proxy)) {
-        throw new InvalidParamsError(`Proxy type for "${actionName}" is not a function: "${proxy}"`);
-      }
-
-      this.actions[actionName] = proxy;
-
-      if (creatorName !== undefined) {
-        if (!isString(creatorName) || creatorName.length === 0) {
-          throw new InvalidParamsError(`Action creatorName type for "${actionName}" is not a string: "${creatorName}"`);
-        }
-        if (this[creatorName] !== undefined) {
-          throw new InvalidParamsError(`Names duplication with proxy\`s creatorName: "${creatorName}"`);
-        }
-
-        this[creatorName] = proxy;
       }
     });
   }
@@ -312,9 +304,21 @@ export function createModule({Ctl, ctlParams = [], reducer, actions}) {
         return Reflect.get(...arguments);
       }
 
-      const result = target.__controllerMdl[propName];
+      let result = target.__controllerMdl[propName];
 
-      return isFunction(result) ? result.bind(target.__controllerMdl) : result;
+      if (!isFunction(result)) {
+        return result;
+      } else {
+        const {actionType} = result;
+
+        result = result.bind(target.__controllerMdl);
+
+        if (actionType !== undefined) {
+          result.actionType = actionType;
+        }
+
+        return result;
+      }
     },
 
     set(target, propName, value) {
