@@ -1,7 +1,7 @@
-import nanoid from 'nanoid/non-secure';
+import { nanoid } from 'nanoid/non-secure';
 
-import {InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError} from '../lib/baseErrors';
-import {validatePath, normalizePath, isString, isFunction, get} from '../Utils';
+import { InsufficientDataError, WrongInterfaceError, InvalidParamsError, DuplicateError } from '../lib/baseErrors';
+import { validatePath, normalizePath, isString, isFunction, get } from '../Utils';
 
 let isStoreLinked = false;
 export function linkStore(globalStore) {
@@ -72,7 +72,7 @@ export class RMCCtl {
     this.actions = {};
     let actionEntries = Object.entries(actions);
 
-    actionEntries.forEach(([actionName, {creator = () => ({}), type, proxy}]) => {
+    actionEntries.forEach(([actionName, { creator = () => ({}), type, proxy }]) => {
       const haveProxy = proxy !== undefined;
       if (haveProxy && (!isFunction(proxy) || !isString(proxy.actionType) || proxy.actionType.length === '')) {
         throw new InvalidParamsError(
@@ -295,7 +295,7 @@ class Module {
 
 const modulesList = [];
 
-export function createModule({Ctl, ctlParams = [], reducer, actions}) {
+export function createModule({ Ctl, ctlParams = [], reducer, actions }) {
   const module = new Module(reducer, actions, Ctl, ctlParams);
 
   const proxy = new Proxy(module, {
@@ -309,7 +309,7 @@ export function createModule({Ctl, ctlParams = [], reducer, actions}) {
       if (!isFunction(result)) {
         return result;
       } else {
-        const {actionType} = result;
+        const { actionType } = result;
 
         result = result.bind(target.__controllerMdl);
 

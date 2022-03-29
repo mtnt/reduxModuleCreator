@@ -1,5 +1,5 @@
-import {linkStore, unlinkStore} from '../src';
-import {DuplicateError, InsufficientDataError} from '../src/lib/baseErrors';
+import { linkStore, unlinkStore } from '../src';
+import { DuplicateError, InsufficientDataError } from '../src/lib/baseErrors';
 
 describe('linkStore', () => {
   afterEach(() => {

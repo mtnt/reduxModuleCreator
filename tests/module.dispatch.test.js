@@ -1,6 +1,6 @@
-import {createStore, unlinkStore, RMCCtl, createModule, combineReducers} from '../src';
-import {WrongInterfaceError} from '../src/lib/baseErrors';
-import {getActionCreator, getUniquePath} from './helpers';
+import { createStore, unlinkStore, RMCCtl, createModule, combineReducers } from '../src';
+import { WrongInterfaceError } from '../src/lib/baseErrors';
+import { getActionCreator, getUniquePath } from './helpers';
 
 const payload0 = {
   name: 'payload0',
@@ -34,10 +34,10 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, 'dispatch');
@@ -54,10 +54,10 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, 'dispatch');
@@ -74,10 +74,10 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, 'dispatch');
@@ -106,10 +106,10 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
     const dispatchSpy = jest.spyOn(store, 'dispatch');
@@ -143,8 +143,8 @@ describe('module.dispatch', () => {
       }
     }
 
-    const module = createModule({Ctl, reducer, actions: {}});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
 
     const store = createStore(rootReducer);
 
@@ -177,8 +177,8 @@ describe('module.dispatch', () => {
       }
     }
 
-    const module = createModule({Ctl, reducer, actions});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl, reducer, actions });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
 
     const store = createStore(rootReducer);
 
@@ -204,11 +204,11 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
 
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     createStore(rootReducer);
 
     module.actions.action(payload0);
@@ -224,10 +224,10 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
 
     createStore(rootReducer);
 
@@ -245,7 +245,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        innerAction: {creator: actionCreator, type: actionCreator.actionType},
+        innerAction: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
 
@@ -260,7 +260,7 @@ describe('module.dispatch', () => {
       Ctl: VALID_CLASS,
       reducer: outerReducer,
       actions: {
-        outerAction: {proxy: innerModule.actions.innerAction},
+        outerAction: { proxy: innerModule.actions.innerAction },
       },
     });
 
@@ -281,6 +281,6 @@ describe('module.dispatch', () => {
     outerModule.actions.outerAction();
 
     expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenLastCalledWith({type: innerModule.actions.innerAction.actionType});
+    expect(spy).toHaveBeenLastCalledWith({ type: innerModule.actions.innerAction.actionType });
   });
 });

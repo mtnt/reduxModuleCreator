@@ -1,9 +1,9 @@
-import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
+import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import {InvalidParamsError, DuplicateError} from '../src/lib/baseErrors';
-import {getActionCreator} from './helpers';
+import { InvalidParamsError, DuplicateError } from '../src/lib/baseErrors';
+import { getActionCreator } from './helpers';
 
-import {unlinkStore, createModule, RMCCtl} from '../src';
+import { unlinkStore, createModule, RMCCtl } from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -23,14 +23,16 @@ describe('createModule', () => {
     const actionCreator = getActionCreator();
 
     expect(() => {
-      createModule(VALID_CLASS, MODULE_REDUCER, {action0: {creator: actionCreator, type: actionCreator.actionType}});
+      createModule(VALID_CLASS, MODULE_REDUCER, {
+        action0: { creator: actionCreator, type: actionCreator.actionType },
+      });
     }).toThrow(InvalidParamsError);
   });
 
   testAllValues((ctl, type) => {
     it(`should throw an error if a controller is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
       expect(() => {
-        createModule({Ctl: ctl, reducer: MODULE_REDUCER, actions: {}});
+        createModule({ Ctl: ctl, reducer: MODULE_REDUCER, actions: {} });
       }).toThrow(InvalidParamsError);
     });
   });
@@ -39,7 +41,7 @@ describe('createModule', () => {
     (ctlParams, type) => {
       it(`should throw an error if a controllers params is not an array: "${ctlParams}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER, actions: {}});
+          createModule({ Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER, actions: {} });
         }).toThrow(InvalidParamsError);
       });
     },
@@ -52,7 +54,7 @@ describe('createModule', () => {
     class SCtl extends RMCCtl {}
 
     expect(() => {
-      createModule({Ctl: SCtl, reducer: MODULE_REDUCER, actions: {}});
+      createModule({ Ctl: SCtl, reducer: MODULE_REDUCER, actions: {} });
     }).not.toThrow();
   });
 
@@ -65,7 +67,7 @@ describe('createModule', () => {
     }
 
     expect(() => {
-      createModule({Ctl: SCtl, ctlParams, reducer: MODULE_REDUCER, actions: {}});
+      createModule({ Ctl: SCtl, ctlParams, reducer: MODULE_REDUCER, actions: {} });
     }).not.toThrow();
   });
 
@@ -73,22 +75,22 @@ describe('createModule', () => {
     (reducer, type) => {
       it(`should throw an error if a reducer is not a function: "${reducer}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+          createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
         }).toThrow(InvalidParamsError);
       });
     },
-    {exclude: [allValuesTypes.FUNCTION]}
+    { exclude: [allValuesTypes.FUNCTION] }
   );
 
   testAllValues(
     (actions, type) => {
       it(`should throw an error if actions is not an object: "${actions}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions});
+          createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions });
         }).toThrow(InvalidParamsError);
       });
     },
-    {exclude: [allValuesTypes.PLAIN_OBJECT]}
+    { exclude: [allValuesTypes.PLAIN_OBJECT] }
   );
 
   testAllValues(
@@ -104,16 +106,16 @@ describe('createModule', () => {
                 Ctl: VALID_CLASS,
                 reducer: MODULE_REDUCER,
                 actions: {
-                  action0: {creator, type},
+                  action0: { creator, type },
                 },
               });
             }).toThrow(InvalidParamsError);
           });
         },
-        {exclude: [allValuesTypes.STRING]}
+        { exclude: [allValuesTypes.STRING] }
       );
     },
-    {exclude: [allValuesTypes.FUNCTION, allValuesTypes.UNDEFINED]}
+    { exclude: [allValuesTypes.FUNCTION, allValuesTypes.UNDEFINED] }
   );
 
   it('should not throw an error if action has not a creator', () => {
@@ -154,7 +156,7 @@ describe('createModule', () => {
           Ctl: VALID_CLASS,
           reducer: MODULE_REDUCER,
           actions: {
-            action0: {proxy},
+            action0: { proxy },
           },
         });
       }).toThrow(InvalidParamsError);
@@ -189,7 +191,7 @@ describe('createModule', () => {
         spy(param0, param1, param2);
       }
     }
-    createModule({Ctl, ctlParams, reducer: MODULE_REDUCER, actions: {}});
+    createModule({ Ctl, ctlParams, reducer: MODULE_REDUCER, actions: {} });
 
     expect(spy).toHaveBeenCalledWith(...ctlParams);
   });
@@ -198,7 +200,7 @@ describe('createModule', () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
-      createModule({Ctl, reducer: () => {}, actions: {}});
+      createModule({ Ctl, reducer: () => {}, actions: {} });
     }).not.toThrow();
   });
 
@@ -209,7 +211,7 @@ describe('createModule', () => {
 
     const warning = jest.spyOn(console, 'warn');
 
-    createModule({Ctl, reducer: () => {}, actions: {}});
+    createModule({ Ctl, reducer: () => {}, actions: {} });
 
     expect(warning).toHaveBeenCalled();
   });
@@ -220,12 +222,12 @@ describe('createModule', () => {
     }
 
     expect(() => {
-      createModule({Ctl, reducer: () => {}, actions: {}});
+      createModule({ Ctl, reducer: () => {}, actions: {} });
     }).toThrow(DuplicateError);
   });
 
   it('should return object with method integrator', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: () => {}, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: () => {}, actions: {} });
 
     expect(module.integrator).toEqual(expect.any(Function));
   });
@@ -233,8 +235,8 @@ describe('createModule', () => {
   it('should return different instance on each call', () => {
     const reducer = () => {};
 
-    const module0 = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
-    const module1 = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+    const module0 = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module1 = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
 
     expect(module0).not.toBe(module1);
   });

@@ -1,8 +1,8 @@
-import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
+import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import {InvalidParamsError} from '../src/lib/baseErrors'
-import {createModule, createStore, RMCCtl} from '../src';
-import {pathDelimiter} from '../src/lib/constansts';
+import { InvalidParamsError } from '../src/lib/baseErrors';
+import { createModule, createStore, RMCCtl } from '../src';
+import { pathDelimiter } from '../src/lib/constansts';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -17,18 +17,18 @@ describe('module.integrator()', () => {
       const desc_100 =
         `should throw an error if single argument "${path}" of type` + ` "${type}" is not compatible with path type`;
       it(desc_100, () => {
-        const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+        const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
         expect(() => {
           module.integrator(path);
         }).toThrow(InvalidParamsError);
       });
     },
-    {exclude: [allValuesTypes.STRING, allValuesTypes.ARRAY]}
+    { exclude: [allValuesTypes.STRING, allValuesTypes.ARRAY] }
   );
 
   it('should throw an error if path is empty string', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     expect(() => {
       module.integrator('');
@@ -36,7 +36,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is empty array', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     expect(() => {
       module.integrator([]);
@@ -44,7 +44,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is array with at least one nonestring value', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     expect(() => {
       module.integrator(['foo', 1, 'bar']);
@@ -52,7 +52,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is array with at least one empty string value', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     expect(() => {
       module.integrator(['foo', '', 'bar']);
@@ -60,7 +60,7 @@ describe('module.integrator()', () => {
   });
 
   it('should throw an error if path is changed', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     module.integrator('path0');
 
@@ -77,7 +77,7 @@ describe('module.integrator()', () => {
       }
     }
 
-    const module = createModule({Ctl, reducer: () => testValue, actions: {}});
+    const module = createModule({ Ctl, reducer: () => testValue, actions: {} });
 
     const pathParts = ['first', 'second', 'third', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
     const testPath = [
@@ -123,7 +123,7 @@ describe('module.integrator()', () => {
     const value = 'foo';
     const reducer = () => value;
 
-    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
     const resultReducer = module.integrator('path');
 
     expect(resultReducer).not.toBe(reducer);
@@ -134,14 +134,14 @@ describe('module.integrator()', () => {
     const reducer = function() {
       expect(this.actions).toEqual(expect.any(Object));
     };
-    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
     const resultReducer = module.integrator('path');
 
     resultReducer();
   });
 
   it("should not throw an error if path is 'false digit'", () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {}});
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
     expect(() => {
       module.integrator('0');

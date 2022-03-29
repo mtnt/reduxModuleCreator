@@ -1,7 +1,6 @@
 {
   "printWidth": 120,
-  "parser": "flow",
-  "bracketSpacing": false,
   "trailingComma": "es5",
-  "singleQuote": true
+  "singleQuote": true,
+  "arrowParens": "avoid"
 }

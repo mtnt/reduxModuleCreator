@@ -1,4 +1,4 @@
-import {createModule, RMCCtl, combineReducers} from '../src';
+import { createModule, RMCCtl, combineReducers } from '../src';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 
@@ -41,7 +41,7 @@ describe('combineReducers', () => {
       [path0]: 'oldFoo',
       [path1]: 'oldBar',
     };
-    const action = {type: 'exampleAction'};
+    const action = { type: 'exampleAction' };
 
     reducer(state, action);
 
@@ -70,8 +70,8 @@ describe('combineReducers', () => {
   });
 
   it('should work ok either with usual reducers or a module`s integrator result', () => {
-    const module0 = createModule({Ctl: VALID_CLASS, reducer: () => 0, actions: {}});
-    const module1 = createModule({Ctl: VALID_CLASS, reducer: () => 1, actions: {}});
+    const module0 = createModule({ Ctl: VALID_CLASS, reducer: () => 0, actions: {} });
+    const module1 = createModule({ Ctl: VALID_CLASS, reducer: () => 1, actions: {} });
 
     const expected = {
       path0: 0,

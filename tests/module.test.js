@@ -1,5 +1,5 @@
-import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from '../src';
-import {getActionCreator, creator, getUniquePath} from './helpers';
+import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../src';
+import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -141,8 +141,8 @@ describe('module', () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule({Ctl, reducer, actions: {}});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
     module.subscribe(listener0);
@@ -173,13 +173,13 @@ describe('module', () => {
           creator: payload => {
             spy(payload);
 
-            return {payload};
+            return { payload };
           },
           type: 'sampleAction',
         },
       },
     });
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     createStore(rootReducer);
 
     module.method0();
@@ -252,8 +252,8 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {creator: actionCreator0, type: actionCreator0.actionType},
-        action1: {creator: actionCreator1, type: actionCreator1.actionType},
+        action0: { creator: actionCreator0, type: actionCreator0.actionType },
+        action1: { creator: actionCreator1, type: actionCreator1.actionType },
       },
     });
 
@@ -269,8 +269,8 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {creator: actionCreator0, type: actionCreator0.actionType},
-        action1: {creator: actionCreator1, type: actionCreator1.actionType},
+        action0: { creator: actionCreator0, type: actionCreator0.actionType },
+        action1: { creator: actionCreator1, type: actionCreator1.actionType },
       },
     });
 
@@ -285,7 +285,7 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {proxy: actionCreator0},
+        action0: { proxy: actionCreator0 },
       },
     });
 
@@ -299,7 +299,7 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {proxy: actionCreator0},
+        action0: { proxy: actionCreator0 },
       },
     });
 
@@ -313,7 +313,7 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {proxy: actionCreator0},
+        action0: { proxy: actionCreator0 },
       },
     });
 
@@ -329,7 +329,7 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action0: {proxy: actionCreator0},
+        action0: { proxy: actionCreator0 },
       },
     });
 
@@ -350,7 +350,7 @@ describe('module', () => {
       Ctl: SCtl,
       reducer: MODULE_REDUCER,
       actions: {
-        methodName: {creator: actionCreator0, type: actionCreator0.actionType},
+        methodName: { creator: actionCreator0, type: actionCreator0.actionType },
       },
     });
 
@@ -366,7 +366,7 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
 
@@ -381,14 +381,14 @@ describe('module', () => {
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
     const module1 = createModule({
       Ctl: VALID_CLASS,
       reducer: MODULE_REDUCER,
       actions: {
-        action: {creator: actionCreator, type: actionCreator.actionType},
+        action: { creator: actionCreator, type: actionCreator.actionType },
       },
     });
 

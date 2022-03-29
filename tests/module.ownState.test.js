@@ -1,8 +1,8 @@
 import cloneDeep from 'lodash.clonedeep';
-import {createStore as reduxCreateStore} from 'redux';
+import { createStore as reduxCreateStore } from 'redux';
 
-import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from '../src';
-import {getActionCreator, creator, getUniquePath} from './helpers';
+import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../src';
+import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -93,8 +93,8 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         }
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -125,8 +125,8 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         };
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -143,7 +143,7 @@ describe('module.ownState', () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+      const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
       const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
@@ -224,8 +224,8 @@ describe('module.ownState', () => {
           this.ownState = {};
         }
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -250,8 +250,8 @@ describe('module.ownState', () => {
           this.ownState = {};
         };
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -365,8 +365,8 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         }
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -409,8 +409,8 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         };
       }
-      const module = createModule({Ctl, reducer, actions: {}});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 

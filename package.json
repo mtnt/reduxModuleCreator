@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "es6-error": "4.1.1",
-    "nanoid": "2.0.3"
+    "nanoid": "3.3.2"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -39,7 +39,7 @@
     "jest": "23.6.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.noop": "3.0.1",
-    "prettier": "1.15.3",
+    "prettier": "2.6.1",
     "redux": "4.0.1",
     "unit-tests-values-iterators": "0.2.1"
   }

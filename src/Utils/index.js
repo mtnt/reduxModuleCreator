@@ -1,4 +1,4 @@
-import {pathDelimiter} from '../lib/constansts';
+import { pathDelimiter } from '../lib/constansts';
 
 export function get(obj, path, def) {
   try {
@@ -19,7 +19,7 @@ export function get(obj, path, def) {
 export function validatePath(path) {
   const isArray = Array.isArray(path);
 
-  if (!isString(path) && !isArray || path.length === 0) {
+  if ((!isString(path) && !isArray) || path.length === 0) {
     throw new Error('A path part is not compatible');
   }
 
