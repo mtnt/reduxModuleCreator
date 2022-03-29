@@ -30,7 +30,7 @@ describe('createModule', () => {
   testAllValues((ctl, type) => {
     it(`should throw an error if a controller is not inherited from the RMCCtl: "${ctl}" of type "${type}"`, () => {
       expect(() => {
-        createModule({Ctl: ctl, reducer: MODULE_REDUCER});
+        createModule({Ctl: ctl, reducer: MODULE_REDUCER, actions: {}});
       }).toThrow(InvalidParamsError);
     });
   });
@@ -39,7 +39,7 @@ describe('createModule', () => {
     (ctlParams, type) => {
       it(`should throw an error if a controllers params is not an array: "${ctlParams}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER});
+          createModule({Ctl: VALID_CLASS, ctlParams, reducer: MODULE_REDUCER, actions: {}});
         }).toThrow(InvalidParamsError);
       });
     },
@@ -57,7 +57,7 @@ describe('createModule', () => {
     }
 
     expect(() => {
-      createModule({Ctl: SCtl, ctlParams, reducer: MODULE_REDUCER});
+      createModule({Ctl: SCtl, ctlParams, reducer: MODULE_REDUCER, actions: {}});
     }).not.toThrow();
   });
 
@@ -65,7 +65,7 @@ describe('createModule', () => {
     (reducer, type) => {
       it(`should throw an error if a reducer is not a function: "${reducer}" of type "${type}"`, () => {
         expect(() => {
-          createModule({Ctl: VALID_CLASS, reducer});
+          createModule({Ctl: VALID_CLASS, reducer, actions: {}});
         }).toThrow(InvalidParamsError);
       });
     },
@@ -80,7 +80,7 @@ describe('createModule', () => {
         }).toThrow(InvalidParamsError);
       });
     },
-    {exclude: [allValuesTypes.PLAIN_OBJECT, allValuesTypes.ARRAY, allValuesTypes.UNDEFINED]}
+    {exclude: [allValuesTypes.PLAIN_OBJECT]}
   );
 
   testAllValues(
@@ -220,7 +220,7 @@ describe('createModule', () => {
         spy(param0, param1, param2);
       }
     }
-    createModule({Ctl, ctlParams, reducer: MODULE_REDUCER});
+    createModule({Ctl, ctlParams, reducer: MODULE_REDUCER, actions: {}});
 
     expect(spy).toHaveBeenCalledWith(...ctlParams);
   });
@@ -229,7 +229,7 @@ describe('createModule', () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
-      createModule({Ctl, reducer: () => {}});
+      createModule({Ctl, reducer: () => {}, actions: {}});
     }).not.toThrow();
   });
 
@@ -240,7 +240,7 @@ describe('createModule', () => {
 
     const warning = jest.spyOn(console, 'warn');
 
-    createModule({Ctl, reducer: () => {}});
+    createModule({Ctl, reducer: () => {}, actions: {}});
 
     expect(warning).toHaveBeenCalled();
   });
@@ -251,21 +251,21 @@ describe('createModule', () => {
     }
 
     expect(() => {
-      createModule({Ctl, reducer: () => {}});
+      createModule({Ctl, reducer: () => {}, actions: {}});
     }).toThrow(DuplicateError);
   });
 
   it('should return object with method integrator', () => {
-    const module = createModule({Ctl: VALID_CLASS, reducer: () => {}});
+    const module = createModule({Ctl: VALID_CLASS, reducer: () => {}, actions: {}});
 
     expect(module.integrator).toEqual(expect.any(Function));
   });
 
-  it('should return different object on each call', () => {
+  it('should return different instance on each call', () => {
     const reducer = () => {};
 
-    const module0 = createModule({Ctl: VALID_CLASS, reducer});
-    const module1 = createModule({Ctl: VALID_CLASS, reducer});
+    const module0 = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
+    const module1 = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
 
     expect(module0).not.toBe(module1);
   });

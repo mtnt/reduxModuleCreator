@@ -72,7 +72,7 @@ describe('module.subscribe', () => {
       }
     }
 
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -94,7 +94,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -117,7 +117,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener0 = jest.fn();
@@ -142,7 +142,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -172,7 +172,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -195,7 +195,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
@@ -224,7 +224,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -257,7 +257,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({Ctl: VALID_CLASS, reducer, actions: {}});
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -293,7 +293,7 @@ describe('module.subscribe', () => {
         stateDidUpdate(...args);
       }
     }
-    const module = createModule({Ctl, reducer});
+    const module = createModule({Ctl, reducer, actions: {}});
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {

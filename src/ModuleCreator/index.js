@@ -220,7 +220,7 @@ class Module {
       throw new InvalidParamsError(msg);
     }
 
-    if (typeof actions !== 'object' || actions === null) {
+    if (typeof actions !== 'object' || Array.isArray(actions) || actions === null) {
       const msg = 'Attempt to create a module, but actions is not an object';
 
       throw new InvalidParamsError(msg);
@@ -303,7 +303,7 @@ class Module {
 
 const modulesList = [];
 
-export function createModule({Ctl, ctlParams = [], reducer, actions = {}}) {
+export function createModule({Ctl, ctlParams = [], reducer, actions}) {
   const module = new Module(reducer, actions, Ctl, ctlParams);
 
   const proxy = new Proxy(module, {

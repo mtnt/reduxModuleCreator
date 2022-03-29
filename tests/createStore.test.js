@@ -22,11 +22,11 @@ describe('createStore', () => {
 
   it('should link store with valid module after invalid one', () => {
     try {
-      createModule({Ctl: INVALID_CLASS, reducer: () => {}});
+      createModule({Ctl: INVALID_CLASS, reducer: () => {}, actions: {}});
     } catch (e) {}
 
     expect(() => {
-      const module = createModule({Ctl: VALID_CLASS, reducer: () => {}});
+      const module = createModule({Ctl: VALID_CLASS, reducer: () => {}, actions: {}});
 
       const modulePath = getUniquePath();
       function rootReducer(state = {}, action) {

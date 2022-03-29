@@ -287,7 +287,7 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 Creates a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
-- `actions` is optional map of modules own actions
+- `actions` is a map of modules own actions
   - key is an actionCreator name
   - value is a map `{type: actionType [, creator: actionCreator]}` or `{proxy: existingActionCreator [, creatorName]}`
 - `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.

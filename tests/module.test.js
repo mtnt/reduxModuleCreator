@@ -141,7 +141,7 @@ describe('module', () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule({Ctl, reducer});
+    const module = createModule({Ctl, reducer, actions: {}});
     const rootReducer = combineReducers({[getUniquePath()]: module});
     const store = createStore(rootReducer);
 
