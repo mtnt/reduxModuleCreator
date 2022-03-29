@@ -3,7 +3,7 @@ import {DuplicateError} from '../src/lib/baseErrors';
 import {getUniquePath} from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
-const INVALID_CLASS = class SCtl extends RMCCtl {}; // there is no option to make class invalid (yet)
+const INVALID_CLASS = class SCtl {};
 
 describe('createStore', () => {
   afterEach(() => {
