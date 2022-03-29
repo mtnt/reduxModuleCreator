@@ -48,7 +48,15 @@ describe('createModule', () => {
     }
   );
 
-  it('should not throw an error if a controller passed with params', () => {
+  it('should not throw an error if a controller passed without params', () => {
+    class SCtl extends RMCCtl {}
+
+    expect(() => {
+      createModule({Ctl: SCtl, reducer: MODULE_REDUCER, actions: {}});
+    }).not.toThrow();
+  });
+
+  it('should not throw an error if a controller passed with params array', () => {
     const ctlParams = ['foo', true];
     class SCtl extends RMCCtl {
       constructor(str, bool, ...rest) {
