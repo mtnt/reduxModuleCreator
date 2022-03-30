@@ -5,11 +5,11 @@ export class RMCError extends ExtendableError {
     super(message);
 
     const domains = [];
-    let prototype = this.__proto__;
+    let prototype = Object.getPrototypeOf(this);
 
     do {
       domains.push(prototype.constructor.name);
-      prototype = prototype.__proto__;
+      prototype = Object.getPrototypeOf(prototype);
     } while (prototype.constructor !== ExtendableError);
 
     this.message = domains.join('.') + (message ? `: ${message}` : '');
