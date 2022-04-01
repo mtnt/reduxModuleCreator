@@ -1,10 +1,8 @@
-import { pathDelimiter } from '../lib/constansts';
-
 export function get(obj, path, def) {
   try {
     let arrPath = path;
     if (!Array.isArray(path)) {
-      arrPath = path.split(pathDelimiter);
+      arrPath = path.split('.');
     }
 
     const firstPathPart = arrPath[0];
@@ -33,7 +31,7 @@ export function normalizePath(path) {
     return path;
   }
 
-  return path.map(normalizePath).join(pathDelimiter);
+  return path.map(normalizePath).join('.');
 }
 
 export function combineReducers(stateReducerMap, rootPath) {
