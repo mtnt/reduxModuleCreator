@@ -1,9 +1,9 @@
 import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import { InvalidParamsError, DuplicateError } from '../src/lib/baseErrors';
+import { InvalidParamsError, DuplicateError } from '../dist/lib/baseErrors';
 import { getActionCreator } from './helpers';
 
-import { unlinkStore, createModule, RMCCtl } from '../src';
+import { unlinkStore, createModule, RMCCtl } from '../dist';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -196,7 +196,7 @@ describe('createModule', () => {
     expect(spy).toHaveBeenCalledWith(...ctlParams);
   });
 
-  it('should not throw an error if ctl class doesn`t have `_stateDidUpdate` method', () => {
+  it('should not throw an error if ctl class doesn`t have `stateDidUpdate`, `didLinkedWithStore` and `didUnlinkedWithStore` methods', () => {
     class Ctl extends RMCCtl {}
 
     expect(() => {
@@ -204,32 +204,16 @@ describe('createModule', () => {
     }).not.toThrow();
   });
 
-  it('should fire a warning if a controller has a same named method or property with Module', () => {
-    class Ctl extends VALID_CLASS {
-      integrator() {}
-    }
-
-    const warning = jest.spyOn(console, 'warn');
-
-    createModule({ Ctl, reducer: () => {}, actions: {} });
-
-    expect(warning).toHaveBeenCalled();
-  });
-
-  it('should throw an error if a controller has a same named private method or property with Module', () => {
-    class Ctl extends VALID_CLASS {
-      __initializeMdl() {}
-    }
-
-    expect(() => {
-      createModule({ Ctl, reducer: () => {}, actions: {} });
-    }).toThrow(DuplicateError);
-  });
-
-  it('should return object with method integrator', () => {
+  it('should return object with method named integrator', () => {
     const module = createModule({ Ctl: VALID_CLASS, reducer: () => {}, actions: {} });
 
     expect(module.integrator).toEqual(expect.any(Function));
+  });
+
+  it('should return object with method named subscribe', () => {
+    const module = createModule({ Ctl: VALID_CLASS, reducer: () => {}, actions: {} });
+
+    expect(module.subscribe).toEqual(expect.any(Function));
   });
 
   it('should return different instance on each call', () => {

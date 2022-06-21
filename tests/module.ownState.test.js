@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import { createStore as reduxCreateStore } from 'redux';
 
-import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../src';
+import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../dist';
 import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -71,7 +71,7 @@ describe('module.ownState', () => {
       expect(module.getOwnState()).toEqual(expected);
     });
 
-    it('should be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
@@ -89,7 +89,7 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           someFunc(this.ownState);
         }
       }
@@ -103,7 +103,7 @@ describe('module.ownState', () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it('should be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
@@ -121,7 +121,7 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           someFunc(this.ownState);
         };
       }
@@ -135,7 +135,7 @@ describe('module.ownState', () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it('should be `undefined` before store get linked', () => {
+    it('should be `undefined` unless the store get linked', () => {
       const ownState = {
         foo: 'bar',
         bar: 'foo',
@@ -208,7 +208,7 @@ describe('module.ownState', () => {
       }).toThrow();
     });
 
-    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('shouldn`t be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
@@ -220,7 +220,7 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           this.ownState = {};
         }
       }
@@ -234,7 +234,7 @@ describe('module.ownState', () => {
       }).toThrow();
     });
 
-    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('shouldn`t be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
@@ -246,7 +246,7 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           this.ownState = {};
         };
       }
@@ -261,6 +261,7 @@ describe('module.ownState', () => {
     });
   });
 
+  // there is undesirable behavior tested below
   describe('for setting a part of the state', () => {
     it('should be accessible from outside', () => {
       const ownState = {
@@ -332,7 +333,7 @@ describe('module.ownState', () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
@@ -359,8 +360,10 @@ describe('module.ownState', () => {
       }
       const fn = jest.fn();
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           fn();
+
+          expect(this.ownState.foo).toEqual(actionFoo);
 
           this.ownState.foo = manualFoo;
         }
@@ -376,7 +379,7 @@ describe('module.ownState', () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
@@ -403,8 +406,10 @@ describe('module.ownState', () => {
       }
       const fn = jest.fn();
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           fn();
+
+          expect(this.ownState.foo).toEqual(actionFoo);
 
           this.ownState.foo = manualFoo;
         };

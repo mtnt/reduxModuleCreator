@@ -1,4 +1,4 @@
-import { createModule, RMCCtl, combineReducers } from '../src';
+import { createModule, RMCCtl, combineReducers } from '../dist';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 

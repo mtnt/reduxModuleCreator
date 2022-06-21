@@ -1,5 +1,5 @@
-import { createStore, unlinkStore, RMCCtl, createModule } from '../src';
-import { DuplicateError } from '../src/lib/baseErrors';
+import { createStore, unlinkStore, RMCCtl, createModule } from '../dist';
+import { DuplicateError } from '../dist/lib/baseErrors';
 import { getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
