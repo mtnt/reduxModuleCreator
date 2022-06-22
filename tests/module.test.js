@@ -152,8 +152,6 @@ describe('module', () => {
     expect(spy).toHaveBeenCalledWith(payload);
   });
 
-  // @todo: add check for correct handling private methods
-
   it('should call controllers method `didLinkedWithStore` on get linked', () => {
     const testFunc = jest.fn();
     class Ctl extends VALID_CLASS {
