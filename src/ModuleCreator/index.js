@@ -62,7 +62,7 @@ export class RMCCtl {
 
     let actionEntries = Object.entries(actions);
 
-    actionEntries.forEach(([actionName, { creator = () => ({}), type, proxy }]) => {
+    actionEntries.forEach(([actionName, { creator = () => ({}), type = 'auto_generated_type_base', proxy }]) => {
       const haveProxy = proxy !== undefined;
       if (haveProxy && (!isFunction(proxy) || !isString(proxy.actionType) || proxy.actionType.length === '')) {
         throw new InvalidParamsError(
