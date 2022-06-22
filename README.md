@@ -36,11 +36,11 @@ If you\`ll ever wish to **change** `me` or `users` **data structure** (see examp
         - [integrator()](#integratorpath)
         - [actions](#actions)
     - [RMCCtl](#rmcctl)
-        - [_stateDidUpdate()](#_statedidupdateprevstate)
-        - [_didLinkedWithStore()](#_didlinkedwithstore)
-        - [_didUnlinkedWithStore()](#_didunlinkedwithstore)
+        - [stateDidUpdate()](#statedidupdateprevstate)
+        - [didLinkedWithStore()](#didlinkedwithstore)
+        - [didUnlinkedWithStore()](#didunlinkedwithstore)
         - [subscribe()](#subscribelistener)
-    - [combineReducers()](#combinereducerspath-module-anotherpath-reducer)
+    - [combineReducers()](#combinereducerspath-module-anotherpath-reducer--rootpath)
 
 ## FAQ
 
@@ -63,7 +63,7 @@ For making a reference between future modules and a store you need to link it. T
 ...and if you can\`t move this responsibility onto another side, you can just use
 
 ```javascript
-import {linkStore} from "redux-module-creator"
+import { linkStore } from "redux-module-creator";
 
 linkStore(alreadyExistanceStore);
 ```
@@ -73,7 +73,7 @@ linkStore(alreadyExistanceStore);
 If you do not want to do anything with the store before linking it. You can just do
 
 ```javascript
-import {createStore} from "redux-module-creator"
+import { createStore } from "redux-module-creator";
 
 const store = createStore(rootReducer, preloadedState, enhancer);
 ```
@@ -94,7 +94,7 @@ import {createModule, RMCCtl} from "redux-module-creator";
 
 class MeCtl extends RMCCtl {
     // will be called only if the module relative part of state is changed
-    _stateDidUpdate(prevOwnState) {
+    stateDidUpdate(prevOwnState) {
         // some reaction to state changes
         // use `this.ownState` to get access to current state
     }
@@ -106,11 +106,11 @@ class MeCtl extends RMCCtl {
 
 const actions = {
   addFriend: {
-    creator: userId => ({payload: userId}),
+    creator: userId => ({ payload: userId }),
     type: 'request to add a friend',
   },
   removeFriend: {
-    creator: userId => ({payload: userId}),
+    creator: userId => ({ payload: userId }),
     type: 'request to remove a friend',
   },
 };
@@ -138,7 +138,7 @@ function meReducer(state, action) {
     }
 }
 
-export default createModule({Ctl: MeCtl, reducer: meReducer, actions});
+export default createModule({ Ctl: MeCtl, reducer: meReducer, actions });
 ```
 
 ### Integrate your module`s reducer into reducers tree
@@ -283,13 +283,13 @@ This trick will help you hide an implementation and avoid redundant dependencies
 
 ## API reference
 
-### createModule({Ctl, ctlParams, reducer, actions})
+### createModule({ Ctl, ctlParams, reducer, actions })
 
 Creates a module with the reducer and the controller
 - `reducer` is a typically reducer, that will be injected into a store. If a reducer is typically function (not an arrow), it will be bind by the module.
 - `actions` is a map of modules own actions
   - key is an actionCreator name
-  - value is a map `{type: actionType [, creator: actionCreator]}` or `{proxy: existingActionCreator (typically an action of another module)}`
+  - value is a map `{ type?: actionType, creator?: actionCreator }` or `{proxy: existingActionCreator (typically an action of another module)}`
 - `Ctl` is a controller class for handling changed of the module`s own state. MUST be extended from RMCCtl.
 - `ctlParams` is an array of the controller params
 
@@ -317,19 +317,19 @@ And you can get the action type by `module.actionName.actionType`.
 As you can see, **it is possible to call actions as the module\`s methods**, however the actions still accessible at the `actions` path.  
 If your controller has it`s own method or property with the same with an action name, it WILL NOT be overwritten.
 
->NB: DO NOT RELY to equality of `module.actionName.actionType` and the type you did pass into the actions map while creating a module. It is different in module reusability purpose.
+>NB: DO NOT RELY to equality of `module.actionName.actionType` and the type you did pass into the actions map while creating a module. It is different in a module reusability purpose.
 
 ### RMCCtl
 Base class for controller.
 
-#### _stateDidUpdate(prevState)
+#### stateDidUpdate(prevState)
 Protected method of a controller for reactions to changes of the state.
 Use `this.ownState` to get a current state.
 
-#### _didLinkedWithStore()
+#### didLinkedWithStore()
 Protected method that will be called after the controller get linked with a store (if exists).
 
-#### _didUnlinkedWithStore()
+#### didUnlinkedWithStore()
 Protected method that will be called after the controller get unlinked with a store (if exists).
 
 #### subscribe(listener)
@@ -338,7 +338,7 @@ Subscribe to the own state changes.
 
 Returns `unsubscriber`. Call it when you no longer need to be subscribed for avoiding of memory leaks.
 
-### combineReducers({path: Module, anotherPath: reducer} [, rootPath])
+### combineReducers({ path: Module, anotherPath: reducer } [, rootPath])
 Turns an object whose values are different reducing functions or modules into a single reducing function you can pass to createStore.
 
 >For modules it will call the `module.integrator` function and pass the module `path` into the integrator result reducer as third param.
@@ -351,6 +351,5 @@ Links the store with created modules.
 - `store` is result of `createStore` or `redux.createStore` call;
 
 ## Some caveats
-* you have access to a controller\`s methods on a module, but you can\`t get access to the module\`s method from inside the controller\`s method by using `this`
 * you must be MUCH CAREFUL with operating `ownState` - it is a ref to a part of the state and changing it you change the state
 * you will get an error if you try to set whole `ownState` property, but you have an ability to change a part of it: `ownState.foo = "bar"`
