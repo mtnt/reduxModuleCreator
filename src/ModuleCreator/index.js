@@ -47,7 +47,6 @@ function generateActionType(origin, uniquePostfix) {
 }
 
 export class RMCCtl {
-  #writable = false;
   #uniquePostfix = `up_${nanoid()}`;
   #unsubscribeStore = undefined;
   #path = undefined;
@@ -104,29 +103,20 @@ export class RMCCtl {
 
     return get(outerState, path);
   }
-  #setOwnState = state => {
-    this.#writable = true;
-
-    this.ownState = state;
-
-    this.#writable = false;
-  };
 
   #stateUpdateListener(nextOuterState) {
     const prevOwnState = this.ownState;
 
-    const ownState = this.#getOwnState(nextOuterState);
+    this.#ownState = this.#getOwnState(nextOuterState);
 
-    this.#setOwnState(ownState);
-
-    if (ownState === prevOwnState) {
+    if (this.#ownState === prevOwnState) {
       return;
     }
 
     this.stateDidUpdate(prevOwnState);
 
     this.#stateChangeListeners.forEach(listener => {
-      listener(prevOwnState, ownState);
+      listener(prevOwnState, this.#ownState);
     });
   }
 
@@ -154,13 +144,6 @@ export class RMCCtl {
     }
 
     return this.#ownState;
-  }
-  set ownState(value) {
-    if (!this.#writable) {
-      throw new WrongInterfaceError('Attempt to set ownState. This property changes via dispatching actions only.');
-    }
-
-    this.#ownState = value;
   }
 
   subscribe(listener) {
@@ -197,8 +180,7 @@ export class RMCCtl {
   __initialize_RMC(store) {
     this.#store = store;
 
-    const ownState = this.#getOwnState();
-    this.#setOwnState(ownState);
+    this.#ownState = this.#getOwnState();
 
     this.#unsubscribeStore = this.#store.subscribe(() => {
       const state = this.#store.getState();
