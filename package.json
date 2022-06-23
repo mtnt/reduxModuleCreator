@@ -39,5 +39,8 @@
     "prettier": "2.6.1",
     "redux": "4.0.1",
     "unit-tests-values-iterators": "0.2.1"
-  }
+  },
+  "files": [
+    "/dist"
+  ]
 }

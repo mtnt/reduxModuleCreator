@@ -1,9 +1,0 @@
-# do not publish sources
-src
-tests
-node_modules
-
-.idea
-.babelrc
-.prettierrc
-.gitignore
