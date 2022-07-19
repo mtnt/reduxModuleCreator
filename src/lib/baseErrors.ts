@@ -1,10 +1,10 @@
 import ExtendableError from 'es6-error';
 
 export class RMCError extends ExtendableError {
-  constructor(message = '') {
+  constructor(message: string = '') {
     super(message);
 
-    const domains = [];
+    const domains: string[] = [];
     let prototype = Object.getPrototypeOf(this);
 
     do {
