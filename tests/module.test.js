@@ -1,4 +1,4 @@
-import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../src';
+import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../dist';
 import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
@@ -48,70 +48,35 @@ describe('module', () => {
     expect(module.getter1()).toBe(3);
   });
 
-  it('should use Module`s method if same named public methods exists in a module and a controller', () => {
-    const integrator = jest.fn();
-
-    class Ctl extends VALID_CLASS {
-      integrator(...args) {
-        integrator(...args);
-      }
-    }
-
-    creator(Ctl, MODULE_REDUCER);
-
-    expect(integrator).toHaveBeenCalledTimes(0);
-  });
-
-  it('should have access to controller`s protected methods from the module', () => {
-    const someFunc0 = jest.fn();
-    const someFunc1 = jest.fn();
-
-    class Ctl extends VALID_CLASS {
-      _someMethod() {
-        someFunc0();
-      }
-
-      _arrowMethod = () => {
-        someFunc1();
-      };
-    }
-    const module = creator(Ctl, MODULE_REDUCER);
-    module._someMethod();
-    module._arrowMethod();
-
-    expect(someFunc0).toHaveBeenCalledTimes(1);
-    expect(someFunc1).toHaveBeenCalledTimes(1);
-  });
-
-  it('should have access to controller`s protected method from inside another controller`s methods', () => {
-    const someFunc0 = jest.fn();
-    const someFunc1 = jest.fn();
-
-    class Ctl extends VALID_CLASS {
-      someMethod() {
-        this._protectedMethod0();
-      }
-
-      arrowMethod = () => {
-        this._protectedMethod1();
-      };
-
-      _protectedMethod0() {
-        someFunc0();
-      }
-
-      _protectedMethod1() {
-        someFunc1();
-      }
-    }
-    const module = creator(Ctl, MODULE_REDUCER);
-
-    module.someMethod();
-    module.arrowMethod();
-
-    expect(someFunc0).toHaveBeenCalledTimes(1);
-    expect(someFunc1).toHaveBeenCalledTimes(1);
-  });
+  // it('should have access to controller`s protected method from inside another controller`s methods', () => {
+  //   const someFunc0 = jest.fn();
+  //   const someFunc1 = jest.fn();
+  //
+  //   class Ctl extends VALID_CLASS {
+  //     someMethod() {
+  //       this._protectedMethod0();
+  //     }
+  //
+  //     arrowMethod = () => {
+  //       this._protectedMethod1();
+  //     };
+  //
+  //     _protectedMethod0() {
+  //       someFunc0();
+  //     }
+  //
+  //     _protectedMethod1() {
+  //       someFunc1();
+  //     }
+  //   }
+  //   const module = creator(Ctl, MODULE_REDUCER);
+  //
+  //   module.someMethod();
+  //   module.arrowMethod();
+  //
+  //   expect(someFunc0).toHaveBeenCalledTimes(1);
+  //   expect(someFunc1).toHaveBeenCalledTimes(1);
+  // });
 
   it("should have access to parent`s method using 'super'", () => {
     const actionCreator = getActionCreator();
@@ -187,39 +152,10 @@ describe('module', () => {
     expect(spy).toHaveBeenCalledWith(payload);
   });
 
-  it('should not use Module`s method if called from controller`s method', () => {
-    const actionCreator = getActionCreator();
-    function reducer(state = 'initial', action) {
-      switch (action.type) {
-        case actionCreator.actionType:
-          return action.payload;
-
-        default:
-          return state;
-      }
-    }
-    class Ctl extends VALID_CLASS {
-      someMethod() {
-        return this.integrator;
-      }
-
-      someArrowMethod = () => {
-        return this.integrator;
-      };
-    }
-    const module = creator(Ctl, reducer);
-
-    const result0 = module.someMethod();
-    const result1 = module.someArrowMethod();
-
-    expect(result0).toBe(undefined);
-    expect(result1).toBe(undefined);
-  });
-
-  it('should call controllers method `_didLinkedWithStore` on get linked', () => {
+  it('should call controllers method `didLinkedWithStore` on get linked', () => {
     const testFunc = jest.fn();
     class Ctl extends VALID_CLASS {
-      _didLinkedWithStore() {
+      didLinkedWithStore() {
         testFunc();
       }
     }
@@ -229,10 +165,10 @@ describe('module', () => {
     expect(testFunc).toHaveBeenCalledTimes(1);
   });
 
-  it('should call controllers method `_didUnlinkedWithStore` on get unlinked', () => {
+  it('should call controllers method `didUnlinkedWithStore` on get unlinked', () => {
     const testFunc = jest.fn();
     class Ctl extends VALID_CLASS {
-      _didUnlinkedWithStore() {
+      didUnlinkedWithStore() {
         testFunc();
       }
     }

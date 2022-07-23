@@ -1,7 +1,7 @@
 import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import { InvalidParamsError } from '../src/lib/baseErrors';
-import { createModule, createStore, RMCCtl } from '../src';
+import { InvalidParamsError } from '../dist/lib/baseErrors';
+import { createModule, createStore, RMCCtl } from '../dist';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {
@@ -42,13 +42,18 @@ describe('module.integrator()', () => {
     }).toThrow(InvalidParamsError);
   });
 
-  it('should throw an error if path is array with at least one nonestring value', () => {
-    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
+  testAllValues(
+    (path, type) => {
+      it(`should throw an error if path is array with at least one nonestring value "${path}" of type ${type}`, () => {
+        const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
 
-    expect(() => {
-      module.integrator(['foo', 1, 'bar']);
-    }).toThrow(InvalidParamsError);
-  });
+        expect(() => {
+          module.integrator(['foo', path, 'bar']);
+        }).toThrow(InvalidParamsError);
+      });
+    },
+    { exclude: [allValuesTypes.STRING] }
+  );
 
   it('should throw an error if path is array with at least one empty string value', () => {
     const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
@@ -56,6 +61,14 @@ describe('module.integrator()', () => {
     expect(() => {
       module.integrator(['foo', '', 'bar']);
     }).toThrow(InvalidParamsError);
+  });
+
+  it("should not throw an error if path is 'false digit'", () => {
+    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
+
+    expect(() => {
+      module.integrator('0');
+    }).not.toThrow();
   });
 
   it('should throw an error if path is changed', () => {
@@ -126,20 +139,12 @@ describe('module.integrator()', () => {
   });
 
   it('should return a function that has access to the action via context', () => {
-    const reducer = function() {
+    const reducer = function () {
       expect(this.actions).toEqual(expect.any(Object));
     };
     const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
     const resultReducer = module.integrator('path');
 
     resultReducer();
-  });
-
-  it("should not throw an error if path is 'false digit'", () => {
-    const module = createModule({ Ctl: VALID_CLASS, reducer: MODULE_REDUCER, actions: {} });
-
-    expect(() => {
-      module.integrator('0');
-    }).not.toThrow();
   });
 });

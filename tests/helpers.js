@@ -1,11 +1,11 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { createStore, createModule } from '../src';
+import { createStore, createModule } from '../dist';
 
 export function getActionCreator() {
   const type = `action_${nanoid()}`;
 
-  const actionCreator = function(payload) {
+  const actionCreator = function (payload) {
     return {
       type,
       payload,

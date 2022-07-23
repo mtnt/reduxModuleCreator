@@ -21,9 +21,7 @@
   ],
   "author": "Kirill \"Mutant\" Glazunov <reg@webmutant.ru>",
   "license": "MIT",
-  "jest": {
-    "testURL": "http://localhost"
-  },
+  "jest": {},
   "peerDependencies": {
     "redux": ">=4.x.x"
   },
@@ -32,15 +30,17 @@
     "nanoid": "3.3.2"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-jest": "23.6.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-preset-env": "1.7.0",
-    "jest": "23.6.0",
+    "@babel/cli": "7.17.10",
+    "@babel/preset-env": "7.18.2",
+    "babel-jest": "28.1.1",
+    "jest": "28.1.1",
     "lodash.clonedeep": "4.5.0",
     "lodash.noop": "3.0.1",
     "prettier": "2.6.1",
     "redux": "4.0.1",
     "unit-tests-values-iterators": "0.2.1"
-  }
+  },
+  "files": [
+    "/dist"
+  ]
 }

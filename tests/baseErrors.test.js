@@ -4,7 +4,7 @@ import {
   InvalidParamsError,
   WrongInterfaceError,
   RMCError,
-} from '../src/lib/baseErrors';
+} from '../dist/lib/baseErrors';
 
 describe.each([
   ['DuplicateError', new DuplicateError('message')],
