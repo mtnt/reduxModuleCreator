@@ -135,8 +135,9 @@ export type RMCReducer<S = any, A extends Action = ExtendedReduxAction> = (
 ) => S;
 
 type RegularAction = ReduxAction<string | number> & { [key: string]: any };
-export type RegularRMCAction = ReduxAction<string | number> & {
+export type RegularRMCAction = {
   creator?: (...args: any[]) => object & { type?: never };
+  type?: string | number;
   proxy?: never;
 };
 
