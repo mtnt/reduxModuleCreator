@@ -5,6 +5,7 @@ import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from 
 import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const ctlParams = [];
 const MODULE_REDUCER = () => {
   return {
     name: 'initial',
@@ -93,7 +94,7 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         }
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
@@ -125,7 +126,7 @@ describe('module.ownState', () => {
           someFunc(this.ownState);
         };
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
@@ -143,7 +144,7 @@ describe('module.ownState', () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+      const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
       const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
@@ -224,7 +225,7 @@ describe('module.ownState', () => {
           this.ownState = {};
         }
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
@@ -250,7 +251,7 @@ describe('module.ownState', () => {
           this.ownState = {};
         };
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
@@ -368,7 +369,7 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         }
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
@@ -414,7 +415,7 @@ describe('module.ownState', () => {
           this.ownState.foo = manualFoo;
         };
       }
-      const module = createModule({ Ctl, reducer, actions: {} });
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
       const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);

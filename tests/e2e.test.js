@@ -18,6 +18,7 @@ function createModule0(initialState) {
 
     stateDidUpdate() {}
   }
+  const ctlParams = [];
 
   const actions = {
     action0: {
@@ -43,7 +44,7 @@ function createModule0(initialState) {
     }
   }
 
-  return createModule({ Ctl, reducer: reducer0, actions });
+  return createModule({ Ctl, ctlParams, reducer: reducer0, actions });
 }
 
 const INITIAL_STATES = [undefined, {}, { initialProp: 'initialPropValue' }];

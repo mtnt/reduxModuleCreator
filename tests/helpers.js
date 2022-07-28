@@ -18,7 +18,8 @@ export function getActionCreator() {
 }
 
 export function creator(Ctl, reducer, modulePath = getUniquePath()) {
-  const module = createModule({ Ctl, reducer, actions: {} });
+  const ctlParams = [];
+  const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
 
   function rootReducer(state = {}, action) {
     return {

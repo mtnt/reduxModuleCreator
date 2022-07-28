@@ -72,7 +72,7 @@ const rootReducer0: {
   foo1_1: { prop0: boolean; prop1: string };
 } = combineReducers(stateReducerMap)(state, { type: '' });
 // @ts-expect-error if return type is not expected
-const rootReducer0: {
+const rootReducer1: {
   foo0: string;
   foo0_1: { prop0: string; prop1: number };
   foo1: { prop0: boolean; prop1: string };

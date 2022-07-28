@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "target": "es2022",
+    "allowJs": false,
+    "target": "es2021",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
@@ -11,5 +11,5 @@
     "noImplicitAny": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/tests/**"]
 }

@@ -36,6 +36,7 @@ describe('unlinkStore', () => {
   it('actions does not affects module after unlink store', () => {
     const stateDidUpdate = jest.fn();
     const actionCreator = getActionCreator();
+    const ctlParams = [];
     function reducer(
       state = {
         name: 'initial',
@@ -55,7 +56,7 @@ describe('unlinkStore', () => {
         stateDidUpdate(...args);
       }
     }
-    const module = createModule({ Ctl, reducer, actions: {} });
+    const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {

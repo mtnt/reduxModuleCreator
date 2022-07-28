@@ -1,6 +1,6 @@
 import { createStore as reduxCreateStore, StoreCreator } from 'redux';
 
-import { linkStore, unlinkStore, createModule, RMCCtl } from './ModuleCreator';
+import { linkStore, unlinkStore, createModule, RMCCtl, clearModules } from './ModuleCreator';
 import { combineReducers, ReducerThisType, ReducerActionsType } from './Utils';
 
 const createStore: StoreCreator = (
@@ -20,6 +20,7 @@ export {
   linkStore,
   unlinkStore,
   combineReducers,
+  clearModules,
   ReducerThisType,
   ReducerActionsType,
 };

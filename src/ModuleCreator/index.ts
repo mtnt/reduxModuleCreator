@@ -15,6 +15,10 @@ import {
 
 const modulesList: RMCCtl<any, any>[] = [];
 
+export function clearModules() {
+  modulesList.length = 0;
+}
+
 let isStoreLinked = false;
 export function linkStore(globalStore: GlobalStore) {
   if (isStoreLinked) {
@@ -74,13 +78,14 @@ export class RMCCtl<
   #stateChangeListeners = new Set<SBS>();
   #unsubscribeStore?: ReturnType<GlobalStore['subscribe']>
 
-  protected stateDidUpdate?: (prevOwnState: S) => any
+  protected stateDidUpdate?: (prevOwnState?: S) => any
   protected didLinkedWithStore?: () => any
   protected didUnlinkedWithStore?: () => any
 
-  actions!: {
+  // @ts-expect-error
+  actions: {
     [AN in keyof A]: A[AN] extends RegularRMCAction ? RMCActionCreator<A[AN]> : A[AN]['proxy']
-  }
+  } = {}
 
   constructor(reducer: R, actions: A) {
     this.#reducer = reducer.bind(this);
@@ -99,7 +104,7 @@ export class RMCCtl<
 
         this.actions[actionName] = action.proxy;
       } else {
-        const { creator = () => ({}), type } = action
+        const { creator = () => ({}), type = 'generated_type' } = action
 
         if (!isFunction(creator)) {
           throw new InvalidParamsError(`Action creator for "${String(actionName)}" is not a function: "${creator}"`);
@@ -154,7 +159,8 @@ export class RMCCtl<
     }
 
     this.#stateChangeListeners.forEach(listener => {
-      listener(prevOwnState, this.#ownState);
+      // `as` because the prevOwnState can not be undefined - #stateUpdateListener can`t be called while a store is unlinked
+      listener(prevOwnState as S, this.#ownState);
     });
   }
 
@@ -172,14 +178,18 @@ export class RMCCtl<
     return this.#unsubscribe.bind(this, listener);
   }
 
-  get ownState() {
+  protected get ownState() {
+    if (this.#store === undefined) {
+      return
+    }
+
     return this.#ownState;
   }
 
   __initialize_RMC(store: GlobalStore) {
     this.#store = store;
 
-    this.#ownState = this.#getOwnState(this.#store);
+    this.#ownState = this.#getOwnState(this.#store.getState());
 
     this.#unsubscribeStore = this.#store.subscribe(() => {
       if (this.#store === undefined) {
@@ -284,11 +294,13 @@ export function createModule<
 
   const module = new CtlClass(...ctlParams, reducer, actions);
 
-  getObjEntries(module.actions).forEach(([key, value]) => {
-    if (module[key] === undefined) {
-      module[key] = value
-    }
-  })
+  if (module.actions !== undefined) {
+    getObjEntries(module.actions).forEach(([key, value]) => {
+      if (module[key] === undefined) {
+        module[key] = value
+      }
+    })
+  }
 
   modulesList.push(module);
 
