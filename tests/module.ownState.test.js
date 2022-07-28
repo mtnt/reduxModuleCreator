@@ -1,10 +1,11 @@
 import cloneDeep from 'lodash.clonedeep';
-import {createStore as reduxCreateStore} from 'redux';
+import { createStore as reduxCreateStore } from 'redux';
 
-import {unlinkStore, RMCCtl, createModule, combineReducers, createStore} from '../src';
-import {getActionCreator, creator, getUniquePath} from './helpers';
+import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../dist';
+import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const ctlParams = [];
 const MODULE_REDUCER = () => {
   return {
     name: 'initial',
@@ -71,7 +72,7 @@ describe('module.ownState', () => {
       expect(module.getOwnState()).toEqual(expected);
     });
 
-    it('should be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
@@ -81,7 +82,7 @@ describe('module.ownState', () => {
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -89,12 +90,12 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           someFunc(this.ownState);
         }
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -103,7 +104,7 @@ describe('module.ownState', () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it('should be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const someFunc = jest.fn();
       const ownState = {
@@ -113,7 +114,7 @@ describe('module.ownState', () => {
       const expected = cloneDeep(ownState);
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -121,12 +122,12 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           someFunc(this.ownState);
         };
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -135,7 +136,7 @@ describe('module.ownState', () => {
       expect(someFunc).toHaveBeenCalledWith(expected);
     });
 
-    it('should be `undefined` before store get linked', () => {
+    it('should be `undefined` unless the store get linked', () => {
       const ownState = {
         foo: 'bar',
         bar: 'foo',
@@ -143,7 +144,7 @@ describe('module.ownState', () => {
       const reducer = (state = {}, action) => {
         return ownState;
       };
-      const module = createModule({Ctl: VALID_CLASS, reducer});
+      const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
       const modulePath = getUniquePath();
 
       function rootReducer(state = {}, action) {
@@ -208,11 +209,11 @@ describe('module.ownState', () => {
       }).toThrow();
     });
 
-    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('shouldn`t be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -220,12 +221,12 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           this.ownState = {};
         }
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -234,11 +235,11 @@ describe('module.ownState', () => {
       }).toThrow();
     });
 
-    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('shouldn`t be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       function reducer(state = {}, action) {
         switch (action.type) {
-          case actionCreator.type:
+          case actionCreator.actionType:
             return action.payload;
 
           default:
@@ -246,12 +247,12 @@ describe('module.ownState', () => {
         }
       }
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           this.ownState = {};
         };
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -261,6 +262,7 @@ describe('module.ownState', () => {
     });
   });
 
+  // there is undesirable behavior tested below
   describe('for setting a part of the state', () => {
     it('should be accessible from outside', () => {
       const ownState = {
@@ -332,7 +334,7 @@ describe('module.ownState', () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it('shouldn`t be accessible from inside of the `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
@@ -346,7 +348,7 @@ describe('module.ownState', () => {
       };
       function reducer(state = initialState, action) {
         switch (action.type) {
-          case actionCreator.type: {
+          case actionCreator.actionType: {
             return {
               ...state,
               foo: action.payload,
@@ -359,14 +361,16 @@ describe('module.ownState', () => {
       }
       const fn = jest.fn();
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate() {
+        stateDidUpdate() {
           fn();
+
+          expect(this.ownState.foo).toEqual(actionFoo);
 
           this.ownState.foo = manualFoo;
         }
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 
@@ -376,7 +380,7 @@ describe('module.ownState', () => {
       expect(module.ownState).toEqual(expected);
     });
 
-    it('shouldn`t be accessible from inside of the arrow `_stateDidUpdate` method', () => {
+    it('should be accessible from inside of the arrow `stateDidUpdate` method', () => {
       const actionCreator = getActionCreator();
       const initialState = {
         foo: {
@@ -390,7 +394,7 @@ describe('module.ownState', () => {
       };
       function reducer(state = initialState, action) {
         switch (action.type) {
-          case actionCreator.type: {
+          case actionCreator.actionType: {
             return {
               ...state,
               foo: action.payload,
@@ -403,14 +407,16 @@ describe('module.ownState', () => {
       }
       const fn = jest.fn();
       class Ctl extends VALID_CLASS {
-        _stateDidUpdate = () => {
+        stateDidUpdate = () => {
           fn();
+
+          expect(this.ownState.foo).toEqual(actionFoo);
 
           this.ownState.foo = manualFoo;
         };
       }
-      const module = createModule({Ctl, reducer});
-      const rootReducer = combineReducers({[getUniquePath()]: module});
+      const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
+      const rootReducer = combineReducers({ [getUniquePath()]: module });
 
       const store = createStore(rootReducer);
 

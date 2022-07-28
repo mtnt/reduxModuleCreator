@@ -1,3 +1,13 @@
+v3.0.0
+ Breaking changes:
+ - _stateDidUpdate, _didLinkedWithStore and _didUnlinkedWithStore are renamed to stateDidUpdate, didLinkedWithStore and didUnlinkedWithStore respectively
+ - __initializeMdl and __deinitialize is renamed to __initialize_RMC and __deinitialize_RMC respectively
+ - some of undocumented methods are renamed
+ - a `creatorName` has been removed from a proxy-action =)
+
+ Nonebreaking changes:
+ - action type is now optional
+
 v2.2.0 (29.01.20)
 - it`s possible to create an action creator for a proxy-action by supplying a `creatorName` property
 

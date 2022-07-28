@@ -1,24 +1,25 @@
-import nanoid from 'nanoid/non-secure';
+import { nanoid } from 'nanoid/non-secure';
 
-import {createStore, createModule} from '../src';
+import { createStore, createModule } from '../dist';
 
 export function getActionCreator() {
   const type = `action_${nanoid()}`;
 
-  const actionCreator = function(payload) {
+  const actionCreator = function (payload) {
     return {
       type,
       payload,
     };
   };
 
-  actionCreator.type = type;
+  actionCreator.actionType = type;
 
   return actionCreator;
 }
 
 export function creator(Ctl, reducer, modulePath = getUniquePath()) {
-  const module = createModule({Ctl, reducer});
+  const ctlParams = [];
+  const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
 
   function rootReducer(state = {}, action) {
     return {

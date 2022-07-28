@@ -1,8 +1,8 @@
-import {allValuesTypes, testAllValues} from 'unit-tests-values-iterators';
+import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import {linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers} from '../src';
-import {getActionCreator, creator, getUniquePath} from './helpers';
-import {InvalidParamsError} from '../src/lib/baseErrors';
+import { linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers } from '../dist';
+import { getActionCreator, creator, getUniquePath } from './helpers';
+import { InvalidParamsError } from '../dist/lib/baseErrors';
 
 const payload0 = {
   name: 'payload0',
@@ -17,6 +17,7 @@ const initialData = {
 };
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const ctlParams = [];
 const MODULE_REDUCER = () => {
   return initialData;
 };
@@ -38,21 +39,21 @@ describe('module.subscribe', () => {
         }).toThrow(InvalidParamsError);
       });
     },
-    {exclude: [allValuesTypes.FUNCTION]}
+    { exclude: [allValuesTypes.FUNCTION] }
   );
 
   it('should be able to get called several times with different listeners', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
 
     expect(() => {
-      module.subscribe(function() {});
-      module.subscribe(function() {});
+      module.subscribe(function () {});
+      module.subscribe(function () {});
     }).not.toThrow();
   });
 
   it('should be able to get called several times with same listener', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
-    const listener = function() {};
+    const listener = function () {};
 
     expect(() => {
       module.subscribe(listener);
@@ -64,7 +65,7 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
@@ -72,8 +73,8 @@ describe('module.subscribe', () => {
       }
     }
 
-    const module = createModule({Ctl: VALID_CLASS, reducer});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -87,15 +88,15 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -110,15 +111,15 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener0 = jest.fn();
     const listener1 = jest.fn();
@@ -135,15 +136,15 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
 
@@ -156,7 +157,7 @@ describe('module.subscribe', () => {
   it('should return function unsubscriber', () => {
     const module = creator(VALID_CLASS, MODULE_REDUCER);
 
-    const unsubscriber = module.subscribe(function() {});
+    const unsubscriber = module.subscribe(function () {});
 
     expect(unsubscriber).toEqual(expect.any(Function));
   });
@@ -165,15 +166,15 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
-    const rootReducer = combineReducers({[getUniquePath()]: module});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
+    const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
     const unsubscriber = module.subscribe(listener);
@@ -188,14 +189,14 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
@@ -217,14 +218,14 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -250,14 +251,14 @@ describe('module.subscribe', () => {
     const actionCreator = getActionCreator();
     function reducer(state = initialData, action) {
       switch (action.type) {
-        case actionCreator.type:
+        case actionCreator.actionType:
           return action.payload;
 
         default:
           return state;
       }
     }
-    const module = createModule({Ctl: VALID_CLASS, reducer});
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -274,37 +275,5 @@ describe('module.subscribe', () => {
     store.dispatch(actionCreator(initialData));
 
     expect(listener).toHaveBeenCalledTimes(0);
-  });
-
-  it('actions does not affects module after unlink store', () => {
-    const stateDidUpdate = jest.fn();
-    const actionCreator = getActionCreator();
-    function reducer(state = initialData, action) {
-      switch (action.type) {
-        case actionCreator.type:
-          return action.payload;
-
-        default:
-          return state;
-      }
-    }
-    class Ctl extends RMCCtl {
-      _stateDidUpdate(...args) {
-        stateDidUpdate(...args);
-      }
-    }
-    const module = createModule({Ctl, reducer});
-    const modulePath = getUniquePath();
-    function rootReducer(state = {}, action) {
-      return {
-        [modulePath]: module.integrator(modulePath)(state[modulePath], action),
-      };
-    }
-    const store = createStore(rootReducer);
-
-    unlinkStore();
-    store.dispatch(actionCreator(payload0));
-
-    expect(stateDidUpdate).toHaveBeenCalledTimes(0);
   });
 });

@@ -1,9 +1,9 @@
-import {createStore, unlinkStore, RMCCtl, createModule} from '../src';
-import {DuplicateError} from '../src/lib/baseErrors';
-import {getUniquePath} from './helpers';
+import { createStore, unlinkStore, RMCCtl, createModule } from '../dist';
+import { DuplicateError } from '../dist/lib/baseErrors';
+import { getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
-const INVALID_CLASS = class SCtl extends RMCCtl {}; // there is no option to make class invalid (yet)
+const INVALID_CLASS = class SCtl {};
 
 describe('createStore', () => {
   afterEach(() => {
@@ -21,12 +21,13 @@ describe('createStore', () => {
   });
 
   it('should link store with valid module after invalid one', () => {
+    const ctlParams = [];
     try {
-      createModule({Ctl: INVALID_CLASS, reducer: () => {}});
+      createModule({ Ctl: INVALID_CLASS, ctlParams, reducer: () => {}, actions: {} });
     } catch (e) {}
 
     expect(() => {
-      const module = createModule({Ctl: VALID_CLASS, reducer: () => {}});
+      const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer: () => {}, actions: {} });
 
       const modulePath = getUniquePath();
       function rootReducer(state = {}, action) {
