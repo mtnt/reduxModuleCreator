@@ -2,6 +2,7 @@ import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from 
 import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const ctlParams = [];
 const MODULE_REDUCER = () => {
   return {
     name: 'initial',
@@ -106,7 +107,7 @@ describe('module', () => {
         super.subscribe(listener);
       }
     }
-    const module = createModule({ Ctl, reducer, actions: {} });
+    const module = createModule({ Ctl, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
 
@@ -132,6 +133,7 @@ describe('module', () => {
     const spy = jest.fn();
     const module = createModule({
       Ctl,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: {
@@ -186,6 +188,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { creator: actionCreator0, type: actionCreator0.actionType },
@@ -203,6 +206,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { creator: actionCreator0, type: actionCreator0.actionType },
@@ -219,6 +223,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { proxy: actionCreator0 },
@@ -233,6 +238,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { proxy: actionCreator0 },
@@ -247,6 +253,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { proxy: actionCreator0 },
@@ -263,6 +270,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action0: { proxy: actionCreator0 },
@@ -284,6 +292,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: SCtl,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         methodName: { creator: actionCreator0, type: actionCreator0.actionType },
@@ -300,6 +309,7 @@ describe('module', () => {
 
     const module = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action: { creator: actionCreator, type: actionCreator.actionType },
@@ -315,6 +325,7 @@ describe('module', () => {
 
     const module0 = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action: { creator: actionCreator, type: actionCreator.actionType },
@@ -322,6 +333,7 @@ describe('module', () => {
     });
     const module1 = createModule({
       Ctl: VALID_CLASS,
+      ctlParams,
       reducer: MODULE_REDUCER,
       actions: {
         action: { creator: actionCreator, type: actionCreator.actionType },

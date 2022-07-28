@@ -17,6 +17,7 @@ const initialData = {
 };
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
+const ctlParams = [];
 const MODULE_REDUCER = () => {
   return initialData;
 };
@@ -72,7 +73,7 @@ describe('module.subscribe', () => {
       }
     }
 
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -94,7 +95,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -117,7 +118,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener0 = jest.fn();
@@ -142,7 +143,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -172,7 +173,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const rootReducer = combineReducers({ [getUniquePath()]: module });
     const store = createStore(rootReducer);
     const listener = jest.fn();
@@ -195,7 +196,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
     function rootReducer(state = {}, action) {
       return {
@@ -224,7 +225,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
@@ -257,7 +258,7 @@ describe('module.subscribe', () => {
           return state;
       }
     }
-    const module = createModule({ Ctl: VALID_CLASS, reducer, actions: {} });
+    const module = createModule({ Ctl: VALID_CLASS, ctlParams, reducer, actions: {} });
     const modulePath = getUniquePath();
 
     function rootReducer(state = {}, action) {
