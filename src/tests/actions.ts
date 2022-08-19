@@ -1,14 +1,8 @@
-import { Action } from 'redux';
-
-import { createModule, RMCCtl } from '../';
+import { createModule, RMCCtl, type ReducerActionsType, ReducerThisType } from '../';
 
 type State = {
   prop: string;
 };
-
-function rmcReducer(state: State = { prop: '' }, action: Action, path: string) {
-  return state;
-}
 
 const actions0 = {
   a0: {
@@ -28,9 +22,20 @@ const actions0 = {
   },
 };
 
+type ActionsType0 = ReducerActionsType<typeof actions0>;
+
+function rmcReducer0(
+  this: ReducerThisType<State, typeof actions0>,
+  state: State = { prop: '' },
+  action: ActionsType0[keyof ActionsType0],
+  path: string
+) {
+  return state;
+}
+
 class Test0 extends RMCCtl<State, typeof actions0> {}
 
-const test0 = createModule({ Ctl: Test0, ctlParams: [], reducer: rmcReducer, actions: actions0 });
+const test0 = createModule({ Ctl: Test0, ctlParams: [], reducer: rmcReducer0, actions: actions0 });
 
 // it`s ok
 test0.actions.a0();
@@ -65,10 +70,21 @@ const actions1 = {
   },
 };
 
+type ActionsType1 = ReducerActionsType<typeof actions1>;
+
+function rmcReducer1(
+  this: ReducerThisType<State, typeof actions1>,
+  state: State = { prop: '' },
+  action: ActionsType1[keyof ActionsType1],
+  path: string
+) {
+  return state;
+}
+
 // it`s ok
 class Test0_1 extends RMCCtl<State, typeof actions1> {}
 
-const test0_1 = createModule({ Ctl: Test0_1, ctlParams: [], reducer: rmcReducer, actions: actions1 });
+const test0_1 = createModule({ Ctl: Test0_1, ctlParams: [], reducer: rmcReducer1, actions: actions1 });
 
 test0_1.actions.a3('proxy prm');
 test0_1.a3('proxy prm');
