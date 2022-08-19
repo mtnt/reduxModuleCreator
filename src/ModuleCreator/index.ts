@@ -78,7 +78,7 @@ export class RMCCtl<
   #stateChangeListeners = new Set<SBS>();
   #unsubscribeStore?: ReturnType<GlobalStore['subscribe']>
 
-  protected stateDidUpdate?: (prevOwnState?: S) => any
+  protected stateDidUpdate?: (prevOwnState: S) => any
   protected didLinkedWithStore?: () => any
   protected didUnlinkedWithStore?: () => any
 
@@ -146,7 +146,7 @@ export class RMCCtl<
   }
 
   #stateUpdateListener(nextOuterState: GlobalStore) {
-    const prevOwnState = this.ownState;
+    const prevOwnState = this.ownState as S;
 
     this.#ownState = this.#getOwnState(nextOuterState);
 
