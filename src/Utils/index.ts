@@ -128,7 +128,7 @@ export function isFunction(obj: any): obj is Function {
   return typeof obj === "function";
 }
 
-export type RMCReducer<S = any, A extends Action = ExtendedReduxAction> = (
+export type RMCReducer<S = any, A extends Action = any> = (
   state: S | undefined,
   action: A,
   path: NormalizedPath

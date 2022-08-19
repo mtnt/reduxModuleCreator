@@ -1,18 +1,30 @@
-import { Action } from 'redux';
-
-import { createStore, combineReducers } from '../';
+import { createStore, combineReducers, type ReducerActionsType, type ReducerThisType } from '../';
 
 type State = {
   prop0: string;
   prop1: number;
 };
 
-function reducer(state: State = { prop0: '', prop1: 3 }, action: Action) {
+const actions0 = {
+  a: {
+    creator: () => ({}),
+    type: 1,
+  },
+};
+
+type ActionsType0 = ReducerActionsType<typeof actions0>;
+
+function rmcReducer0(
+  this: ReducerThisType<State, typeof actions0>,
+  state: State = { prop0: '', prop1: 1 },
+  action: ActionsType0[keyof ActionsType0],
+  path: string
+) {
   return state;
 }
 
 const rootReducer = combineReducers({
-  foo: reducer,
+  foo: rmcReducer0,
 });
 
 // @ts-expect-error: wrong enhancer/preloadedState

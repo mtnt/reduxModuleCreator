@@ -1,17 +1,34 @@
-import { Action, combineReducers as foo } from 'redux';
+import { Action } from 'redux';
 
-import { RMCCtl, createModule, combineReducers } from '../';
+import { RMCCtl, createModule, combineReducers, type ReducerThisType, type ReducerActionsType } from '../';
+
+const actions = {
+  test: {
+    creator: () => ({}),
+    type: 'test',
+  },
+};
+type ActionsType = ReducerActionsType<typeof actions>;
 
 type StateRMC = { prop0: string; prop1: number };
 type StateRegular = { prop0: boolean; prop1: string };
 
-class TestRMC extends RMCCtl<StateRMC, {}> {}
-class TestRegular extends RMCCtl<StateRegular, {}> {}
+class TestRMC extends RMCCtl<StateRMC, typeof actions> {}
+class TestRegular extends RMCCtl<StateRegular, typeof actions> {}
 
-function rmcReducer(state: StateRMC = { prop0: '', prop1: 3 }, action: Action, path: string) {
+function rmcReducer(
+  this: ReducerThisType<StateRMC, typeof actions>,
+  state: StateRMC = { prop0: '', prop1: 3 },
+  action: ActionsType[keyof ActionsType],
+  path: string
+) {
   return state;
 }
-function regularReducer(state: StateRegular = { prop0: true, prop1: '' }, action: Action) {
+function regularReducer(
+  this: ReducerThisType<StateRegular, typeof actions>,
+  state: StateRegular = { prop0: true, prop1: '' },
+  action: ActionsType[keyof ActionsType]
+) {
   return state;
 }
 
@@ -19,13 +36,13 @@ const testMdl0 = createModule({
   Ctl: TestRMC,
   ctlParams: [],
   reducer: rmcReducer,
-  actions: {},
+  actions,
 });
 const testMdl1 = createModule({
   Ctl: TestRegular,
   ctlParams: [],
   reducer: regularReducer,
-  actions: {},
+  actions,
 });
 const stateReducerMap = {
   foo0: rmcReducer,

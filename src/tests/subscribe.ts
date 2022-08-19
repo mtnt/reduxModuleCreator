@@ -1,20 +1,28 @@
-import { Action } from 'redux';
-
-import { RMCCtl } from '../';
+import { ReducerActionsType, ReducerThisType, RMCCtl } from '../';
 
 type State = {
   prop: string;
 };
+const actions0 = {
+  test: {
+    creator: () => ({ payload: 1 }),
+    type: 'test',
+  },
+};
 
-function rmcReducer(state: State = { prop: '' }, action: Action, path: string) {
+type ActionsType0 = ReducerActionsType<typeof actions0>;
+
+function reducer0(
+  this: ReducerThisType<State, typeof actions0>,
+  state: State = { prop: 'true' },
+  action: ActionsType0[keyof ActionsType0]
+): State {
   return state;
 }
 
-const emptyActions = {};
+class Test0 extends RMCCtl<State, typeof actions0> {}
 
-class Test0 extends RMCCtl<State, typeof emptyActions> {}
-
-const test0 = new Test0(rmcReducer, emptyActions);
+const test0 = new Test0(reducer0, actions0);
 
 // it`s ok
 test0.subscribe((prevOwnState: State, ownState: State) => {});
