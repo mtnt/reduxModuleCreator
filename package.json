@@ -45,6 +45,7 @@
     "unit-tests-values-iterators": "0.2.1"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "!/dist/tests"
   ]
 }
