@@ -1,8 +1,16 @@
 import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import { linkStore, unlinkStore, createStore, RMCCtl, createModule, combineReducers } from '../dist';
+import {
+  linkStore,
+  unlinkStore,
+  createStore,
+  RMCCtl,
+  createModule,
+  combineReducers,
+  InvalidParamsError,
+} from '../dist';
+
 import { getActionCreator, creator, getUniquePath } from './helpers';
-import { InvalidParamsError } from '../dist/lib/baseErrors';
 
 const payload0 = {
   name: 'payload0',

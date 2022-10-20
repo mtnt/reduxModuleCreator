@@ -2,6 +2,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { createStore as reduxCreateStore } from 'redux';
 
 import { unlinkStore, RMCCtl, createModule, combineReducers, createStore } from '../dist';
+
 import { getActionCreator, creator, getUniquePath } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};

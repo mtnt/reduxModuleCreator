@@ -2,6 +2,13 @@ import { createStore as reduxCreateStore, StoreCreator } from 'redux';
 
 import { linkStore, unlinkStore, createModule, RMCCtl, clearModules } from './ModuleCreator';
 import { combineReducers, ReducerThisType, ReducerActionsType } from './Utils';
+import {
+  RMCError,
+  InvalidParamsError,
+  WrongInterfaceError,
+  DuplicateError,
+  InsufficientDataError,
+} from './lib/baseErrors';
 
 const createStore: StoreCreator = (
   ...args: Parameters<typeof reduxCreateStore>
@@ -21,6 +28,11 @@ export {
   unlinkStore,
   combineReducers,
   clearModules,
+  RMCError,
+  InvalidParamsError,
+  WrongInterfaceError,
+  DuplicateError,
+  InsufficientDataError,
   ReducerThisType,
   ReducerActionsType,
 };
