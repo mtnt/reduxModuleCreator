@@ -1,9 +1,8 @@
 import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import { InvalidParamsError, DuplicateError } from '../dist/lib/baseErrors';
-import { getActionCreator } from './helpers';
+import { unlinkStore, createModule, RMCCtl, InvalidParamsError } from '../dist';
 
-import { unlinkStore, createModule, RMCCtl } from '../dist';
+import { getActionCreator } from './helpers';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {

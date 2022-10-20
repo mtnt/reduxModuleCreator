@@ -1,10 +1,4 @@
-import {
-  DuplicateError,
-  InsufficientDataError,
-  InvalidParamsError,
-  WrongInterfaceError,
-  RMCError,
-} from '../dist/lib/baseErrors';
+import { DuplicateError, InsufficientDataError, InvalidParamsError, WrongInterfaceError, RMCError } from '../dist';
 
 describe.each([
   ['DuplicateError', new DuplicateError('message')],

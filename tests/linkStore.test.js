@@ -1,5 +1,12 @@
-import { linkStore, unlinkStore, RMCCtl, createModule, createStore } from '../dist';
-import { DuplicateError, InsufficientDataError } from '../dist/lib/baseErrors';
+import {
+  linkStore,
+  unlinkStore,
+  RMCCtl,
+  createModule,
+  createStore,
+  DuplicateError,
+  InsufficientDataError,
+} from '../dist';
 
 import { getActionCreator, getUniquePath } from './helpers';
 

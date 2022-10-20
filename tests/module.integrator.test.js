@@ -1,7 +1,6 @@
 import { allValuesTypes, testAllValues } from 'unit-tests-values-iterators';
 
-import { InvalidParamsError } from '../dist/lib/baseErrors';
-import { createModule, createStore, RMCCtl, clearModules } from '../dist';
+import { createModule, createStore, RMCCtl, clearModules, InvalidParamsError } from '../dist';
 
 const VALID_CLASS = class SCtl extends RMCCtl {};
 const MODULE_REDUCER = () => {

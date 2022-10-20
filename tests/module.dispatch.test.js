@@ -1,5 +1,5 @@
-import { createStore, unlinkStore, RMCCtl, createModule, combineReducers } from '../dist';
-import { WrongInterfaceError } from '../dist/lib/baseErrors';
+import { createStore, unlinkStore, RMCCtl, createModule, combineReducers, WrongInterfaceError } from '../dist';
+
 import { getActionCreator, getUniquePath } from './helpers';
 
 const payload0 = {
