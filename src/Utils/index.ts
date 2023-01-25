@@ -162,7 +162,7 @@ export function generateActionType(origin: string): string {
   return `${origin}_${nanoid()}`;
 }
 
-export type ReducerThisType<State extends {}, Actions extends Record<string, RMCAction>> = ReturnType<typeof createModule<typeof RMCCtl<State, Actions>>>
+export type ReducerThisType<R extends { new (...args: any[]): RMCCtl<any, Record<string, RMCAction>> }, A extends Record<string, RMCAction>> = ReturnType<typeof createModule<R, A>>;
 export type ReducerActionsType<A extends Record<string, RMCAction>> = {
   [AN in keyof A]: A[AN] extends RegularRMCAction
     ? A[AN]["creator"] extends (...args: any) => any

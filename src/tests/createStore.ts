@@ -1,4 +1,4 @@
-import { createStore, combineReducers, type ReducerActionsType, type ReducerThisType } from '../';
+import { createStore, combineReducers, type ReducerActionsType, type ReducerThisType, RMCCtl } from "../";
 
 type State = {
   prop0: string;
@@ -14,14 +14,17 @@ const actions0 = {
 
 type ActionsType0 = ReducerActionsType<typeof actions0>;
 
+class Test extends RMCCtl<State, typeof actions0> {}
+
 function rmcReducer0(
-  this: ReducerThisType<State, typeof actions0>,
+  this: ReducerThisType<typeof Test, typeof actions0>,
   state: State = { prop0: '', prop1: 1 },
   action: ActionsType0[keyof ActionsType0],
   path: string
 ) {
   return state;
 }
+
 
 const rootReducer = combineReducers({
   foo: rmcReducer0,
