@@ -25,7 +25,7 @@ const actions0 = {
 type ActionsType0 = ReducerActionsType<typeof actions0>;
 
 function rmcReducer0(
-  this: ReducerThisType<State, typeof actions0>,
+  this: ReducerThisType<typeof Test0, typeof actions0>,
   state: State = { prop: '' },
   action: ActionsType0[keyof ActionsType0],
   path: string
@@ -73,7 +73,7 @@ const actions1 = {
 type ActionsType1 = ReducerActionsType<typeof actions1>;
 
 function rmcReducer1(
-  this: ReducerThisType<State, typeof actions1>,
+  this: ReducerThisType<typeof Test0_1, typeof actions1>,
   state: State = { prop: '' },
   action: ActionsType1[keyof ActionsType1],
   path: string

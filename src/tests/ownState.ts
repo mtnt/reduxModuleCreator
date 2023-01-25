@@ -18,7 +18,7 @@ class Test extends RMCCtl<State, typeof actions0> {
 }
 
 function reducer(
-  this: ReducerThisType<State, typeof actions0>,
+  this: ReducerThisType<typeof Test, typeof actions0>,
   state: State = { prop0: true, prop1: '1' },
   action: ActionsType0[keyof ActionsType0]
 ) {

@@ -13,7 +13,7 @@ const actions0 = {
 type ActionsType0 = ReducerActionsType<typeof actions0>;
 
 function reducer0(
-  this: ReducerThisType<State, typeof actions0>,
+  this: ReducerThisType<typeof Test0, typeof actions0>,
   state: State = { prop: 'true' },
   action: ActionsType0[keyof ActionsType0]
 ): State {

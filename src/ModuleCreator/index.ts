@@ -247,7 +247,7 @@ type ExcludeTuples<TupleA, TupleB> = TupleA extends TupleB
 
 export function createModule<
   CTL extends { new (...args: any[]): any },
-  A extends Record<string, RMCAction> = any,
+  A extends Record<string, RMCAction>,
   R extends RMCReducer | RegularReducer = any,
 >({
   Ctl: CtlClass,

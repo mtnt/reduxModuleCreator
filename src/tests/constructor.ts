@@ -15,7 +15,7 @@ type ActionsType0 = ReducerActionsType<typeof actions0>;
 class Test0 extends RMCCtl<State0, typeof actions0> {}
 
 function rmcReducer0(
-  this: ReducerThisType<State0, typeof actions0>,
+  this: ReducerThisType<typeof Test0, typeof actions0>,
   state: State0 = { prop: '' },
   action: ActionsType0[keyof ActionsType0],
   path: string
@@ -23,7 +23,7 @@ function rmcReducer0(
   return state;
 }
 function regularReducer0(
-  this: ReducerThisType<State0, typeof actions0>,
+  this: ReducerThisType<typeof Test0, typeof actions0>,
   state: State0 = { prop: '' },
   action: ActionsType0[keyof ActionsType0]
 ) {
@@ -60,7 +60,7 @@ type ActionsType1_0 = ReducerActionsType<typeof actions1_0>;
 class Test1_0 extends RMCCtl<State1, typeof actions1_0> {}
 
 function rmcReducer1_0(
-  this: ReducerThisType<State1, typeof actions1_0>,
+  this: ReducerThisType<typeof Test1_0, typeof actions1_0>,
   state: State0 = { prop: '' },
   action: ActionsType1_0[keyof ActionsType1_0],
   path: string
@@ -82,7 +82,7 @@ type ActionsType1_1 = ReducerActionsType<typeof actions1_1>;
 class Test1_1 extends RMCCtl<State1, typeof actions1_1> {}
 
 function rmcReducer1_1(
-  this: ReducerThisType<State1, typeof actions1_1>,
+  this: ReducerThisType<typeof Test1_1, typeof actions1_1>,
   state: State0 = { prop: '' },
   action: ActionsType1_1[keyof ActionsType1_1],
   path: string
@@ -102,7 +102,7 @@ type ActionsType1_2 = ReducerActionsType<typeof actions1_2>;
 class Test1_2 extends RMCCtl<State1, typeof actions1_2> {}
 
 function rmcReducer1_2(
-  this: ReducerThisType<State1, typeof actions1_2>,
+  this: ReducerThisType<typeof Test1_2, typeof actions1_2>,
   state: State0 = { prop: '' },
   action: ActionsType1_2[keyof ActionsType1_2],
   path: string
@@ -125,7 +125,7 @@ type ActionsType1_3 = ReducerActionsType<typeof actions1_3>;
 class Test1_3 extends RMCCtl<State1, typeof actions1_3> {}
 
 function rmcReducer1_3(
-  this: ReducerThisType<State1, typeof actions1_3>,
+  this: ReducerThisType<typeof Test1_3, typeof actions1_3>,
   state: State0 = { prop: '' },
   action: ActionsType1_3[keyof ActionsType1_3],
   path: string
@@ -148,7 +148,7 @@ type ActionsType1_4 = ReducerActionsType<typeof actions1_4>;
 class Test1_4 extends RMCCtl<State1, typeof actions1_4> {}
 
 function rmcReducer1_4(
-  this: ReducerThisType<State1, typeof actions1_4>,
+  this: ReducerThisType<typeof Test1_4, typeof actions1_4>,
   state: State0 = { prop: '' },
   action: ActionsType1_4[keyof ActionsType1_4],
   path: string
@@ -173,7 +173,7 @@ class Test1_5 extends RMCCtl<State1, typeof actions1_5> {}
 
 function rmcReducer1_5(
   // @ts-expect-error
-  this: ReducerThisType<State1, typeof actions1_5>,
+  this: ReducerThisType<typeof Test1_5, typeof actions1_5>,
   state: State0 = { prop: '' },
   action: ActionsType1_5[keyof ActionsType1_5],
   path: string
@@ -197,7 +197,7 @@ class Test1_6 extends RMCCtl<State1, typeof actions1_6> {}
 
 function rmcReducer1_6(
   // @ts-expect-error
-  this: ReducerThisType<State1, typeof actions1_6>,
+  this: ReducerThisType<typeof Test1_6, typeof actions1_6>,
   state: State0 = { prop: '' },
   action: ActionsType1_6[keyof ActionsType1_6],
   path: string
@@ -226,7 +226,7 @@ class Test2 extends RMCCtl<State2, typeof actions2> {
 }
 
 function rmcReducer2(
-  this: ReducerThisType<State2, typeof actions2>,
+  this: ReducerThisType<typeof Test2, typeof actions2>,
   state: State0 = { prop: '' },
   action: ActionsType2[keyof ActionsType2],
   path: string

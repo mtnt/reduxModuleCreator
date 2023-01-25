@@ -21,7 +21,7 @@ class Test0_0 extends RMCCtl<State0, typeof actions0> {
 class Test0_1 extends RMCCtl<State0, typeof actions0> {}
 
 function rmcReducer0(
-  this: ReducerThisType<State0, typeof actions0>,
+  this: ReducerThisType<typeof Test0_1, typeof actions0>,
   state: State0 = { prop0: "", prop1: 3 },
   action: ActionsType0[keyof ActionsType0],
   path: string
@@ -65,7 +65,7 @@ type State1 = { prop: number }
 class Test1 extends RMCCtl<State1, typeof actions1> {}
 
 function rmcReducer1(
-  this: ReducerThisType<State1, typeof actions1>,
+  this: ReducerThisType<typeof Test1, typeof actions1>,
   state: State1 = { prop: 1 },
   action: ActionsType1[keyof ActionsType1],
   path: string
@@ -74,7 +74,7 @@ function rmcReducer1(
 }
 
 function regularReducer1(
-  this: ReducerThisType<State1, typeof actions1>,
+  this: ReducerThisType<typeof Test1, typeof actions1>,
   state: State1 = { prop: 1 },
   action: ActionsType1[keyof ActionsType1]
 ) {
@@ -82,12 +82,12 @@ function regularReducer1(
 }
 
 // income and outcome are not equal
-function badReducer0(this: ReducerThisType<State1, typeof actions1>, state: string | undefined, action: ActionsType1[keyof ActionsType1]) {
+function badReducer0(this: ReducerThisType<typeof Test1, typeof actions1>, state: string | undefined, action: ActionsType1[keyof ActionsType1]) {
   return true;
 }
 
 // equal income and outcome but its type is not appropriate the Test1s state type
-function badReducer1(this: ReducerThisType<State1, typeof actions1>, state: string | undefined = "", action: ActionsType1[keyof ActionsType1]) {
+function badReducer1(this: ReducerThisType<typeof Test1, typeof actions1>, state: string | undefined = "", action: ActionsType1[keyof ActionsType1]) {
   return state;
 }
 
@@ -123,7 +123,7 @@ type ActionsType2_0 = ReducerActionsType<typeof actions2_0>;
 class Test2_0 extends RMCCtl<State2, typeof actions2_0> {}
 
 function regularReducer2_0(
-  this: ReducerThisType<State2, typeof actions2_0>,
+  this: ReducerThisType<typeof Test2_0, typeof actions2_0>,
   state: State2 = { prop: 1 },
   action: ActionsType2_0[keyof ActionsType2_0],
   path: string
@@ -145,7 +145,7 @@ type ActionsType2_1 = ReducerActionsType<typeof actions2_1>;
 class Test2_1 extends RMCCtl<State2, typeof actions2_1> {}
 
 function regularReducer2_1(
-  this: ReducerThisType<State2, typeof actions2_1>,
+  this: ReducerThisType<typeof Test2_1, typeof actions2_1>,
   state: State2 = { prop: 1 },
   action: ActionsType2_1[keyof ActionsType2_1],
   path: string
@@ -165,7 +165,7 @@ type ActionsType2_2 = ReducerActionsType<typeof actions2_2>;
 class Test2_2 extends RMCCtl<State2, typeof actions2_2> {}
 
 function regularReducer2_2(
-  this: ReducerThisType<State2, typeof actions2_2>,
+  this: ReducerThisType<typeof Test2_2, typeof actions2_2>,
   state: State2 = { prop: 1 },
   action: ActionsType2_2[keyof ActionsType2_2],
   path: string
@@ -188,7 +188,7 @@ type ActionsType2_3 = ReducerActionsType<typeof actions2_3>;
 class Test2_3 extends RMCCtl<State2, typeof actions2_3> {}
 
 function regularReducer2_3(
-  this: ReducerThisType<State2, typeof actions2_3>,
+  this: ReducerThisType<typeof Test2_3, typeof actions2_3>,
   state: State2 = { prop: 1 },
   action: ActionsType2_3[keyof ActionsType2_3],
   path: string
@@ -210,7 +210,7 @@ type ActionsType2_4 = ReducerActionsType<typeof actions2_4>;
 class Test2_4 extends RMCCtl<State2, typeof actions2_4> {}
 
 function regularReducer2_4(
-  this: ReducerThisType<State2, typeof actions2_4>,
+  this: ReducerThisType<typeof Test2_4, typeof actions2_4>,
   state: State2 = { prop: 1 },
   action: ActionsType2_4[keyof ActionsType2_4],
   path: string
@@ -235,7 +235,7 @@ class Test2_5 extends RMCCtl<State2, typeof actions2_5> {}
 
 function regularReducer2_5(
   // @ts-expect-error
-  this: ReducerThisType<State2, typeof actions2_5>,
+  this: ReducerThisType<typeof Test2_5, typeof actions2_5>,
   state: State2 = { prop: 1 },
   action: ActionsType2_5[keyof ActionsType2_5],
   path: string
@@ -259,7 +259,7 @@ class Test2_6 extends RMCCtl<State2, typeof actions2_6> {}
 
 function regularReducer2_6(
   // @ts-expect-error
-  this: ReducerThisType<State2, typeof actions2_6>,
+  this: ReducerThisType<typeof Test2_6, typeof actions2_6>,
   state: State2 = { prop: 1 },
   action: ActionsType2_6[keyof ActionsType2_6],
   path: string
@@ -281,7 +281,7 @@ const actions3 = {
 type ActionsType3 = ReducerActionsType<typeof actions3>;
 
 function regularReducer3(
-  this: ReducerThisType<State3, typeof actions3>,
+  this: ReducerThisType<typeof Test3, typeof actions3>,
   state: State3 = { prop: 1 },
   action: ActionsType3[keyof ActionsType3],
   path: string

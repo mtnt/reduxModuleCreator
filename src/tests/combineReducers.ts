@@ -17,7 +17,7 @@ class TestRMC extends RMCCtl<StateRMC, typeof actions> {}
 class TestRegular extends RMCCtl<StateRegular, typeof actions> {}
 
 function rmcReducer(
-  this: ReducerThisType<StateRMC, typeof actions>,
+  this: ReducerThisType<typeof TestRMC, typeof actions>,
   state: StateRMC = { prop0: '', prop1: 3 },
   action: ActionsType[keyof ActionsType],
   path: string
@@ -25,7 +25,7 @@ function rmcReducer(
   return state;
 }
 function regularReducer(
-  this: ReducerThisType<StateRegular, typeof actions>,
+  this: ReducerThisType<typeof TestRegular, typeof actions>,
   state: StateRegular = { prop0: true, prop1: '' },
   action: ActionsType[keyof ActionsType]
 ) {
