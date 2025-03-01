@@ -266,7 +266,9 @@ export function createModule<
   reducer: R extends (arg: infer S | undefined, ...rest: any) => infer S ? R : never;
   actions: A;
 }): InstanceType<CTL> & {
-  [AN in keyof A]: InstanceType<CTL>[AN] extends (...args: any) => any ? InstanceType<CTL>[AN] : A[AN] extends RegularRMCAction ? RMCActionCreator<A[AN]> : A[AN]['proxy']
+  [AN in keyof InstanceType<CTL>['actions']]: InstanceType<CTL>[AN] extends (...args: any) => any
+    ? InstanceType<CTL>[AN]
+    : InstanceType<CTL>['actions'][AN];
 } {
   if (!isFunction(reducer)) {
     const msg = 'Attempt to create a module, but reducer is not a function';
