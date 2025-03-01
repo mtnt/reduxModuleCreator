@@ -1,7 +1,7 @@
 import { createStore as reduxCreateStore, StoreCreator } from 'redux';
 
 import { linkStore, unlinkStore, createModule, RMCCtl, clearModules } from './ModuleCreator';
-import { combineReducers, ReducerThisType, ReducerActionsType } from './Utils';
+import { combineReducers, ReducerThisType, ReducerActionsType, RMCAction } from './Utils';
 import {
   RMCError,
   InvalidParamsError,
@@ -20,6 +20,10 @@ const createStore: StoreCreator = (
   return store;
 };
 
+type Module<A extends Record<string, RMCAction> = any> = ReturnType<
+  typeof createModule<{ new (...args: any[]): RMCCtl<any, A> }, A>
+>;
+
 export {
   createModule,
   RMCCtl,
@@ -33,6 +37,7 @@ export {
   WrongInterfaceError,
   DuplicateError,
   InsufficientDataError,
-  ReducerThisType,
-  ReducerActionsType,
+  type Module,
+  type ReducerThisType,
+  type ReducerActionsType,
 };

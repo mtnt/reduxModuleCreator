@@ -1,17 +1,21 @@
-import { AnyAction, Reducer as RegularReducer, Store as GlobalStore } from "redux";
+import { AnyAction, Reducer as RegularReducer, Store as GlobalStore } from 'redux';
 
 import { DuplicateError, InsufficientDataError, InvalidParamsError, WrongInterfaceError } from '../lib/baseErrors';
 import {
   get,
-  isFunction, isProxyAction, isString,
+  isFunction,
+  isProxyAction,
+  isString,
   NormalizedPath,
   normalizePath,
   PathParts,
   RMCAction,
   RMCReducer,
   validatePath,
-  generateActionType, RMCActionCreator, RegularRMCAction
-} from "../Utils";
+  generateActionType,
+  RMCActionCreator,
+  RegularRMCAction,
+} from '../Utils';
 
 const modulesList: RMCCtl<any, any>[] = [];
 
@@ -58,10 +62,12 @@ export function unlinkStore() {
   }
 }
 
-function getObjEntries<T extends {[key: string]: any}>(obj: T): {
+function getObjEntries<T extends { [key: string]: any }>(
+  obj: T
+): {
   [K in keyof T]: [K, T[K]];
 }[keyof T][] {
-  return Object.entries(obj) as any
+  return Object.entries(obj) as any;
 }
 
 export class RMCCtl<
@@ -76,16 +82,16 @@ export class RMCCtl<
   #ownState!: S;
 
   #stateChangeListeners = new Set<SBS>();
-  #unsubscribeStore?: ReturnType<GlobalStore['subscribe']>
+  #unsubscribeStore?: ReturnType<GlobalStore['subscribe']>;
 
-  protected stateDidUpdate?: (prevOwnState: S) => any
-  protected didLinkedWithStore?: () => any
-  protected didUnlinkedWithStore?: () => any
+  protected stateDidUpdate?: (prevOwnState: S) => any;
+  protected didLinkedWithStore?: () => any;
+  protected didUnlinkedWithStore?: () => any;
 
   // @ts-expect-error
   actions: {
-    [AN in keyof A]: A[AN] extends RegularRMCAction ? RMCActionCreator<A[AN]> : A[AN]['proxy']
-  } = {}
+    [AN in keyof A]: A[AN] extends RegularRMCAction ? RMCActionCreator<A[AN]> : A[AN]['proxy'];
+  } = {};
 
   constructor(reducer: R, actions: A) {
     this.#reducer = reducer.bind(this);
@@ -94,7 +100,7 @@ export class RMCCtl<
 
     actionEntries.forEach(([actionName, action]) => {
       if (isProxyAction(action)) {
-        const { proxy } = action
+        const { proxy } = action;
 
         if (!isFunction(proxy) || !isString(proxy.actionType) || proxy.actionType === '') {
           throw new InvalidParamsError(
@@ -104,27 +110,27 @@ export class RMCCtl<
 
         this.actions[actionName] = action.proxy;
       } else {
-        const { creator = () => ({}), type = 'generated_type' } = action
+        const { creator = () => ({}), type = 'generated_type' } = action;
 
         if (!isFunction(creator)) {
           throw new InvalidParamsError(`Action creator for "${String(actionName)}" is not a function: "${creator}"`);
         }
-        if ((!isString(type) || type.length === 0)) {
+        if (!isString(type) || type.length === 0) {
           throw new InvalidParamsError(`Action type for "${String(actionName)}" is not a string: "${type}"`);
         }
 
         const generatedType = generateActionType(type);
 
         const actionCreator = <A extends []>(...args: A): any => {
-          const action = {...creator(...args), type: generatedType};
+          const action = { ...creator(...args), type: generatedType };
 
           this.#dispatch(action);
 
-          return action
+          return action;
         };
         actionCreator.actionType = generatedType;
 
-        this.actions[actionName] = actionCreator
+        this.actions[actionName] = actionCreator;
       }
     });
   }
@@ -180,7 +186,7 @@ export class RMCCtl<
 
   protected get ownState() {
     if (this.#store === undefined) {
-      return
+      return;
     }
 
     return this.#ownState;
@@ -248,7 +254,7 @@ type ExcludeTuples<TupleA, TupleB> = TupleA extends TupleB
 export function createModule<
   CTL extends { new (...args: any[]): any },
   A extends Record<string, RMCAction>,
-  R extends RMCReducer | RegularReducer = any,
+  R extends RMCReducer | RegularReducer = any
 >({
   Ctl: CtlClass,
   ctlParams,
@@ -297,9 +303,9 @@ export function createModule<
   if (module.actions !== undefined) {
     getObjEntries(module.actions).forEach(([key, value]) => {
       if (module[key] === undefined) {
-        module[key] = value
+        module[key] = value;
       }
-    })
+    });
   }
 
   modulesList.push(module);
